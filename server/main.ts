@@ -1,12 +1,11 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { listenAndServeTLS } from "https://deno.land/std@0.74.0/http/server.ts";
 
 const app = new Hono();
 
-const useHttps = Deno.env.get("USE_HTTPS") === "true";
 console.log(Deno.env.get("USE_HTTPS"));
-console.log(typeof Deno.env.get("USE_HTTPS"));
-
+const useHttps = Deno.env.get("USE_HTTPS") === "true";
 console.log("useHttps: " + useHttps);
 
 // CORS should be called before the route
@@ -33,18 +32,6 @@ app.get("/", (c) => {
 
 app.get("/api/v1/wedding", (c) => {
   return c.text("Wedding API is loading.");
-});
-
-import { listenAndServeTLS } from "https://deno.land/std@0.74.0/http/server.ts";
-
-const body = "Hello HTTPS";
-const options = {
-  port: 443,
-  certFile: "/etc/letsencrypt/live/denohttpstest.lcas.dev/fullchain.pem",
-  keyFile: "/etc/letsencrypt/live/denohttpstest.lcas.dev/privkey.pem",
-};
-listenAndServeTLS(options, (req) => {
-  req.respond({ body });
 });
 
 const devConfig = {};

@@ -55,7 +55,7 @@ const prodConfig = {
 };
 const config = useHttps ? prodConfig : devConfig;
 
-console.log("config for Deno.serve: ");
+console.log("config settings for Deno.serve: ");
 console.dir(config);
 
 Deno.serve(config, app.fetch);

@@ -38,7 +38,9 @@ const devConfig = {};
 const prodConfig = {
   port: 443,
   cert: await Deno.readTextFile("/etc/letsencrypt/live/bakken.family/cert.pem"),
-  key: await Deno.readTextFile("/etc/letsencrypt/live/bakken.family/key.pem"),
+  key: await Deno.readTextFile(
+    "/etc/letsencrypt/live/bakken.family/privkey.pem",
+  ),
 };
 const config = useHttps ? prodConfig : devConfig;
 

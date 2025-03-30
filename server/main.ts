@@ -6,12 +6,12 @@ const app = new Hono();
 // CORS should be called before the route
 // app.use("/api/*", cors());
 app.use(
-  "/api/*",
+  "api/*",
   cors({
     origin: [
       "https://www.bakken.family",
       "https://bakken.family",
-      "localhost:5173",
+      "http://localhost:5173",
     ],
     allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
     allowMethods: ["POST", "PUT", "GET", "OPTIONS", "DELETE"],

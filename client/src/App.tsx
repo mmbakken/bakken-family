@@ -7,7 +7,9 @@ function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:8000")
+    const url = `${window.location.protocol}//${window.location.hostname}:8000/api/v1/wedding`;
+
+    fetch(url)
       .then((data) => {
         console.dir(data);
       })

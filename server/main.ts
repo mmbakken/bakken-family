@@ -53,6 +53,6 @@ const prodConfig = {
   cert: await Deno.readTextFile("/etc/letsencrypt/live/bakken.family/cert.pem"),
   key: await Deno.readTextFile("/etc/letsencrypt/live/bakken.family/key.pem"),
 };
-const config = useHttps ? devConfig : prodConfig;
+const config = useHttps ? prodConfig : devConfig;
 
 Deno.serve(config, app.fetch);

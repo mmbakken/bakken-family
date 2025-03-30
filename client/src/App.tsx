@@ -3,11 +3,16 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 
+// TODO: Use dev and prod URL roots for the API
+console.log(
+  "import.meta.env.VITE_API_BASE_URL: " + import.meta.env.VITE_API_BASE_URL,
+);
+
 function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const url = `${window.location.protocol}//${window.location.hostname}:8000/api/v1/wedding`;
+    const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding`;
 
     fetch(url)
       .then((data) => {

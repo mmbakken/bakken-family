@@ -19,7 +19,8 @@
 
 ### Database
 
-- TODO
+- Starts up with the server
+- Access pgadmin via http://localhost:5050
 
 ## Deploying the Wedding Site app
 
@@ -34,7 +35,7 @@
   - `$ npm run build`
   - This builds the app as static assets. Nginx will serve `index.html` as the app's entry point.
 - Deploy the server
-  - `$ cd /home/matt/bakken-family/server`
+  - `$ cd /home/matt/bakken-family`
   - `$ docker compose build`
   - `$ docker compose up -d`
   - The server and database should be running now.

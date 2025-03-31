@@ -13,9 +13,7 @@
 
 ### Server
 
-- Make sure `deno` is installed and you can run it from your shell.
-- `$ cd serve`
-- `$ deno task start`
+- `$ docker compose up --watch`
 - Open http://localhost:8000/api/v1/wedding
 - Has HMR enabled so you can make changes while it's running.
 
@@ -30,14 +28,13 @@
 - `$ cd bakken-family`
 - `$ git pull`
 - Deploy the client
-  - `$ cd bakken-family/client`
+  - `$ cd /home/matt/bakken-family/client`
   - `$ nvm use 22.14.0`
   - `$ npm i`
   - `$ npm run build`
   - This builds the app as static assets. Nginx will serve `index.html` as the app's entry point.
 - Deploy the server
-  - `$ cd bakken-family/client`
-  - Make sure Deno is installed and available from the shell.
-  - `$ deno task start`
-  - The server should be running now.
-  - TODO: Need to run this in a detached mode - figure this out.
+  - `$ cd /home/matt/bakken-family/server`
+  - `$ docker compose build`
+  - `$ docker compose up -d`
+  - The server and database should be running now.

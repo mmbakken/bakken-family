@@ -1,22 +1,26 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { useEffect, useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
+  const [apiResponse, setApiResponse] = useState('')
 
   useEffect(() => {
-    const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding`;
+    const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding`
 
     fetch(url)
       .then((data) => {
-        console.dir(data);
+        data.json().then((res) => {
+          console.log('API Response:', res)
+          setApiResponse(res)
+        })
       })
       .catch((err) => {
-        console.dir(err);
-      });
-  });
+        console.dir(err)
+      })
+  })
 
   return (
     <>
@@ -28,8 +32,10 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
+
       <h1>Vite + React</h1>
-      <h2>Now we're cooking</h2>
+      <h2>API Response: {apiResponse}</h2>
+
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
@@ -42,7 +48,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

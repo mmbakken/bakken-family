@@ -1,0 +1,12 @@
+{
+    "workbench.editor.closeEmptyGroups": false,
+    "editor.rulers": [80],
+    "editor.formatOnSave": true,
+    "deno.enable": true,
+    "deno.lint": true,
+    "deno.config": "./server/deno.json",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[typescript]": {
+      "editor.defaultFormatter": "denoland.vscode-deno"
+    }
+}

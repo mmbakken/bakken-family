@@ -8,5 +8,11 @@
   "compilerOptions": {
     "jsx": "precompile",
     "jsxImportSource": "hono/jsx"
+  },
+  "fmt": {
+    "lineWidth": 80,
+    "indentWidth": 2,
+    "semiColons": false,
+    "singleQuote": true
   }
 }

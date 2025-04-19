@@ -13,7 +13,6 @@ function App() {
     fetch(url)
       .then((data) => {
         data.json().then((res) => {
-          console.log('API Response:', res)
           setApiResponse(res)
         })
       })
@@ -34,7 +33,7 @@ function App() {
       </div>
 
       <h1>Vite + React</h1>
-      <h2>API Response: {apiResponse}</h2>
+      <h2>API Response: {JSON.stringify(apiResponse, null, 2)}</h2>
 
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>

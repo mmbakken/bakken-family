@@ -4,7 +4,6 @@ import { cors } from 'hono/cors'
 const app = new Hono()
 
 // CORS should be called before the route
-// app.use("/api/*", cors());
 app.use(
   'api/*',
   cors({
@@ -22,11 +21,11 @@ app.use(
 )
 
 app.get('/', (c) => {
-  return c.text('Hello Hono!')
+  return c.json({ message: 'Hello Hono!' })
 })
 
 app.get('/api/v1/wedding', (c) => {
-  return c.text('Wedding API is loading.')
+  return c.json({ message: 'Wedding API is loading. Does it update?' })
 })
 
 Deno.serve(app.fetch)

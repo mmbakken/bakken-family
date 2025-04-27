@@ -4,9 +4,14 @@
 
 Start Deno and Postgres:
 
-`$ docker compose up --watch`
+`$ docker compose up -d`
 
 This should hot reload any changes you make to the Deno app.
+
+To watch the output of the containers:
+
+`$ docker logs server -f`
+`$ docker logs postgres -f`
 
 ### Database commands
 
@@ -14,11 +19,11 @@ Make sure the app has started before running these commands.
 
 Apply migrations to Postgres:
 
-`$ deno task db:push`
+`$ docker compose exec server deno task db:push`
 
 Seed the database for local testing:
 
-`$ deno task db:seed`
+`$ docker compose exec server deno task db:seed`
 
 ### Inspect the db with pgAdmin
 

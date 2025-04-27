@@ -6,6 +6,7 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
   const [apiResponse, setApiResponse] = useState('')
+  const [usersResponse, setUsersResponse] = useState('')
 
   useEffect(() => {
     const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding`
@@ -19,7 +20,21 @@ function App() {
       .catch((err) => {
         console.dir(err)
       })
-  })
+  }, [])
+
+  useEffect(() => {
+    const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding/users`
+
+    fetch(url)
+      .then((data) => {
+        data.json().then((res) => {
+          setUsersResponse(res)
+        })
+      })
+      .catch((err) => {
+        console.dir(err)
+      })
+  }, [])
 
   return (
     <>
@@ -34,6 +49,15 @@ function App() {
 
       <h1>Vite + React</h1>
       <h2>API Response: {JSON.stringify(apiResponse, null, 2)}</h2>
+      <h2>Users: {JSON.stringify(usersResponse, null, 2)}</h2>
+
+      <div>
+        <label>
+          Names:
+          <input type="text" placeholder="e.g. Mark & Nancy"></input>
+          <p>Enter this as it appears on your invitation.</p>
+        </label>
+      </div>
 
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>

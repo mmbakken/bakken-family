@@ -3,6 +3,8 @@ services:
     container_name: server
     build:
       context: server
+    volumes:
+      - ./server:/app
     ports:
       - 8000:8000
     depends_on:

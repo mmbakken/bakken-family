@@ -13,14 +13,16 @@
 
 ### Server
 
-- `$ docker compose up --watch`
+- `$ docker compose up -d`
 - Open http://localhost:8000/api/v1/wedding
 - Has HMR enabled so you can make changes while it's running.
+- See server README for more commands.
 
 ### Database
 
 - Starts up with the server
 - Access pgadmin via http://localhost:5050
+- See server README for more commands.
 
 ## Deploying the Wedding Site app
 

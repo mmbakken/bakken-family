@@ -4,10 +4,11 @@
     "drizzle-kit": "npm:drizzle-kit@^0.31.0",
     "drizzle-orm": "npm:drizzle-orm@^0.41.0",
     "hono": "jsr:@hono/hono@^4.7.5",
+    "bcrypt": "jsr:@blackberry/bcrypt@0.17.0",
     "pg": "npm:pg@^8.14.1"
   },
   "tasks": {
-    "start": "deno run --watch-hmr --allow-net --allow-env src/main.ts",
+    "start": "deno run --watch-hmr -A --env src/main.ts",
     "db:push": "deno run --node-modules-dir -A npm:drizzle-kit push",
     "db:seed": "deno run -A --env ./db/seed.ts"
   },

@@ -1,7 +1,11 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@blackberry/bcrypt@0.17.0": "0.17.0",
+    "jsr:@denosaurs/lz4@0.1.4": "0.1.4",
     "jsr:@hono/hono@^4.7.5": "4.7.5",
+    "jsr:@std/encoding@0.221": "0.221.0",
+    "npm:@types/node@*": "22.12.0",
     "npm:@types/pg@^8.11.11": "8.11.11",
     "npm:drizzle-kit@*": "0.31.0_esbuild@0.25.2",
     "npm:drizzle-kit@0.31": "0.31.0_esbuild@0.25.2",
@@ -10,8 +14,21 @@
     "npm:pg@^8.14.1": "8.14.1"
   },
   "jsr": {
+    "@blackberry/bcrypt@0.17.0": {
+      "integrity": "6faec1140f29cf3af7e804727cb2a19cb4cf6e4c5b4d15544e92e319b09b4091",
+      "dependencies": [
+        "jsr:@denosaurs/lz4",
+        "jsr:@std/encoding"
+      ]
+    },
+    "@denosaurs/lz4@0.1.4": {
+      "integrity": "ad5d556c02eb01fe1e0f2e953d7be066a14870afe149b1aed1ced019460f6aa1"
+    },
     "@hono/hono@4.7.5": {
       "integrity": "36a7e1b3db8a58e5dc2bd36a76be53346f0966e04c24c635c4d6f58875575b0a"
+    },
+    "@std/encoding@0.221.0": {
+      "integrity": "d1dd76ef0dc5d14088411e6dc1dede53bf8308c95d1537df1214c97137208e45"
     }
   },
   "npm": {
@@ -201,8 +218,8 @@
       "dependencies": [
         "@drizzle-team/brocli",
         "@esbuild-kit/esm-loader",
-        "esbuild@0.25.2",
-        "esbuild-register"
+        "esbuild-register",
+        "esbuild@0.25.2"
       ]
     },
     "drizzle-orm@0.41.0_@types+pg@8.11.11_pg@8.14.1": {
@@ -222,15 +239,15 @@
     "esbuild@0.18.20": {
       "integrity": "sha512-ceqxoedUrcayh7Y7ZX6NdbbDzGROiyVBgC4PriJThBKSVPWnnFHZAkfI1lJT8QFkOwH4qOS2SJkS4wvpGl8BpA==",
       "dependencies": [
-        "@esbuild/android-arm@0.18.20",
         "@esbuild/android-arm64@0.18.20",
+        "@esbuild/android-arm@0.18.20",
         "@esbuild/android-x64@0.18.20",
         "@esbuild/darwin-arm64@0.18.20",
         "@esbuild/darwin-x64@0.18.20",
         "@esbuild/freebsd-arm64@0.18.20",
         "@esbuild/freebsd-x64@0.18.20",
-        "@esbuild/linux-arm@0.18.20",
         "@esbuild/linux-arm64@0.18.20",
+        "@esbuild/linux-arm@0.18.20",
         "@esbuild/linux-ia32@0.18.20",
         "@esbuild/linux-loong64@0.18.20",
         "@esbuild/linux-mips64el@0.18.20",
@@ -250,15 +267,15 @@
       "integrity": "sha512-16854zccKPnC+toMywC+uKNeYSv+/eXkevRAfwRD/G9Cleq66m8XFIrigkbvauLLlCfDL45Q2cWegSg53gGBnQ==",
       "dependencies": [
         "@esbuild/aix-ppc64",
-        "@esbuild/android-arm@0.25.2",
         "@esbuild/android-arm64@0.25.2",
+        "@esbuild/android-arm@0.25.2",
         "@esbuild/android-x64@0.25.2",
         "@esbuild/darwin-arm64@0.25.2",
         "@esbuild/darwin-x64@0.25.2",
         "@esbuild/freebsd-arm64@0.25.2",
         "@esbuild/freebsd-x64@0.25.2",
-        "@esbuild/linux-arm@0.25.2",
         "@esbuild/linux-arm64@0.25.2",
+        "@esbuild/linux-arm@0.25.2",
         "@esbuild/linux-ia32@0.25.2",
         "@esbuild/linux-loong64@0.25.2",
         "@esbuild/linux-mips64el@0.25.2",
@@ -421,6 +438,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@blackberry/bcrypt@0.17.0",
       "jsr:@hono/hono@^4.7.5",
       "npm:@types/pg@^8.11.11",
       "npm:drizzle-kit@0.31",

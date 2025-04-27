@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "@blackberry/bcrypt": "jsr:@blackberry/bcrypt@^0.17.0"
+  }
+}

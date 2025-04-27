@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { getUsers } from './routes/users.ts'
 
 const app = new Hono()
 
@@ -27,5 +28,7 @@ app.get('/', (c) => {
 app.get('/api/v1/wedding', (c) => {
   return c.json({ message: 'Wedding API is loading. Does it update?' })
 })
+
+app.get('/api/v1/wedding/users', getUsers)
 
 Deno.serve(app.fetch)

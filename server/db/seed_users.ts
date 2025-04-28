@@ -1,10 +1,9 @@
-import { hash } from 'bcrypt'
+import * as bcrypt from 'bcrypt'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import * as schema from './schema.ts'
 import USERS from './users.json' with { type: 'json' }
 
 const db = drizzle(Deno.env.get('DATABASE_URL')!, { schema })
-const encoder = new TextEncoder()
 
 export const seedUsers = async () => {
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`')
@@ -19,12 +18,9 @@ export const seedUsers = async () => {
   // Given the user object data, returns a user with a salted and hashed
   // password that's ready to be inserted into the DB.
   const buildUser = (userData: typeof schema.users.$inferInsert) => {
-    const password = encoder.encode(userData.password)
-    const salt = encoder.encode(Deno.env.get('PASSWORD_SALT')!)
-
     return {
       username: userData.username,
-      password: hash(password, salt),
+      password: bcrypt.hashSync(userData.password),
       role: userData.role,
     }
   }

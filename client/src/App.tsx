@@ -7,6 +7,8 @@ function App() {
   const [count, setCount] = useState(0)
   const [apiResponse, setApiResponse] = useState('')
   const [usersResponse, setUsersResponse] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   useEffect(() => {
     const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding`
@@ -25,7 +27,13 @@ function App() {
   useEffect(() => {
     const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding/users`
 
-    fetch(url)
+    const options = {
+      headers: {
+        Authorization: localStorage.getItem('token') ?? '',
+      },
+    }
+
+    fetch(url, options)
       .then((data) => {
         data.json().then((res) => {
           setUsersResponse(res)
@@ -35,6 +43,46 @@ function App() {
         console.dir(err)
       })
   }, [])
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.currentTarget.value)
+  }
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.currentTarget.value)
+  }
+
+  const handleLoginSubmit = async (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault()
+
+    const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding/login`
+
+    console.log('username: ' + username)
+    console.log('password: ' + password)
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      })
+
+      const json = await response.json()
+      console.log('POST /login response:')
+      console.dir(json)
+
+      // Save the token to local storage and include with all future requests.
+      localStorage.setItem('token', json.accessToken)
+    } catch (error) {
+      console.log('POST /login error:')
+      console.error(error)
+    }
+  }
 
   return (
     <>
@@ -54,9 +102,25 @@ function App() {
       <div>
         <label>
           Names:
-          <input type="text" placeholder="e.g. Mark & Nancy"></input>
+          <input
+            type="text"
+            placeholder="e.g. Mark & Nancy"
+            onChange={handleUsernameChange}
+            value={username}
+          />
           <p>Enter this as it appears on your invitation.</p>
         </label>
+
+        <label>
+          Password
+          <input
+            type="password"
+            onChange={handlePasswordChange}
+            value={password}
+          />
+        </label>
+
+        <button onClick={handleLoginSubmit}>Submit</button>
       </div>
 
       <div className="card">

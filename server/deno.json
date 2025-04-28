@@ -4,7 +4,9 @@
     "drizzle-kit": "npm:drizzle-kit@^0.31.0",
     "drizzle-orm": "npm:drizzle-orm@^0.41.0",
     "hono": "jsr:@hono/hono@^4.7.5",
-    "bcrypt": "jsr:@blackberry/bcrypt@0.17.0",
+    "bcrypt": "https://deno.land/x/bcrypt@v0.3.0/mod.ts",
+    "jsonwebtoken": "npm:jsonwebtoken@9.0.2",
+    "@types/jsonwebtoken": "npm:@types/jsonwebtoken@9.0.9",
     "pg": "npm:pg@^8.14.1"
   },
   "tasks": {

@@ -1,5 +1,7 @@
 {
   "imports": {
-    "@blackberry/bcrypt": "jsr:@blackberry/bcrypt@^0.17.0"
+    "@blackberry/bcrypt": "jsr:@blackberry/bcrypt@^0.17.0",
+    "@types/jsonwebtoken": "npm:@types/jsonwebtoken@9.0.9",
+    "jsonwebtoken": "npm:jsonwebtoken@9.0.2"
   }
 }

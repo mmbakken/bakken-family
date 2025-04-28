@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 
+const baseUrl =
+  import.meta.env.VITE_ENV === 'production'
+    ? `${window.location.origin}/api/v1`
+    : `http://localhost:8000/api/v1`
+
 const Login = () => {
   const navigate = useNavigate()
   const [apiResponse, setApiResponse] = useState('')
@@ -9,7 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding`
+    const url = `${baseUrl}/wedding`
 
     fetch(url)
       .then((data) => {
@@ -23,7 +28,7 @@ const Login = () => {
   }, [])
 
   useEffect(() => {
-    const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding/users`
+    const url = `${baseUrl}/wedding/users`
 
     const options = {
       headers: {
@@ -62,7 +67,7 @@ const Login = () => {
   }
 
   const login = async () => {
-    const url = `${import.meta.env.VITE_API_BASE_URL}/api/v1/wedding/login`
+    const url = `${baseUrl}/wedding/login`
 
     try {
       const response = await fetch(url, {

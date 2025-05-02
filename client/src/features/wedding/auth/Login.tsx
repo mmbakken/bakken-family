@@ -100,8 +100,8 @@ const Login = () => {
   }
 
   return (
-    <>
-      <h1>Login</h1>
+    <div>
+      <h1 className="text-3xl">Login</h1>
 
       <div>
         <label>
@@ -131,7 +131,7 @@ const Login = () => {
 
       <h2>API Response: {JSON.stringify(apiResponse, null, 2)}</h2>
       <h2>Users: {JSON.stringify(usersResponse, null, 2)}</h2>
-    </>
+    </div>
   )
 }
 

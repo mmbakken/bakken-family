@@ -1,4 +1,8 @@
+import { useTitle } from '../../../hooks'
+
 const Home = () => {
+  useTitle('Wedding')
+
   return (
     <div>
       <header>

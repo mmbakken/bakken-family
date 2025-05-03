@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { useTitle } from '../../../hooks'
 
 const baseUrl =
   import.meta.env.VITE_ENV === 'production'
@@ -7,6 +8,7 @@ const baseUrl =
     : `http://localhost:8000/api/v1`
 
 const Login = () => {
+  useTitle('Wedding - Login')
   const navigate = useNavigate()
   const [apiResponse, setApiResponse] = useState('')
   const [usersResponse, setUsersResponse] = useState('')
@@ -47,6 +49,10 @@ const Login = () => {
       })
   }, [])
 
+  //==================================================
+  // Event handlers
+  //==================================================
+
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.currentTarget.value)
   }
@@ -65,6 +71,10 @@ const Login = () => {
     e.preventDefault()
     await login()
   }
+
+  //==================================================
+  // API calls
+  //==================================================
 
   const login = async () => {
     const url = `${baseUrl}/wedding/login`
@@ -100,7 +110,7 @@ const Login = () => {
   }
 
   return (
-    <div>
+    <div className="flex gap-4">
       <h1 className="text-3xl">Login</h1>
 
       <div>

@@ -1,10 +1,15 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { logger } from 'hono/logger'
 import { login } from './auth/login.ts'
 import { authenticateToken } from './auth/authenticateToken.ts'
 import { getUsers } from './routes/users.ts'
+import { getGuests } from './routes/guests.ts'
+import { getRsvps } from './routes/rsvps.ts'
+import { getInvites } from './routes/invites.ts'
 
 const app = new Hono()
+app.use(logger())
 
 // CORS should be called before the route
 app.use(
@@ -43,5 +48,16 @@ app.get('/api/v1/wedding', (c) => {
 app.post('/api/v1/wedding/login', login)
 
 app.get('/api/v1/wedding/users', authenticateToken, getUsers)
+app.get('/api/v1/wedding/guests', authenticateToken, getGuests)
+app.get(
+  '/api/v1/wedding/rsvps',
+  authenticateToken,
+  getRsvps,
+)
+app.get(
+  '/api/v1/wedding/invites',
+  authenticateToken,
+  getInvites,
+)
 
 Deno.serve(app.fetch)

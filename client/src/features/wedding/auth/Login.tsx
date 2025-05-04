@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTitle } from '../../../hooks'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 const baseUrl =
   import.meta.env.VITE_ENV === 'production'
@@ -10,44 +12,8 @@ const baseUrl =
 const Login = () => {
   useTitle('Wedding - Login')
   const navigate = useNavigate()
-  const [apiResponse, setApiResponse] = useState('')
-  const [usersResponse, setUsersResponse] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
-  useEffect(() => {
-    const url = `${baseUrl}/wedding`
-
-    fetch(url)
-      .then((data) => {
-        data.json().then((res) => {
-          setApiResponse(res)
-        })
-      })
-      .catch((err) => {
-        console.dir(err)
-      })
-  }, [])
-
-  useEffect(() => {
-    const url = `${baseUrl}/wedding/users`
-
-    const options = {
-      headers: {
-        Authorization: localStorage.getItem('token') ?? '',
-      },
-    }
-
-    fetch(url, options)
-      .then((data) => {
-        data.json().then((res) => {
-          setUsersResponse(res)
-        })
-      })
-      .catch((err) => {
-        console.dir(err)
-      })
-  }, [])
 
   //==================================================
   // Event handlers
@@ -110,37 +76,50 @@ const Login = () => {
   }
 
   return (
-    <div className="flex gap-4">
-      <h1 className="text-3xl">Login</h1>
+    <div className="flex size-full flex-col items-center p-6 md:p-8">
+      <div className="flex max-w-md flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl text-neutral-900">Welcome!</h1>
+          <h2 className="text-md text-neutral-900">
+            Please enter the login info included on your invitation.
+          </h2>
+        </div>
 
-      <div>
-        <label>
-          Names:
-          <input
-            type="text"
-            placeholder="e.g. Mark & Nancy"
-            onChange={handleUsernameChange}
-            value={username}
-          />
-          <p>Enter this as it appears on your invitation.</p>
-        </label>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="input-name">Names:</label>
+              <Input
+                className="border-app-blush-900 bg-app-offwhite text-md text-app-blush-900 border"
+                id="input-name"
+                type="text"
+                placeholder="e.g. Matt & Hilary"
+                onChange={handleUsernameChange}
+                value={username}
+              />
+            </div>
 
-        <label>
-          Password
-          <input
-            type="password"
-            onChange={handlePasswordChange}
-            value={password}
-          />
-        </label>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="input-password">Password</label>
+              <Input
+                className="border-app-blush-900 bg-app-offwhite text-md text-app-blush-900 border"
+                id="input-password"
+                type="password"
+                onChange={handlePasswordChange}
+                value={password}
+              />
+            </div>
+          </div>
 
-        <button onKeyDown={handleKeyDown} onClick={handleLoginSubmit}>
-          Submit
-        </button>
+          <Button
+            className="disabled:cursor-disabled border-app-blush-900 bg-app-blush-700 w-40 cursor-pointer border"
+            onKeyDown={handleKeyDown}
+            onClick={handleLoginSubmit}
+          >
+            Log In
+          </Button>
+        </div>
       </div>
-
-      <h2>API Response: {JSON.stringify(apiResponse, null, 2)}</h2>
-      <h2>Users: {JSON.stringify(usersResponse, null, 2)}</h2>
     </div>
   )
 }

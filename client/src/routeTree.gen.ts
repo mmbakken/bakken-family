@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as WeddingIndexImport } from './routes/wedding/index'
+import { Route as WeddingRsvpImport } from './routes/wedding/rsvp'
 import { Route as WeddingLoginImport } from './routes/wedding/login'
 
 // Create/Update Routes
@@ -26,6 +27,12 @@ const IndexRoute = IndexImport.update({
 const WeddingIndexRoute = WeddingIndexImport.update({
   id: '/wedding/',
   path: '/wedding/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const WeddingRsvpRoute = WeddingRsvpImport.update({
+  id: '/wedding/rsvp',
+  path: '/wedding/rsvp',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,6 +60,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WeddingLoginImport
       parentRoute: typeof rootRoute
     }
+    '/wedding/rsvp': {
+      id: '/wedding/rsvp'
+      path: '/wedding/rsvp'
+      fullPath: '/wedding/rsvp'
+      preLoaderRoute: typeof WeddingRsvpImport
+      parentRoute: typeof rootRoute
+    }
     '/wedding/': {
       id: '/wedding/'
       path: '/wedding'
@@ -68,12 +82,14 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/wedding/login': typeof WeddingLoginRoute
+  '/wedding/rsvp': typeof WeddingRsvpRoute
   '/wedding': typeof WeddingIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/wedding/login': typeof WeddingLoginRoute
+  '/wedding/rsvp': typeof WeddingRsvpRoute
   '/wedding': typeof WeddingIndexRoute
 }
 
@@ -81,27 +97,30 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/wedding/login': typeof WeddingLoginRoute
+  '/wedding/rsvp': typeof WeddingRsvpRoute
   '/wedding/': typeof WeddingIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/wedding/login' | '/wedding'
+  fullPaths: '/' | '/wedding/login' | '/wedding/rsvp' | '/wedding'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/wedding/login' | '/wedding'
-  id: '__root__' | '/' | '/wedding/login' | '/wedding/'
+  to: '/' | '/wedding/login' | '/wedding/rsvp' | '/wedding'
+  id: '__root__' | '/' | '/wedding/login' | '/wedding/rsvp' | '/wedding/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   WeddingLoginRoute: typeof WeddingLoginRoute
+  WeddingRsvpRoute: typeof WeddingRsvpRoute
   WeddingIndexRoute: typeof WeddingIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   WeddingLoginRoute: WeddingLoginRoute,
+  WeddingRsvpRoute: WeddingRsvpRoute,
   WeddingIndexRoute: WeddingIndexRoute,
 }
 
@@ -117,6 +136,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/wedding/login",
+        "/wedding/rsvp",
         "/wedding/"
       ]
     },
@@ -125,6 +145,9 @@ export const routeTree = rootRoute
     },
     "/wedding/login": {
       "filePath": "wedding/login.tsx"
+    },
+    "/wedding/rsvp": {
+      "filePath": "wedding/rsvp.tsx"
     },
     "/wedding/": {
       "filePath": "wedding/index.tsx"

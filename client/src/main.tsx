@@ -1,9 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import App from '@/App'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
-
-// Tailwind CSS entry point.
-import './index.css'
 
 // Import the generated route tree.
 import { routeTree } from './routeTree.gen'
@@ -21,6 +19,8 @@ declare module '@tanstack/react-router' {
 // Render the app. Routes will render their applicable features.
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <App>
+      <RouterProvider router={router} />
+    </App>
   </StrictMode>,
 )

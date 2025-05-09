@@ -161,7 +161,7 @@ const seed = async () => {
     userId: usersByName['Nana & Grandad'].id,
   }
   const Uncle_Bill = {
-    fullName: 'William Merrick',
+    fullName: 'Bill Merrick',
     givenName: 'Bill',
     userId: usersByName['Uncle Bill'].id,
   }
@@ -290,8 +290,18 @@ const seed = async () => {
 
   // Create events
 
+  const wedding: typeof schema.events.$inferInsert = {
+    name: 'Wedding',
+    sort: 0,
+    location: 'Sky Valley Chateau, Steamboat Springs, CO',
+    description:
+      'General event placeholder for the main RSVP page. Gives a rough yes/no guest count.',
+  }
+
   const welcomeParty: typeof schema.events.$inferInsert = {
     name: 'Welcome Party',
+    sort: 1,
+    location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
       'Join us for an evening of tacos & margaritas to kick off the wedding weekend! Vegan & non-alcoholic options available as well.',
     startsAt: new Date('2025-10-10T22:00:00.000Z'), // 4pm MDT
@@ -300,6 +310,8 @@ const seed = async () => {
 
   const ceremony: typeof schema.events.$inferInsert = {
     name: 'Ceremony',
+    sort: 2,
+    location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description: 'Come watch us get married! Semi-formal attire.',
     startsAt: new Date('2025-10-11T20:30:00.000Z'), // 2:30pm MDT
     endsAt: new Date('2025-10-11T21:00:00.000Z'), // 3pm MDT
@@ -307,43 +319,57 @@ const seed = async () => {
 
   const reception: typeof schema.events.$inferInsert = {
     name: 'Reception',
+    sort: 3,
+    location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
       'Celebrate with us after the ceremony! Dinner, drinks, music, and good times.',
+    hasEntree: true,
     startsAt: new Date('2025-10-11T21:00:00.000Z'), // 3pm MDT
     endsAt: new Date('2025-10-13T03:00:00.000Z'), // 9pm MDT
   }
 
   const sundayHangout: typeof schema.events.$inferInsert = {
     name: 'Sunday Hangout',
+    sort: 4,
+    location: 'Steamboat Springs, CO',
     description:
       "TBD, but we'll have something going on during the day after the wedding - maybe visit the hot springs in Steamboat, hang out in town, something like that.",
   }
 
   const lodgingThu: typeof schema.events.$inferInsert = {
     name: 'Lodging - Thursday Night',
+    sort: 5,
+    location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
       'Stay with us at the Sky Valley Chateau on the night of Thursday, October 9th. Room assignments TBD.',
   }
 
   const lodgingFri: typeof schema.events.$inferInsert = {
     name: 'Lodging - Friday Night',
+    sort: 6,
+    location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
       'Stay with us at the Sky Valley Chateau on the night of Friday, October 10th. Room assignments TBD.',
   }
 
   const lodgingSat: typeof schema.events.$inferInsert = {
     name: 'Lodging - Saturday Night',
+    sort: 7,
+    location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
       'Stay with us at the Sky Valley Chateau on the night of Saturday, October 11th. Room assignments TBD. Please note - there will be an after party at the lodge following the wedding reception! This is not a good option if you need to go to bed early. Go to bed before midnight? Straight to jail.',
   }
 
   const lodgingSun: typeof schema.events.$inferInsert = {
     name: 'Lodging - Sunday Night',
+    sort: 8,
+    location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
       'Stay with us at the Sky Valley Chateau on the night of Sunday, October 12th. Room assignments TBD.',
   }
 
   const events = [
+    wedding,
     welcomeParty,
     ceremony,
     reception,
@@ -363,10 +389,10 @@ const seed = async () => {
   // Create invites
 
   // Organize the guests by userId so they're easier to look up.
-  const guestsByUserId = allGuests.reduce((guestsByUserId, guest) => {
-    guestsByUserId[guest.userId] = guest
-    return guestsByUserId
-  }, {} as { [guestId: string]: typeof schema.guests.$inferSelect })
+  const guestsByFullName = allGuests.reduce((guestsByFullName, guest) => {
+    guestsByFullName[guest.fullName] = guest
+    return guestsByFullName
+  }, {} as { [guestFullName: string]: typeof schema.guests.$inferSelect })
 
   // Organize the events by name so they're easier to look up.
   const eventsByName = allEvents.reduce((eventsByName, event) => {
@@ -376,990 +402,1106 @@ const seed = async () => {
 
   const Matt_Bakken_Invites = [
     {
-      guestId: guestsByUserId[Matt_Bakken.userId].id,
+      guestId: guestsByFullName[Matt_Bakken.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Matt_Bakken.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Matt_Bakken.userId].id,
+      guestId: guestsByFullName[Matt_Bakken.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Matt_Bakken.userId].id,
+      guestId: guestsByFullName[Matt_Bakken.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Matt_Bakken.userId].id,
+      guestId: guestsByFullName[Matt_Bakken.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
 
     // Lodging Events
     {
-      guestId: guestsByUserId[Matt_Bakken.userId].id,
+      guestId: guestsByFullName[Matt_Bakken.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Matt_Bakken.userId].id,
+      guestId: guestsByFullName[Matt_Bakken.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Matt_Bakken.userId].id,
+      guestId: guestsByFullName[Matt_Bakken.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Matt_Bakken.userId].id,
+      guestId: guestsByFullName[Matt_Bakken.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
 
   const Hilary_Lohman_Invites = [
     {
-      guestId: guestsByUserId[Hilary_Lohman.userId].id,
+      guestId: guestsByFullName[Hilary_Lohman.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Hilary_Lohman.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Hilary_Lohman.userId].id,
+      guestId: guestsByFullName[Hilary_Lohman.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Hilary_Lohman.userId].id,
+      guestId: guestsByFullName[Hilary_Lohman.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Hilary_Lohman.userId].id,
+      guestId: guestsByFullName[Hilary_Lohman.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Hilary_Lohman.userId].id,
+      guestId: guestsByFullName[Hilary_Lohman.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Hilary_Lohman.userId].id,
+      guestId: guestsByFullName[Hilary_Lohman.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Hilary_Lohman.userId].id,
+      guestId: guestsByFullName[Hilary_Lohman.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Hilary_Lohman.userId].id,
+      guestId: guestsByFullName[Hilary_Lohman.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Ashli_Rupe_Invites = [
     {
-      guestId: guestsByUserId[Ashli_Rupe.userId].id,
+      guestId: guestsByFullName[Ashli_Rupe.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Ashli_Rupe.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Ashli_Rupe.userId].id,
+      guestId: guestsByFullName[Ashli_Rupe.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Ashli_Rupe.userId].id,
+      guestId: guestsByFullName[Ashli_Rupe.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Ashli_Rupe.userId].id,
+      guestId: guestsByFullName[Ashli_Rupe.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Ashli_Rupe.userId].id,
+      guestId: guestsByFullName[Ashli_Rupe.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Ashli_Rupe.userId].id,
+      guestId: guestsByFullName[Ashli_Rupe.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Ashli_Rupe.userId].id,
+      guestId: guestsByFullName[Ashli_Rupe.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Ashli_Rupe.userId].id,
+      guestId: guestsByFullName[Ashli_Rupe.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const David_Rupe_Invites = [
     {
-      guestId: guestsByUserId[David_Rupe.userId].id,
+      guestId: guestsByFullName[David_Rupe.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[David_Rupe.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[David_Rupe.userId].id,
+      guestId: guestsByFullName[David_Rupe.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[David_Rupe.userId].id,
+      guestId: guestsByFullName[David_Rupe.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[David_Rupe.userId].id,
+      guestId: guestsByFullName[David_Rupe.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[David_Rupe.userId].id,
+      guestId: guestsByFullName[David_Rupe.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[David_Rupe.userId].id,
+      guestId: guestsByFullName[David_Rupe.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[David_Rupe.userId].id,
+      guestId: guestsByFullName[David_Rupe.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[David_Rupe.userId].id,
+      guestId: guestsByFullName[David_Rupe.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Henry_Rupe_Invites = [
     {
-      guestId: guestsByUserId[Henry_Rupe.userId].id,
+      guestId: guestsByFullName[Henry_Rupe.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Henry_Rupe.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Henry_Rupe.userId].id,
+      guestId: guestsByFullName[Henry_Rupe.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Henry_Rupe.userId].id,
+      guestId: guestsByFullName[Henry_Rupe.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Henry_Rupe.userId].id,
+      guestId: guestsByFullName[Henry_Rupe.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Henry_Rupe.userId].id,
+      guestId: guestsByFullName[Henry_Rupe.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Henry_Rupe.userId].id,
+      guestId: guestsByFullName[Henry_Rupe.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Henry_Rupe.userId].id,
+      guestId: guestsByFullName[Henry_Rupe.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Henry_Rupe.userId].id,
+      guestId: guestsByFullName[Henry_Rupe.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Madelyn_Rupe_Invites = [
     {
-      guestId: guestsByUserId[Madelyn_Rupe.userId].id,
+      guestId: guestsByFullName[Madelyn_Rupe.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Madelyn_Rupe.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Madelyn_Rupe.userId].id,
+      guestId: guestsByFullName[Madelyn_Rupe.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Madelyn_Rupe.userId].id,
+      guestId: guestsByFullName[Madelyn_Rupe.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Madelyn_Rupe.userId].id,
+      guestId: guestsByFullName[Madelyn_Rupe.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Madelyn_Rupe.userId].id,
+      guestId: guestsByFullName[Madelyn_Rupe.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Madelyn_Rupe.userId].id,
+      guestId: guestsByFullName[Madelyn_Rupe.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Madelyn_Rupe.userId].id,
+      guestId: guestsByFullName[Madelyn_Rupe.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Madelyn_Rupe.userId].id,
+      guestId: guestsByFullName[Madelyn_Rupe.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Hannah_Lohman_Invites = [
     {
-      guestId: guestsByUserId[Hannah_Lohman.userId].id,
+      guestId: guestsByFullName[Hannah_Lohman.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Hannah_Lohman.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Hannah_Lohman.userId].id,
+      guestId: guestsByFullName[Hannah_Lohman.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Hannah_Lohman.userId].id,
+      guestId: guestsByFullName[Hannah_Lohman.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Hannah_Lohman.userId].id,
+      guestId: guestsByFullName[Hannah_Lohman.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Hannah_Lohman.userId].id,
+      guestId: guestsByFullName[Hannah_Lohman.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Hannah_Lohman.userId].id,
+      guestId: guestsByFullName[Hannah_Lohman.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Hannah_Lohman.userId].id,
+      guestId: guestsByFullName[Hannah_Lohman.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Hannah_Lohman.userId].id,
+      guestId: guestsByFullName[Hannah_Lohman.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Jeff_Wallace_Invites = [
     {
-      guestId: guestsByUserId[Jeff_Wallace.userId].id,
+      guestId: guestsByFullName[Jeff_Wallace.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Jeff_Wallace.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Jeff_Wallace.userId].id,
+      guestId: guestsByFullName[Jeff_Wallace.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Jeff_Wallace.userId].id,
+      guestId: guestsByFullName[Jeff_Wallace.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Jeff_Wallace.userId].id,
+      guestId: guestsByFullName[Jeff_Wallace.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Jeff_Wallace.userId].id,
+      guestId: guestsByFullName[Jeff_Wallace.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Jeff_Wallace.userId].id,
+      guestId: guestsByFullName[Jeff_Wallace.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Jeff_Wallace.userId].id,
+      guestId: guestsByFullName[Jeff_Wallace.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Jeff_Wallace.userId].id,
+      guestId: guestsByFullName[Jeff_Wallace.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Shaina_Lohman_Invites = [
     {
-      guestId: guestsByUserId[Shaina_Lohman.userId].id,
+      guestId: guestsByFullName[Shaina_Lohman.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Shaina_Lohman.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Shaina_Lohman.userId].id,
+      guestId: guestsByFullName[Shaina_Lohman.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Shaina_Lohman.userId].id,
+      guestId: guestsByFullName[Shaina_Lohman.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Shaina_Lohman.userId].id,
+      guestId: guestsByFullName[Shaina_Lohman.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Shaina_Lohman.userId].id,
+      guestId: guestsByFullName[Shaina_Lohman.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Shaina_Lohman.userId].id,
+      guestId: guestsByFullName[Shaina_Lohman.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Shaina_Lohman.userId].id,
+      guestId: guestsByFullName[Shaina_Lohman.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Shaina_Lohman.userId].id,
+      guestId: guestsByFullName[Shaina_Lohman.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Miles_Loftin_Invites = [
     {
-      guestId: guestsByUserId[Miles_Loftin.userId].id,
+      guestId: guestsByFullName[Miles_Loftin.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Miles_Loftin.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Miles_Loftin.userId].id,
+      guestId: guestsByFullName[Miles_Loftin.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Miles_Loftin.userId].id,
+      guestId: guestsByFullName[Miles_Loftin.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Miles_Loftin.userId].id,
+      guestId: guestsByFullName[Miles_Loftin.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Miles_Loftin.userId].id,
+      guestId: guestsByFullName[Miles_Loftin.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Miles_Loftin.userId].id,
+      guestId: guestsByFullName[Miles_Loftin.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Miles_Loftin.userId].id,
+      guestId: guestsByFullName[Miles_Loftin.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Miles_Loftin.userId].id,
+      guestId: guestsByFullName[Miles_Loftin.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Matthew_Lohman_Invites = [
     {
-      guestId: guestsByUserId[Matthew_Lohman.userId].id,
+      guestId: guestsByFullName[Matthew_Lohman.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Matthew_Lohman.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Matthew_Lohman.userId].id,
+      guestId: guestsByFullName[Matthew_Lohman.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Matthew_Lohman.userId].id,
+      guestId: guestsByFullName[Matthew_Lohman.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Matthew_Lohman.userId].id,
+      guestId: guestsByFullName[Matthew_Lohman.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Matthew_Lohman.userId].id,
+      guestId: guestsByFullName[Matthew_Lohman.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Matthew_Lohman.userId].id,
+      guestId: guestsByFullName[Matthew_Lohman.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Matthew_Lohman.userId].id,
+      guestId: guestsByFullName[Matthew_Lohman.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Matthew_Lohman.userId].id,
+      guestId: guestsByFullName[Matthew_Lohman.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Daniel_Lohman_Invites = [
     {
-      guestId: guestsByUserId[Daniel_Lohman.userId].id,
+      guestId: guestsByFullName[Daniel_Lohman.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Daniel_Lohman.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Daniel_Lohman.userId].id,
+      guestId: guestsByFullName[Daniel_Lohman.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Daniel_Lohman.userId].id,
+      guestId: guestsByFullName[Daniel_Lohman.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Daniel_Lohman.userId].id,
+      guestId: guestsByFullName[Daniel_Lohman.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Daniel_Lohman.userId].id,
+      guestId: guestsByFullName[Daniel_Lohman.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Daniel_Lohman.userId].id,
+      guestId: guestsByFullName[Daniel_Lohman.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Daniel_Lohman.userId].id,
+      guestId: guestsByFullName[Daniel_Lohman.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Daniel_Lohman.userId].id,
+      guestId: guestsByFullName[Daniel_Lohman.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Alex_Bakken_Invites = [
     {
-      guestId: guestsByUserId[Alex_Bakken.userId].id,
+      guestId: guestsByFullName[Alex_Bakken.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Alex_Bakken.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Alex_Bakken.userId].id,
+      guestId: guestsByFullName[Alex_Bakken.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Alex_Bakken.userId].id,
+      guestId: guestsByFullName[Alex_Bakken.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Alex_Bakken.userId].id,
+      guestId: guestsByFullName[Alex_Bakken.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Alex_Bakken.userId].id,
+      guestId: guestsByFullName[Alex_Bakken.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Alex_Bakken.userId].id,
+      guestId: guestsByFullName[Alex_Bakken.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Alex_Bakken.userId].id,
+      guestId: guestsByFullName[Alex_Bakken.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Alex_Bakken.userId].id,
+      guestId: guestsByFullName[Alex_Bakken.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Brittany_Gottchalk_Invites = [
     {
-      guestId: guestsByUserId[Brittany_Gottchalk.userId].id,
+      guestId: guestsByFullName[Brittany_Gottchalk.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Brittany_Gottchalk.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Brittany_Gottchalk.userId].id,
+      guestId: guestsByFullName[Brittany_Gottchalk.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Brittany_Gottchalk.userId].id,
+      guestId: guestsByFullName[Brittany_Gottchalk.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Brittany_Gottchalk.userId].id,
+      guestId: guestsByFullName[Brittany_Gottchalk.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Brittany_Gottchalk.userId].id,
+      guestId: guestsByFullName[Brittany_Gottchalk.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Brittany_Gottchalk.userId].id,
+      guestId: guestsByFullName[Brittany_Gottchalk.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Brittany_Gottchalk.userId].id,
+      guestId: guestsByFullName[Brittany_Gottchalk.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Brittany_Gottchalk.userId].id,
+      guestId: guestsByFullName[Brittany_Gottchalk.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Emma_Bakken_Invites = [
     {
-      guestId: guestsByUserId[Emma_Bakken.userId].id,
+      guestId: guestsByFullName[Emma_Bakken.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Emma_Bakken.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Emma_Bakken.userId].id,
+      guestId: guestsByFullName[Emma_Bakken.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Emma_Bakken.userId].id,
+      guestId: guestsByFullName[Emma_Bakken.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Emma_Bakken.userId].id,
+      guestId: guestsByFullName[Emma_Bakken.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Emma_Bakken.userId].id,
+      guestId: guestsByFullName[Emma_Bakken.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Emma_Bakken.userId].id,
+      guestId: guestsByFullName[Emma_Bakken.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Emma_Bakken.userId].id,
+      guestId: guestsByFullName[Emma_Bakken.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Emma_Bakken.userId].id,
+      guestId: guestsByFullName[Emma_Bakken.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Jake_Genova_Invites = [
     {
-      guestId: guestsByUserId[Jake_Genova.userId].id,
+      guestId: guestsByFullName[Jake_Genova.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Jake_Genova.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Jake_Genova.userId].id,
+      guestId: guestsByFullName[Jake_Genova.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Jake_Genova.userId].id,
+      guestId: guestsByFullName[Jake_Genova.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Jake_Genova.userId].id,
+      guestId: guestsByFullName[Jake_Genova.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Jake_Genova.userId].id,
+      guestId: guestsByFullName[Jake_Genova.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Jake_Genova.userId].id,
+      guestId: guestsByFullName[Jake_Genova.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Jake_Genova.userId].id,
+      guestId: guestsByFullName[Jake_Genova.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Jake_Genova.userId].id,
+      guestId: guestsByFullName[Jake_Genova.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Taylor_Paddock_Invites = [
     {
-      guestId: guestsByUserId[Taylor_Paddock.userId].id,
+      guestId: guestsByFullName[Taylor_Paddock.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Taylor_Paddock.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Taylor_Paddock.userId].id,
+      guestId: guestsByFullName[Taylor_Paddock.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Taylor_Paddock.userId].id,
+      guestId: guestsByFullName[Taylor_Paddock.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Taylor_Paddock.userId].id,
+      guestId: guestsByFullName[Taylor_Paddock.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Taylor_Paddock.userId].id,
+      guestId: guestsByFullName[Taylor_Paddock.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Taylor_Paddock.userId].id,
+      guestId: guestsByFullName[Taylor_Paddock.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Taylor_Paddock.userId].id,
+      guestId: guestsByFullName[Taylor_Paddock.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Taylor_Paddock.userId].id,
+      guestId: guestsByFullName[Taylor_Paddock.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Cassie_Paddock_Invites = [
     {
-      guestId: guestsByUserId[Cassie_Paddock.userId].id,
+      guestId: guestsByFullName[Cassie_Paddock.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Cassie_Paddock.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Cassie_Paddock.userId].id,
+      guestId: guestsByFullName[Cassie_Paddock.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Cassie_Paddock.userId].id,
+      guestId: guestsByFullName[Cassie_Paddock.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Cassie_Paddock.userId].id,
+      guestId: guestsByFullName[Cassie_Paddock.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Cassie_Paddock.userId].id,
+      guestId: guestsByFullName[Cassie_Paddock.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Cassie_Paddock.userId].id,
+      guestId: guestsByFullName[Cassie_Paddock.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Cassie_Paddock.userId].id,
+      guestId: guestsByFullName[Cassie_Paddock.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Cassie_Paddock.userId].id,
+      guestId: guestsByFullName[Cassie_Paddock.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Jack_Stigler_Invites = [
     {
-      guestId: guestsByUserId[Jack_Stigler.userId].id,
+      guestId: guestsByFullName[Jack_Stigler.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Jack_Stigler.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Jack_Stigler.userId].id,
+      guestId: guestsByFullName[Jack_Stigler.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Jack_Stigler.userId].id,
+      guestId: guestsByFullName[Jack_Stigler.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Jack_Stigler.userId].id,
+      guestId: guestsByFullName[Jack_Stigler.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Jack_Stigler.userId].id,
+      guestId: guestsByFullName[Jack_Stigler.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Jack_Stigler.userId].id,
+      guestId: guestsByFullName[Jack_Stigler.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Jack_Stigler.userId].id,
+      guestId: guestsByFullName[Jack_Stigler.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Jack_Stigler.userId].id,
+      guestId: guestsByFullName[Jack_Stigler.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Nathan_Vogel_Invites = [
     {
-      guestId: guestsByUserId[Nathan_Vogel.userId].id,
+      guestId: guestsByFullName[Nathan_Vogel.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Nathan_Vogel.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Nathan_Vogel.userId].id,
+      guestId: guestsByFullName[Nathan_Vogel.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Nathan_Vogel.userId].id,
+      guestId: guestsByFullName[Nathan_Vogel.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Nathan_Vogel.userId].id,
+      guestId: guestsByFullName[Nathan_Vogel.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Nathan_Vogel.userId].id,
+      guestId: guestsByFullName[Nathan_Vogel.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Nathan_Vogel.userId].id,
+      guestId: guestsByFullName[Nathan_Vogel.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Nathan_Vogel.userId].id,
+      guestId: guestsByFullName[Nathan_Vogel.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Nathan_Vogel.userId].id,
+      guestId: guestsByFullName[Nathan_Vogel.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Alexandria_Odekirk_Invites = [
     {
-      guestId: guestsByUserId[Alexandria_Odekirk.userId].id,
+      guestId: guestsByFullName[Alexandria_Odekirk.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Alexandria_Odekirk.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Alexandria_Odekirk.userId].id,
+      guestId: guestsByFullName[Alexandria_Odekirk.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Alexandria_Odekirk.userId].id,
+      guestId: guestsByFullName[Alexandria_Odekirk.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Alexandria_Odekirk.userId].id,
+      guestId: guestsByFullName[Alexandria_Odekirk.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Alexandria_Odekirk.userId].id,
+      guestId: guestsByFullName[Alexandria_Odekirk.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Alexandria_Odekirk.userId].id,
+      guestId: guestsByFullName[Alexandria_Odekirk.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Alexandria_Odekirk.userId].id,
+      guestId: guestsByFullName[Alexandria_Odekirk.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Alexandria_Odekirk.userId].id,
+      guestId: guestsByFullName[Alexandria_Odekirk.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Heggi_Aschul_Invites = [
     {
-      guestId: guestsByUserId[Heggi_Aschul.userId].id,
+      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Heggi_Aschul.userId].id,
+      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Heggi_Aschul.userId].id,
+      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Heggi_Aschul.userId].id,
+      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Heggi_Aschul.userId].id,
+      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Heggi_Aschul.userId].id,
+      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Heggi_Aschul.userId].id,
+      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Heggi_Aschul.userId].id,
+      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const William_Lee_Invites = [
     {
-      guestId: guestsByUserId[William_Lee.userId].id,
+      guestId: guestsByFullName[William_Lee.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[William_Lee.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[William_Lee.userId].id,
+      guestId: guestsByFullName[William_Lee.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[William_Lee.userId].id,
+      guestId: guestsByFullName[William_Lee.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[William_Lee.userId].id,
+      guestId: guestsByFullName[William_Lee.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[William_Lee.userId].id,
+      guestId: guestsByFullName[William_Lee.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[William_Lee.userId].id,
+      guestId: guestsByFullName[William_Lee.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[William_Lee.userId].id,
+      guestId: guestsByFullName[William_Lee.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[William_Lee.userId].id,
+      guestId: guestsByFullName[William_Lee.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Kelsey_Carroll_Invites = [
     {
-      guestId: guestsByUserId[Kelsey_Carroll.userId].id,
+      guestId: guestsByFullName[Kelsey_Carroll.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Kelsey_Carroll.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Kelsey_Carroll.userId].id,
+      guestId: guestsByFullName[Kelsey_Carroll.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Kelsey_Carroll.userId].id,
+      guestId: guestsByFullName[Kelsey_Carroll.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Kelsey_Carroll.userId].id,
+      guestId: guestsByFullName[Kelsey_Carroll.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Kelsey_Carroll.userId].id,
+      guestId: guestsByFullName[Kelsey_Carroll.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Kelsey_Carroll.userId].id,
+      guestId: guestsByFullName[Kelsey_Carroll.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Kelsey_Carroll.userId].id,
+      guestId: guestsByFullName[Kelsey_Carroll.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Kelsey_Carroll.userId].id,
+      guestId: guestsByFullName[Kelsey_Carroll.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Jon_Carroll_Invites = [
     {
-      guestId: guestsByUserId[Jon_Carroll.userId].id,
+      guestId: guestsByFullName[Jon_Carroll.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Jon_Carroll.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Jon_Carroll.userId].id,
+      guestId: guestsByFullName[Jon_Carroll.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Jon_Carroll.userId].id,
+      guestId: guestsByFullName[Jon_Carroll.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Jon_Carroll.userId].id,
+      guestId: guestsByFullName[Jon_Carroll.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Jon_Carroll.userId].id,
+      guestId: guestsByFullName[Jon_Carroll.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Jon_Carroll.userId].id,
+      guestId: guestsByFullName[Jon_Carroll.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Jon_Carroll.userId].id,
+      guestId: guestsByFullName[Jon_Carroll.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Jon_Carroll.userId].id,
+      guestId: guestsByFullName[Jon_Carroll.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const David_Wu_Invites = [
     {
-      guestId: guestsByUserId[David_Wu.userId].id,
+      guestId: guestsByFullName[David_Wu.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[David_Wu.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[David_Wu.userId].id,
+      guestId: guestsByFullName[David_Wu.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[David_Wu.userId].id,
+      guestId: guestsByFullName[David_Wu.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[David_Wu.userId].id,
+      guestId: guestsByFullName[David_Wu.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[David_Wu.userId].id,
+      guestId: guestsByFullName[David_Wu.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[David_Wu.userId].id,
+      guestId: guestsByFullName[David_Wu.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[David_Wu.userId].id,
+      guestId: guestsByFullName[David_Wu.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[David_Wu.userId].id,
+      guestId: guestsByFullName[David_Wu.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Delanie_Wu_Invites = [
     {
-      guestId: guestsByUserId[Delanie_Wu.userId].id,
+      guestId: guestsByFullName[Delanie_Wu.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Delanie_Wu.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Delanie_Wu.userId].id,
+      guestId: guestsByFullName[Delanie_Wu.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Delanie_Wu.userId].id,
+      guestId: guestsByFullName[Delanie_Wu.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Delanie_Wu.userId].id,
+      guestId: guestsByFullName[Delanie_Wu.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Delanie_Wu.userId].id,
+      guestId: guestsByFullName[Delanie_Wu.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Delanie_Wu.userId].id,
+      guestId: guestsByFullName[Delanie_Wu.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Delanie_Wu.userId].id,
+      guestId: guestsByFullName[Delanie_Wu.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Delanie_Wu.userId].id,
+      guestId: guestsByFullName[Delanie_Wu.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Michele_Gaffigan_Invites = [
     {
-      guestId: guestsByUserId[Michele_Gaffigan.userId].id,
+      guestId: guestsByFullName[Michele_Gaffigan.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Michele_Gaffigan.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Michele_Gaffigan.userId].id,
+      guestId: guestsByFullName[Michele_Gaffigan.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Michele_Gaffigan.userId].id,
+      guestId: guestsByFullName[Michele_Gaffigan.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Michele_Gaffigan.userId].id,
+      guestId: guestsByFullName[Michele_Gaffigan.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Michele_Gaffigan.userId].id,
+      guestId: guestsByFullName[Michele_Gaffigan.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Michele_Gaffigan.userId].id,
+      guestId: guestsByFullName[Michele_Gaffigan.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Michele_Gaffigan.userId].id,
+      guestId: guestsByFullName[Michele_Gaffigan.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Michele_Gaffigan.userId].id,
+      guestId: guestsByFullName[Michele_Gaffigan.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
   const Kenny_Hunt_Invites = [
     {
-      guestId: guestsByUserId[Kenny_Hunt.userId].id,
+      guestId: guestsByFullName[Kenny_Hunt.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Kenny_Hunt.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Kenny_Hunt.userId].id,
+      guestId: guestsByFullName[Kenny_Hunt.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Kenny_Hunt.userId].id,
+      guestId: guestsByFullName[Kenny_Hunt.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Kenny_Hunt.userId].id,
+      guestId: guestsByFullName[Kenny_Hunt.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByUserId[Kenny_Hunt.userId].id,
+      guestId: guestsByFullName[Kenny_Hunt.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByUserId[Kenny_Hunt.userId].id,
+      guestId: guestsByFullName[Kenny_Hunt.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByUserId[Kenny_Hunt.userId].id,
+      guestId: guestsByFullName[Kenny_Hunt.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByUserId[Kenny_Hunt.userId].id,
+      guestId: guestsByFullName[Kenny_Hunt.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
@@ -1367,163 +1509,199 @@ const seed = async () => {
   // No lodging invites
   const Chase_Stephens_Invites = [
     {
-      guestId: guestsByUserId[Chase_Stephens.userId].id,
+      guestId: guestsByFullName[Chase_Stephens.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Chase_Stephens.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Chase_Stephens.userId].id,
+      guestId: guestsByFullName[Chase_Stephens.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Chase_Stephens.userId].id,
+      guestId: guestsByFullName[Chase_Stephens.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Chase_Stephens.userId].id,
+      guestId: guestsByFullName[Chase_Stephens.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
   ]
   const Caitlin_Stephens_Invites = [
     {
-      guestId: guestsByUserId[Caitlin_Stephens.userId].id,
+      guestId: guestsByFullName[Caitlin_Stephens.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Caitlin_Stephens.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Caitlin_Stephens.userId].id,
+      guestId: guestsByFullName[Caitlin_Stephens.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Caitlin_Stephens.userId].id,
+      guestId: guestsByFullName[Caitlin_Stephens.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Caitlin_Stephens.userId].id,
+      guestId: guestsByFullName[Caitlin_Stephens.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
   ]
   const Uncle_Bill_Invites = [
     {
-      guestId: guestsByUserId[Uncle_Bill.userId].id,
+      guestId: guestsByFullName[Uncle_Bill.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Uncle_Bill.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Uncle_Bill.userId].id,
+      guestId: guestsByFullName[Uncle_Bill.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Uncle_Bill.userId].id,
+      guestId: guestsByFullName[Uncle_Bill.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Uncle_Bill.userId].id,
+      guestId: guestsByFullName[Uncle_Bill.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
   ]
   const Mark_Lohman_Invites = [
     {
-      guestId: guestsByUserId[Mark_Lohman.userId].id,
+      guestId: guestsByFullName[Mark_Lohman.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Mark_Lohman.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Mark_Lohman.userId].id,
+      guestId: guestsByFullName[Mark_Lohman.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Mark_Lohman.userId].id,
+      guestId: guestsByFullName[Mark_Lohman.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Mark_Lohman.userId].id,
+      guestId: guestsByFullName[Mark_Lohman.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
   ]
   const Nancy_Lohman_Invites = [
     {
-      guestId: guestsByUserId[Nancy_Lohman.userId].id,
+      guestId: guestsByFullName[Nancy_Lohman.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Nancy_Lohman.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Nancy_Lohman.userId].id,
+      guestId: guestsByFullName[Nancy_Lohman.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Nancy_Lohman.userId].id,
+      guestId: guestsByFullName[Nancy_Lohman.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Nancy_Lohman.userId].id,
+      guestId: guestsByFullName[Nancy_Lohman.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
   ]
   const Mark_Bakken_Invites = [
     {
-      guestId: guestsByUserId[Mark_Bakken.userId].id,
+      guestId: guestsByFullName[Mark_Bakken.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Mark_Bakken.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Mark_Bakken.userId].id,
+      guestId: guestsByFullName[Mark_Bakken.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Mark_Bakken.userId].id,
+      guestId: guestsByFullName[Mark_Bakken.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Mark_Bakken.userId].id,
+      guestId: guestsByFullName[Mark_Bakken.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
   ]
   const Peggy_Bakken_Invites = [
     {
-      guestId: guestsByUserId[Peggy_Bakken.userId].id,
+      guestId: guestsByFullName[Peggy_Bakken.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Peggy_Bakken.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Peggy_Bakken.userId].id,
+      guestId: guestsByFullName[Peggy_Bakken.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Peggy_Bakken.userId].id,
+      guestId: guestsByFullName[Peggy_Bakken.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Peggy_Bakken.userId].id,
+      guestId: guestsByFullName[Peggy_Bakken.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
   ]
   const Nana_Invites = [
     {
-      guestId: guestsByUserId[Nana.userId].id,
+      guestId: guestsByFullName[Nana.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Nana.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Nana.userId].id,
+      guestId: guestsByFullName[Nana.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Nana.userId].id,
+      guestId: guestsByFullName[Nana.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Nana.userId].id,
+      guestId: guestsByFullName[Nana.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
   ]
   const Grandad_Invites = [
     {
-      guestId: guestsByUserId[Grandad.userId].id,
+      guestId: guestsByFullName[Grandad.fullName].id,
+      eventId: eventsByName[wedding.name].id,
+    },
+    {
+      guestId: guestsByFullName[Grandad.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByUserId[Grandad.userId].id,
+      guestId: guestsByFullName[Grandad.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByUserId[Grandad.userId].id,
+      guestId: guestsByFullName[Grandad.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByUserId[Grandad.userId].id,
+      guestId: guestsByFullName[Grandad.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
   ]

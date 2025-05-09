@@ -22,8 +22,11 @@ export const guests = pgTable('guests', {
 // Events describe a scheduled part of the wedding weekend.
 export const events = pgTable('events', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  sort: integer().notNull(),
   name: text().notNull().unique(),
   description: text(),
+  location: text(),
+  hasEntree: boolean().notNull().default(false),
   startsAt: timestamp('starts_at'),
   endsAt: timestamp('ends_at'),
 })
@@ -43,6 +46,7 @@ export const rsvps = pgTable('rsvps', {
   guestId: integer('guest_id').notNull().references(() => guests.id),
   eventId: integer('event_id').notNull().references(() => events.id),
   accepted: boolean().notNull(),
+  entree: text(),
   createdOn: timestamp('created_on').notNull().defaultNow(),
   updatedOn: timestamp('updated_on').notNull().defaultNow(),
 })

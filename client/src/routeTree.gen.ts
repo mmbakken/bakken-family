@@ -15,6 +15,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as WeddingIndexImport } from './routes/wedding/index'
 import { Route as WeddingRsvpImport } from './routes/wedding/rsvp'
 import { Route as WeddingLoginImport } from './routes/wedding/login'
+import { Route as WeddingAdminImport } from './routes/wedding/admin'
 
 // Create/Update Routes
 
@@ -42,6 +43,12 @@ const WeddingLoginRoute = WeddingLoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const WeddingAdminRoute = WeddingAdminImport.update({
+  id: '/wedding/admin',
+  path: '/wedding/admin',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -51,6 +58,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/wedding/admin': {
+      id: '/wedding/admin'
+      path: '/wedding/admin'
+      fullPath: '/wedding/admin'
+      preLoaderRoute: typeof WeddingAdminImport
       parentRoute: typeof rootRoute
     }
     '/wedding/login': {
@@ -81,6 +95,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/wedding/admin': typeof WeddingAdminRoute
   '/wedding/login': typeof WeddingLoginRoute
   '/wedding/rsvp': typeof WeddingRsvpRoute
   '/wedding': typeof WeddingIndexRoute
@@ -88,6 +103,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/wedding/admin': typeof WeddingAdminRoute
   '/wedding/login': typeof WeddingLoginRoute
   '/wedding/rsvp': typeof WeddingRsvpRoute
   '/wedding': typeof WeddingIndexRoute
@@ -96,6 +112,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/wedding/admin': typeof WeddingAdminRoute
   '/wedding/login': typeof WeddingLoginRoute
   '/wedding/rsvp': typeof WeddingRsvpRoute
   '/wedding/': typeof WeddingIndexRoute
@@ -103,15 +120,27 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/wedding/login' | '/wedding/rsvp' | '/wedding'
+  fullPaths:
+    | '/'
+    | '/wedding/admin'
+    | '/wedding/login'
+    | '/wedding/rsvp'
+    | '/wedding'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/wedding/login' | '/wedding/rsvp' | '/wedding'
-  id: '__root__' | '/' | '/wedding/login' | '/wedding/rsvp' | '/wedding/'
+  to: '/' | '/wedding/admin' | '/wedding/login' | '/wedding/rsvp' | '/wedding'
+  id:
+    | '__root__'
+    | '/'
+    | '/wedding/admin'
+    | '/wedding/login'
+    | '/wedding/rsvp'
+    | '/wedding/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  WeddingAdminRoute: typeof WeddingAdminRoute
   WeddingLoginRoute: typeof WeddingLoginRoute
   WeddingRsvpRoute: typeof WeddingRsvpRoute
   WeddingIndexRoute: typeof WeddingIndexRoute
@@ -119,6 +148,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  WeddingAdminRoute: WeddingAdminRoute,
   WeddingLoginRoute: WeddingLoginRoute,
   WeddingRsvpRoute: WeddingRsvpRoute,
   WeddingIndexRoute: WeddingIndexRoute,
@@ -135,6 +165,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/wedding/admin",
         "/wedding/login",
         "/wedding/rsvp",
         "/wedding/"
@@ -142,6 +173,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/wedding/admin": {
+      "filePath": "wedding/admin.tsx"
     },
     "/wedding/login": {
       "filePath": "wedding/login.tsx"

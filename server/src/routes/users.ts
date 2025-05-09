@@ -4,6 +4,10 @@ import * as schema from '../../db/schema.ts'
 
 const db = drizzle(Deno.env.get('DATABASE_URL')!, { schema })
 
+export const getUser = (c: Context) => {
+  return c.json(c.get('user'))
+}
+
 export const getUsers = async (c: Context) => {
   const allUsers = await db.select({
     username: schema.users.username,

@@ -1,0 +1,47 @@
+// See Drizzle schema and Hono routes for source of all API response types.
+export type UserT = {
+  id: string
+  username: string
+  role: number
+}
+
+export type GuestT = {
+  id: string
+  userId: string
+  fullName: string
+  givenName: string
+  allergies: string | null
+}
+
+export type RsvpT = {
+  id: string
+  guestId: string
+  eventId: string
+  accepted: boolean
+  entree: string | null
+  createdOn: string // timestamp
+  updatedOn: string // timestamp
+}
+
+export type EventT = {
+  id: string
+  order: number
+  name: string
+  location: string | null
+  description: string | null
+  hasEntree: boolean
+  startsAt: Date | null
+  endsAt: Date | null
+}
+
+// Join type of Invite table and Event table.
+export type InviteT = {
+  id: string
+  guestId: string
+  eventId: string
+  eventName: string
+  eventDescription: string | null
+  eventHasEntree: boolean
+  eventStartsAt: Date | null
+  eventEndsAt: Date | null
+}

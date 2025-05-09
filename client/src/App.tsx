@@ -6,7 +6,7 @@ interface AppProps {
 }
 
 const App = ({ children }: AppProps) => {
-  return <div className="bg-app-blush-100 h-screen w-screen">{children}</div>
+  return <div className="">{children}</div>
 }
 
 export default App

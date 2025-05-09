@@ -3,9 +3,10 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { login } from './auth/login.ts'
 import { authenticateToken } from './auth/authenticateToken.ts'
-import { getUsers } from './routes/users.ts'
+import { getUser, getUsers } from './routes/users.ts'
 import { getGuests } from './routes/guests.ts'
-import { getRsvps } from './routes/rsvps.ts'
+import { addRsvp, getRsvps } from './routes/rsvps.ts'
+import { getEvents } from './routes/events.ts'
 import { getInvites } from './routes/invites.ts'
 
 const app = new Hono()
@@ -47,17 +48,35 @@ app.get('/api/v1/wedding', (c) => {
 
 app.post('/api/v1/wedding/login', login)
 
+// Test endpoint to validate auth/token works. Do we need this anymore?
 app.get('/api/v1/wedding/users', authenticateToken, getUsers)
+app.get('/api/v1/wedding/user', authenticateToken, getUser)
+
 app.get('/api/v1/wedding/guests', authenticateToken, getGuests)
 app.get(
-  '/api/v1/wedding/rsvps',
+  '/api/v1/wedding/events',
   authenticateToken,
-  getRsvps,
+  getEvents,
 )
 app.get(
   '/api/v1/wedding/invites',
   authenticateToken,
   getInvites,
 )
+
+app.get(
+  '/api/v1/wedding/rsvps',
+  authenticateToken,
+  getRsvps,
+)
+
+app.post(
+  '/api/v1/wedding/rsvp',
+  authenticateToken,
+  addRsvp,
+)
+
+// TODO: Add an endpoint to submit RSVP form responses.
+// Should create an RSVP record in the DB for each guest invite.
 
 Deno.serve(app.fetch)

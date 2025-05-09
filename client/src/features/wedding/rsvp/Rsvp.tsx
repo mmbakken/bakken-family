@@ -1,97 +1,61 @@
-import { useEffect, useState } from 'react'
 import { useTitle } from '@/hooks'
-
-const baseUrl =
-  import.meta.env.VITE_ENV === 'production'
-    ? `${window.location.origin}/api/v1`
-    : `http://localhost:8000/api/v1`
+import { STEPS } from '@/features/wedding/constants'
+import { getIsLoadingRsvpData, getRsvpStep } from '@/features/wedding/slice'
+import {
+  useGetGuestsQuery,
+  useGetRsvpsQuery,
+  useGetEventsQuery,
+  useGetInvitesQuery,
+} from '@/services/api'
+import { Entry, Main, Lodging, Done, Declined } from '@/features/wedding/rsvp'
+import { useAppSelector } from '@/store'
+import { LoaderIcon } from 'lucide-react'
 
 const Rsvp = () => {
   useTitle('Wedding - RSVP')
 
-  // TODO: Install RTK Query for managing API state
-  // Fetch the guests for this user
-  // Fetch the invites for this user
-  // Fetch the RSVPs for this user
+  // Fetch all necessary data for the RSVP process right away.
+  useGetGuestsQuery()
+  useGetRsvpsQuery()
+  useGetEventsQuery()
+  useGetInvitesQuery()
 
-  const [guests, setGuests] = useState('')
-  const [rsvps, setRsvps] = useState('')
-  const [invites, setInvites] = useState('')
+  // const isLoadingRsvpData = useAppSelector(getIsLoadingRsvpData)
+  const step = useAppSelector(getRsvpStep)
 
-  useEffect(() => {
-    const url = `${baseUrl}/wedding/guests`
+  // if (isLoadingRsvpData) {
+  //   return (
+  //     <div className="flex h-screen w-screen items-center justify-center">
+  //       <LoaderIcon className="animate spin" />
+  //     </div>
+  //   )
+  // }
 
-    const options = {
-      headers: {
-        Authorization: localStorage.getItem('token') ?? '',
-      },
+  switch (step) {
+    case STEPS.ENTRY: {
+      return <Entry />
     }
 
-    fetch(url, options)
-      .then((data) => {
-        data.json().then((res) => {
-          setGuests(res.guests)
-        })
-      })
-      .catch((err) => {
-        console.dir(err)
-      })
-  }, [])
-
-  useEffect(() => {
-    const url = `${baseUrl}/wedding/rsvps`
-
-    const options = {
-      headers: {
-        Authorization: localStorage.getItem('token') ?? '',
-      },
+    case STEPS.MAIN: {
+      return <Main />
     }
 
-    fetch(url, options)
-      .then((data) => {
-        data.json().then((res) => {
-          setRsvps(res.rsvps)
-        })
-      })
-      .catch((err) => {
-        console.dir(err)
-      })
-  }, [])
-
-  useEffect(() => {
-    const url = `${baseUrl}/wedding/invites`
-
-    const options = {
-      headers: {
-        Authorization: localStorage.getItem('token') ?? '',
-      },
+    case STEPS.LODGING: {
+      return <Lodging />
     }
 
-    fetch(url, options)
-      .then((data) => {
-        data.json().then((res) => {
-          setInvites(res.invites)
-        })
-      })
-      .catch((err) => {
-        console.dir(err)
-      })
-  }, [])
+    case STEPS.DONE: {
+      return <Done />
+    }
 
-  return (
-    <div>
-      <header>
-        <h1 className="text-app-blush-900 text-3xl">Wedding RSVP Page</h1>
-        <p>TODO: Add the RSVP form</p>
-      </header>
+    case STEPS.DECLINED: {
+      return <Declined />
+    }
 
-      <section className="flex flex-col gap-4">
-        <pre>{JSON.stringify(guests, null, 2)}</pre>
-        <pre>{JSON.stringify(rsvps, null, 2)}</pre>
-        <pre>{JSON.stringify(invites, null, 2)}</pre>
-      </section>
-    </div>
-  )
+    default: {
+      return null
+    }
+  }
 }
 
 export default Rsvp

@@ -2,6 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from '@/App'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { store } from '@/store'
+import { Provider as StoreProvider } from 'react-redux'
 
 // Import the generated route tree.
 import { routeTree } from './routeTree.gen'
@@ -19,8 +21,10 @@ declare module '@tanstack/react-router' {
 // Render the app. Routes will render their applicable features.
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App>
-      <RouterProvider router={router} />
-    </App>
+    <StoreProvider store={store}>
+      <App>
+        <RouterProvider router={router} />
+      </App>
+    </StoreProvider>
   </StrictMode>,
 )

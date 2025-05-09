@@ -1,7 +1,7 @@
 import { Context } from 'hono'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import * as schema from '../../db/schema.ts'
-import { eq, inArray } from 'drizzle-orm/expressions'
+import { and, eq, inArray } from 'drizzle-orm/expressions'
 
 const db = drizzle(Deno.env.get('DATABASE_URL')!, { schema })
 
@@ -21,25 +21,100 @@ export const getRsvps = async (c: Context) => {
   ).where(eq(schema.guests.userId, user.id))
 
   if (userGuests == null || userGuests.length === 0) {
-    return c.json({ rsvps: [] })
+    return c.json([])
   }
 
   const userGuestIds = userGuests.map((user) => user.id)
 
   if (userGuestIds == null || userGuestIds.length === 0) {
-    return c.json({ rsvps: [] })
+    return c.json([])
   }
 
   // Get all RSVPs for all of these guests.
-  const rsvps = await db.select({
-    id: schema.rsvps.id,
-    guestId: schema.rsvps.guestId,
-    eventId: schema.rsvps.eventId,
-  }).from(
+  const rawRsvps = await db.select().from(
     schema.rsvps,
   ).where(inArray(schema.rsvps.guestId, userGuestIds))
 
-  return c.json({
-    rsvps: rsvps,
+  // Convert ids to strings
+  const rsvps = rawRsvps.map((rsvp) => {
+    return {
+      ...rsvp,
+      id: `${rsvp.id}`,
+      guestId: `${rsvp.guestId}`,
+      eventId: `${rsvp.eventId}`,
+    }
   })
+
+  console.log('rsvps')
+  console.dir(rsvps)
+
+  return c.json(rsvps)
+}
+
+// Adds OR updates the RSVP matching the event id and guest id params.
+export const addRsvp = async (c: Context) => {
+  const user = c.get('user')
+
+  if (user == null) {
+    return c.json({ error: 'User not found.' }, 404)
+  }
+  const body = await c.req.json()
+
+  const guestId = Number(body.guestId)
+  const eventId = Number(body.eventId)
+  const accepted = Boolean(body.accepted)
+  const entree = body.entree ? String(body.entree) : null
+
+  if (
+    guestId == null ||
+    eventId == null ||
+    accepted == null
+  ) {
+    return c.json({ error: 'Missing params' }, 422)
+  }
+
+  // First, see if there's already a record with an eventId and guestId.
+  // Note: This would be simpler to do with a combined primary key and "upsert"
+  // type of query, but alas, I'm bad at SQL and it's late.
+  const foundRsvp = await db.select().from(schema.rsvps).where(
+    and(
+      eq(schema.rsvps.guestId, guestId),
+      eq(schema.rsvps.eventId, eventId),
+    ),
+  )
+
+  console.log('foundRsvp:')
+  console.dir(foundRsvp)
+
+  // If found, update this RSVP with the new attending status.
+  if (foundRsvp && foundRsvp.length) {
+    const updatedRsvp = await db.update(schema.rsvps).set({
+      accepted: accepted,
+      entree: entree,
+      updatedOn: new Date(),
+    }).where(
+      and(
+        eq(schema.rsvps.guestId, guestId),
+        eq(schema.rsvps.eventId, eventId),
+      ),
+    ).returning()
+
+    console.log('updatedRsvp:')
+    console.dir(updatedRsvp)
+
+    return c.json(updatedRsvp)
+  }
+
+  // Otherwise, if no RSVP is found to update, just add a new one.
+  const newRsvp = await db.insert(schema.rsvps).values({
+    guestId,
+    eventId,
+    accepted,
+    entree,
+  }).returning()
+
+  console.log('newRsvp')
+  console.dir(newRsvp)
+
+  return c.json(newRsvp)
 }

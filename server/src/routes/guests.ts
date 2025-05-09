@@ -10,7 +10,7 @@ export const getGuests = async (c: Context) => {
   const user = c.get('user')
 
   if (user == null) {
-    return c.json({ error: 'User not found' }, 404)
+    return c.json({ error: 'User not found.' }, 404)
   }
 
   const userGuests = await db.select({
@@ -23,7 +23,14 @@ export const getGuests = async (c: Context) => {
     schema.guests,
   ).where(eq(schema.guests.userId, user.id))
 
-  return c.json({
-    guests: userGuests,
+  // Convert ids to strings
+  const guests = userGuests.map((guest) => {
+    return {
+      ...guest,
+      id: `${guest.id}`,
+      userId: `${guest.userId}`,
+    }
   })
+
+  return c.json(guests)
 }

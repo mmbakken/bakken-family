@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { useTitle } from '../../../hooks'
+import { useTitle } from '@/hooks'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
@@ -42,6 +42,7 @@ const Login = () => {
   // API calls
   //==================================================
 
+  // TODO: Move to API slice?
   const login = async () => {
     const url = `${baseUrl}/wedding/login`
 
@@ -76,16 +77,19 @@ const Login = () => {
   }
 
   return (
-    <div className="flex size-full flex-col items-center p-6 md:p-8">
-      <div className="flex max-w-md flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl text-neutral-900">Welcome!</h1>
-          <h2 className="text-md text-neutral-900">
+    <div className="flex size-full flex-col items-center justify-center p-6 md:p-8">
+      <div className="flex max-w-md flex-col gap-8">
+        <div className="flex flex-col gap-6">
+          <h2 className="text-md text-center text-neutral-900">Welcome to</h2>
+          <h1 className="text-center text-3xl text-neutral-900">
+            Hilary & Matt's Wedding
+          </h1>
+          <h2 className="text-md text-center text-neutral-900">
             Please enter the login info included on your invitation.
           </h2>
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2">
             <div className="flex flex-col gap-2">
               <label htmlFor="input-name">Names:</label>
@@ -93,7 +97,7 @@ const Login = () => {
                 className="border-app-blush-900 bg-app-offwhite text-md text-app-blush-900 border"
                 id="input-name"
                 type="text"
-                placeholder="e.g. Matt & Hilary"
+                placeholder="e.g. Hilary & Matt"
                 onChange={handleUsernameChange}
                 value={username}
               />

@@ -1,12 +1,11 @@
 import { useTitle } from '@/hooks'
 import { useAppDispatch, useAppSelector } from '@/store'
 import {
-  getEntryEvent,
   clickedAttending,
   clickedNotAttending,
   upsertRsvp,
-  getAllGuests,
 } from '@/features/wedding/slice'
+import { getEntryEvent, getAllGuests } from '@/features/wedding/selectors'
 import { Button } from '@/components/ui/button'
 
 const Entry = () => {

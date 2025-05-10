@@ -4,8 +4,8 @@ import { logger } from 'hono/logger'
 import { login } from './auth/login.ts'
 import { authenticateToken } from './auth/authenticateToken.ts'
 import { getUser, getUsers } from './routes/users.ts'
-import { getGuests } from './routes/guests.ts'
-import { addRsvp, getRsvps } from './routes/rsvps.ts'
+import { getGuests, updateGuest } from './routes/guests.ts'
+import { getRsvps, updateRsvp, upsertRsvp } from './routes/rsvps.ts'
 import { getEvents } from './routes/events.ts'
 import { getInvites } from './routes/invites.ts'
 
@@ -53,11 +53,18 @@ app.get('/api/v1/wedding/users', authenticateToken, getUsers)
 app.get('/api/v1/wedding/user', authenticateToken, getUser)
 
 app.get('/api/v1/wedding/guests', authenticateToken, getGuests)
+app.put(
+  '/api/v1/wedding/guest',
+  authenticateToken,
+  updateGuest,
+)
+
 app.get(
   '/api/v1/wedding/events',
   authenticateToken,
   getEvents,
 )
+
 app.get(
   '/api/v1/wedding/invites',
   authenticateToken,
@@ -69,14 +76,15 @@ app.get(
   authenticateToken,
   getRsvps,
 )
-
 app.post(
   '/api/v1/wedding/rsvp',
   authenticateToken,
-  addRsvp,
+  upsertRsvp,
 )
-
-// TODO: Add an endpoint to submit RSVP form responses.
-// Should create an RSVP record in the DB for each guest invite.
+app.put(
+  '/api/v1/wedding/rsvp',
+  authenticateToken,
+  updateRsvp,
+)
 
 Deno.serve(app.fetch)

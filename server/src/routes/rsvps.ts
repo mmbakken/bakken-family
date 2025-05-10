@@ -49,14 +49,14 @@ export const getRsvps = async (c: Context) => {
 }
 
 // Adds OR updates the RSVP matching the event id and guest id params.
-export const addRsvp = async (c: Context) => {
+export const upsertRsvp = async (c: Context) => {
   const user = c.get('user')
 
   if (user == null) {
     return c.json({ error: 'User not found.' }, 404)
   }
-  const body = await c.req.json()
 
+  const body = await c.req.json()
   const guestId = Number(body.guestId)
   const eventId = Number(body.eventId)
   const accepted = Boolean(body.accepted)
@@ -108,8 +108,6 @@ export const addRsvp = async (c: Context) => {
       guestId: `${updatedRsvp.guestId}`,
       eventId: `${updatedRsvp.eventId}`,
     })
-
-    return c.json(updatedRsvp)
   }
 
   // Otherwise, if no RSVP is found to update, just add a new one.
@@ -131,5 +129,46 @@ export const addRsvp = async (c: Context) => {
     id: `${newRsvp.id}`,
     guestId: `${newRsvp.guestId}`,
     eventId: `${newRsvp.eventId}`,
+  })
+}
+
+// Updates an existing RSVP id params.
+// NOTE: Only allow updating the entree field this way.
+export const updateRsvp = async (c: Context) => {
+  const user = c.get('user')
+
+  if (user == null) {
+    return c.json({ error: 'User not found.' }, 404)
+  }
+
+  const body = await c.req.json()
+  const id = Number(body.id)
+  const entree = body.entree ? String(body.entree) : null
+
+  if (
+    id == null ||
+    entree == null
+  ) {
+    return c.json({ error: 'Missing params' }, 422)
+  }
+
+  const updatedRsvps = await db.update(schema.rsvps).set({
+    entree: entree,
+    updatedOn: new Date(),
+  }).where(
+    eq(schema.rsvps.id, id),
+  ).returning()
+
+  const updatedRsvp = updatedRsvps[0]
+
+  console.log('updatedRsvp:')
+  console.dir(updatedRsvp)
+
+  // Convert ids to strings
+  return c.json({
+    ...updatedRsvp,
+    id: `${updatedRsvp.id}`,
+    guestId: `${updatedRsvp.guestId}`,
+    eventId: `${updatedRsvp.eventId}`,
   })
 }

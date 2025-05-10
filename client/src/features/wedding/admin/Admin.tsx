@@ -1,12 +1,12 @@
 import { useAppDispatch, useAppSelector } from '@/store'
 import { useTitle } from '@/hooks'
+import { fetchRsvpData } from '@/features/wedding/slice'
 import {
-  fetchRsvpData,
   getAllGuests,
   getAllRsvps,
   getAllEvents,
   getAllInvites,
-} from '@/features/wedding/slice'
+} from '@/features/wedding/selectors'
 import { useEffect } from 'react'
 
 const Admin = () => {

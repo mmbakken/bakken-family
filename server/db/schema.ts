@@ -17,6 +17,8 @@ export const guests = pgTable('guests', {
   fullName: text('full_name').notNull(),
   givenName: text('given_name').notNull(),
   allergies: text(),
+  createdOn: timestamp('created_on').notNull().defaultNow(),
+  updatedOn: timestamp('updated_on').notNull().defaultNow(),
 })
 
 // Events describe a scheduled part of the wedding weekend.

@@ -2,11 +2,8 @@ import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '@/store'
 import { useTitle } from '@/hooks'
 import { STEPS } from '@/features/wedding/constants'
-import {
-  fetchRsvpData,
-  getHasLoadedRsvpData,
-  getRsvpStep,
-} from '@/features/wedding/slice'
+import { fetchRsvpData } from '@/features/wedding/slice'
+import { getHasLoadedRsvpData, getRsvpStep } from '@/features/wedding/selectors'
 import { Entry, Main, Lodging, Done, Declined } from '@/features/wedding/rsvp'
 import { LoaderIcon } from 'lucide-react'
 

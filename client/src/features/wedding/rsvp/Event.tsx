@@ -1,21 +1,21 @@
 import { format } from 'date-fns'
 import { useAppSelector } from '@/store'
 import {
-  getMainInvitesByEventId,
-  getMainEventsById,
+  getInvitesByEventId,
+  getEventsById,
 } from '@/features/wedding/selectors'
-import { GuestRsvp } from '@/features/wedding/rsvp/main'
+import { GuestRsvp } from '@/features/wedding/rsvp'
 
 type EventProps = {
   id: string
 }
 
 const Event = ({ id }: EventProps) => {
-  const mainInvitesByEventId = useAppSelector(getMainInvitesByEventId)
-  const mainEventsById = useAppSelector(getMainEventsById)
+  const invitesByEventId = useAppSelector(getInvitesByEventId)
+  const eventsById = useAppSelector(getEventsById)
 
-  const event = mainEventsById[id]
-  const invites = mainInvitesByEventId[id]
+  const event = eventsById[id]
+  const invites = invitesByEventId[id]
 
   return (
     <div>

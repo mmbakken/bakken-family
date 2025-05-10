@@ -8,8 +8,8 @@ import {
 } from '@/features/wedding/selectors'
 import { RsvpButtons } from '@/features/wedding/rsvp'
 import { ATTENDING_STATUS, ENTREE_OPTIONS } from '@/features/wedding/constants'
-import EntreeButtons from './EntreeButtons'
-import Allergies from './Allergies'
+import EntreeButtons from '@/features/wedding/rsvp/EntreeButtons'
+import Allergies from '@/features/wedding/rsvp/Allergies'
 import { useDebounce } from '@/hooks'
 import type { ChangeEvent } from 'react'
 

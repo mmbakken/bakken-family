@@ -16,6 +16,10 @@ const getWeddingState = (state: RootState) => {
 export const getHasLoadedRsvpData = (state: RootState) =>
   state.wedding.hasLoaded
 
+//======================================
+// Guests
+//======================================
+
 export const getAllGuests = createSelector(
   [getWeddingState, getHasLoadedRsvpData],
   (state, hasLoadedRsvpData) => {
@@ -26,45 +30,6 @@ export const getAllGuests = createSelector(
     }
 
     return emptyGuests
-  },
-)
-
-export const getAllEvents = createSelector(
-  [getWeddingState, getHasLoadedRsvpData],
-  (state, hasLoadedRsvpData) => {
-    const events = state.entities.events
-
-    if (hasLoadedRsvpData) {
-      return events ?? emptyEvents
-    }
-
-    return emptyEvents
-  },
-)
-
-export const getAllInvites = createSelector(
-  [getWeddingState, getHasLoadedRsvpData],
-  (state, hasLoadedRsvpData) => {
-    const invites = state.entities.invites
-
-    if (hasLoadedRsvpData) {
-      return invites ?? emptyInvites
-    }
-
-    return emptyInvites
-  },
-)
-
-export const getAllRsvps = createSelector(
-  [getWeddingState, getHasLoadedRsvpData],
-  (state, hasLoadedRsvpData) => {
-    const rsvps = state.entities.rsvps
-
-    if (hasLoadedRsvpData) {
-      return rsvps ?? emptyRsvps
-    }
-
-    return emptyRsvps
   },
 )
 
@@ -84,6 +49,23 @@ export const getGuestsById = createSelector(
       guestsById[guest.id] = guest
       return guestsById
     }, {} as Record<string, GuestT>)
+  },
+)
+
+//======================================
+// Events
+//======================================
+
+export const getAllEvents = createSelector(
+  [getWeddingState, getHasLoadedRsvpData],
+  (state, hasLoadedRsvpData) => {
+    const events = state.entities.events
+
+    if (hasLoadedRsvpData) {
+      return events ?? emptyEvents
+    }
+
+    return emptyEvents
   },
 )
 
@@ -128,13 +110,93 @@ const getMainEvents = createSelector(
   },
 )
 
-// Returns the event ids, ordered by their `sort` field.
+// Returns the main event ids, ordered by their `sort` field.
 export const getOrderedMainEventIds = createSelector(
   [getMainEvents],
   (mainEvents) => {
     const events = mainEvents.map((e) => e)
     events.sort((a, b) => a.order - b.order)
     return events.map((e) => e.id)
+  },
+)
+
+const LODGING_EVENT_NAMES = [
+  'Lodging - Thursday Night',
+  'Lodging - Friday Night',
+  'Lodging - Saturday Night',
+  'Lodging - Sunday Night',
+]
+
+// Returns an array of event ids which are Lodging events.
+const getLodgingEventIds = createSelector(
+  [getAllEvents],
+  (allEvents) => {
+    const lodgingEvents = allEvents.filter((event) => {
+      return LODGING_EVENT_NAMES.includes(event.name)
+    }) ?? []
+
+    return lodgingEvents.map((event) => event.id)
+  },
+)
+
+// Returns an array of events which are Lodging events.
+const getLodgingEvents = createSelector(
+  [getAllEvents],
+  (allEvents) => {
+    const lodgingEvents = allEvents.filter((event) => {
+      return LODGING_EVENT_NAMES.includes(event.name)
+    }) ?? []
+
+    return lodgingEvents
+  },
+)
+
+// Returns the lodging event ids, ordered by their `sort` field.
+export const getOrderedLodgingEventIds = createSelector(
+  [getLodgingEvents],
+  (lodgingEvents) => {
+    const events = lodgingEvents.map((e) => e)
+    events.sort((a, b) => a.order - b.order)
+    return events.map((e) => e.id)
+  },
+)
+
+// Given an Event id, returns true if the event requires an entree selection. If
+// no Event is found, returns false.
+export const getHasEntree = createSelector(
+  [
+    getAllEvents,
+    (_state, eventId) => eventId,
+  ],
+  (allEvents, eventId) => {
+    if (allEvents == null || eventId == null) {
+      return false
+    }
+
+    const event = allEvents.find((thisEvent) => thisEvent.id === eventId)
+
+    if (event == null) {
+      return false
+    }
+
+    return event.hasEntree
+  },
+)
+
+//======================================
+// Invites
+//======================================
+
+export const getAllInvites = createSelector(
+  [getWeddingState, getHasLoadedRsvpData],
+  (state, hasLoadedRsvpData) => {
+    const invites = state.entities.invites
+
+    if (hasLoadedRsvpData) {
+      return invites ?? emptyInvites
+    }
+
+    return emptyInvites
   },
 )
 
@@ -162,23 +224,23 @@ export const getHasMainInvites = createSelector(
   },
 )
 
-// Returns the Main event objects, grouped by their ids.
-export const getMainEventsById = createSelector(
-  [getMainEvents],
-  (mainEvents) => {
-    return mainEvents.reduce((mainEventsById, event) => {
-      mainEventsById[event.id] = event
-      return mainEventsById
+// Returns the Event objects, grouped by their ids.
+export const getEventsById = createSelector(
+  [getAllEvents],
+  (allEvents) => {
+    return allEvents.reduce((eventsById, event) => {
+      eventsById[event.id] = event
+      return eventsById
     }, {} as Record<string, EventT>)
   },
 )
 
-// Returns all Main event invites, grouped by their event id. One event id is
-// the key to an array of invites.
-export const getMainInvitesByEventId = createSelector(
-  [getMainInvites],
-  (mainInvites) => {
-    return mainInvites.reduce((invitesByEventId, invite) => {
+// Returns all event invites, grouped by their event id. One event id is the key
+// to an array of invites.
+export const getInvitesByEventId = createSelector(
+  [getAllInvites],
+  (allInvites) => {
+    return allInvites.reduce((invitesByEventId, invite) => {
       if (invitesByEventId[invite.eventId] == null) {
         invitesByEventId[invite.eventId] = [invite]
       } else {
@@ -206,6 +268,48 @@ export const getMainInviteIds = createSelector(
   },
 )
 
+// Returns an array of invite ids which are for Lodging events.
+const getLodgingInviteIds = createSelector(
+  [getAllInvites, getLodgingEventIds],
+  (allInvites, lodgingEventIds) => {
+    const lodgingInviteIds: string[] = []
+
+    allInvites.map((invite) => {
+      if (lodgingEventIds.includes(invite.eventId)) {
+        lodgingInviteIds.push(invite.id)
+      }
+    })
+
+    return lodgingInviteIds
+  },
+)
+
+// Returns true if the user has lodging invites (and therefore should be allowed
+// to see the Lodging RSVP page).
+export const getHasLodgingInvites = createSelector(
+  [getLodgingInviteIds],
+  (lodgingInviteIds) => {
+    return lodgingInviteIds.length > 0
+  },
+)
+
+//======================================
+// Rsvps
+//======================================
+
+export const getAllRsvps = createSelector(
+  [getWeddingState, getHasLoadedRsvpData],
+  (state, hasLoadedRsvpData) => {
+    const rsvps = state.entities.rsvps
+
+    if (hasLoadedRsvpData) {
+      return rsvps ?? emptyRsvps
+    }
+
+    return emptyRsvps
+  },
+)
+
 // Returns an array of RSVP ids which are for Main events.
 const getMainRsvpIds = createSelector(
   [getAllRsvps, getMainEventIds],
@@ -230,41 +334,6 @@ export const getHasCompletedAllMainInvites = createSelector(
   },
 )
 
-const LODGING_EVENT_NAMES = [
-  'Lodging - Thursday Night',
-  'Lodging - Friday Night',
-  'Lodging - Saturday Night',
-  'Lodging - Sunday Night',
-]
-
-// Returns an array of event ids which are Lodging events.
-const getLodgingEventIds = createSelector(
-  [getAllEvents],
-  (allEvents) => {
-    const lodgingEvents = allEvents.filter((event) => {
-      return LODGING_EVENT_NAMES.includes(event.name)
-    }) ?? []
-
-    return lodgingEvents.map((event) => event.id)
-  },
-)
-
-// Returns an array of invite ids which are for Lodging events.
-const getLodgingInviteIds = createSelector(
-  [getAllInvites, getLodgingEventIds],
-  (allInvites, lodgingEventIds) => {
-    const lodgingInviteIds: string[] = []
-
-    allInvites.map((invite) => {
-      if (lodgingEventIds.includes(invite.eventId)) {
-        lodgingInviteIds.push(invite.id)
-      }
-    })
-
-    return lodgingInviteIds
-  },
-)
-
 // Returns an array of RSVP ids which are for Lodging events.
 const getLodgingRsvpIds = createSelector(
   [getAllRsvps, getLodgingEventIds],
@@ -282,19 +351,10 @@ const getLodgingRsvpIds = createSelector(
 )
 
 // Returns true if the user has an RSVP for each lodging event invite.
-const getHasCompletedAllLodgingInvites = createSelector(
+export const getHasCompletedAllLodgingInvites = createSelector(
   [getLodgingRsvpIds, getLodgingInviteIds],
   (lodgingRsvpIds, lodgingInviteIds) => {
     return lodgingRsvpIds.length === lodgingInviteIds.length
-  },
-)
-
-// Returns true if the user has lodging invites (and therefore should be allowed
-// to see the Lodging RSVP page).
-export const getHasLodgingInvites = createSelector(
-  [getLodgingInviteIds],
-  (lodgingInviteIds) => {
-    return lodgingInviteIds.length > 0
   },
 )
 
@@ -369,27 +429,5 @@ export const getRsvpByEventIdAndGuestId = createSelector(
     )
 
     return rsvp ?? null
-  },
-)
-
-// Given an Event id, returns true if the event requires an entree selection. If
-// no Event is found, returns false.
-export const getHasEntree = createSelector(
-  [
-    getAllEvents,
-    (_state, eventId) => eventId,
-  ],
-  (allEvents, eventId) => {
-    if (allEvents == null || eventId == null) {
-      return false
-    }
-
-    const event = allEvents.find((thisEvent) => thisEvent.id === eventId)
-
-    if (event == null) {
-      return false
-    }
-
-    return event.hasEntree
   },
 )

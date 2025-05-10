@@ -60,7 +60,6 @@ export const upsertRsvp = async (c: Context) => {
   const guestId = Number(body.guestId)
   const eventId = Number(body.eventId)
   const accepted = Boolean(body.accepted)
-  const entree = body.entree ? String(body.entree) : null
 
   if (
     guestId == null ||
@@ -87,7 +86,6 @@ export const upsertRsvp = async (c: Context) => {
   if (foundRsvp && foundRsvp.length) {
     const updatedRsvps = await db.update(schema.rsvps).set({
       accepted: accepted,
-      entree: entree,
       updatedOn: new Date(),
     }).where(
       and(
@@ -115,7 +113,6 @@ export const upsertRsvp = async (c: Context) => {
     guestId,
     eventId,
     accepted,
-    entree,
   }).returning()
 
   const newRsvp = newRsvps[0]

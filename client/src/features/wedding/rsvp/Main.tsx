@@ -8,7 +8,7 @@ import {
 } from '@/features/wedding/selectors'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Event } from '@/features/wedding/rsvp/main'
+import { Event } from '@/features/wedding/rsvp'
 
 const Main = () => {
   useTitle('Wedding - RSVP')
@@ -36,7 +36,7 @@ const Main = () => {
           <ChevronLeft />
         </Button>
         <h1 className="text-primary text-center text-5xl leading-16">RSVP</h1>
-        <Button size="icon" disabled onClick={handleNextClick}>
+        <Button size="icon" onClick={handleNextClick}>
           <ChevronRight />
         </Button>
       </header>

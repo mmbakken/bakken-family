@@ -1,13 +1,25 @@
-import { useAppDispatch } from '@/store'
+import { useAppDispatch, useAppSelector } from '@/store'
 import { useTitle } from '@/hooks'
-import { clickedBack, clickedNext } from '../slice'
+import { clickedBack, clickedNext } from '@/features/wedding/slice'
+import {
+  getHasCompletedAllLodgingInvites,
+  getOrderedLodgingEventIds,
+  getHasLodgingInvites,
+} from '@/features/wedding/selectors'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Event } from '@/features/wedding/rsvp'
 
 const Lodging = () => {
   useTitle('Wedding - RSVP - Lodging')
 
   const dispatch = useAppDispatch()
+
+  const hasCompletedAllLodgingInvites = useAppSelector(
+    getHasCompletedAllLodgingInvites,
+  )
+  const orderedLodgingEventIds = useAppSelector(getOrderedLodgingEventIds)
+  const hasLodgingInvites = useAppSelector(getHasLodgingInvites)
 
   const handleBackClick = () => {
     dispatch(clickedBack())
@@ -24,12 +36,22 @@ const Lodging = () => {
           <ChevronLeft />
         </Button>
         <h1 className="text-primary text-center text-5xl leading-16">
-          Lodging
+          RSVP - Lodging
         </h1>
-        <Button size="icon" disabled onClick={handleNextClick}>
+        <Button size="icon" onClick={handleNextClick}>
           <ChevronRight />
         </Button>
       </header>
+
+      <p>
+        Has completed all Lodging invites:{' '}
+        {String(hasCompletedAllLodgingInvites)}
+      </p>
+
+      {hasLodgingInvites &&
+        orderedLodgingEventIds.map((eventId) => {
+          return <Event id={eventId} key={eventId} />
+        })}
     </div>
   )
 }

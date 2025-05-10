@@ -10,6 +10,7 @@ import { RsvpButtons } from '@/features/wedding/rsvp'
 import { ATTENDING_STATUS, ENTREE_OPTIONS } from '@/features/wedding/constants'
 import EntreeButtons from './EntreeButtons'
 import Allergies from './Allergies'
+import { useDebounce } from '@/hooks'
 import type { ChangeEvent } from 'react'
 
 type GuestRsvpProps = {
@@ -59,7 +60,6 @@ const GuestRsvp = ({ id, eventId }: GuestRsvpProps) => {
 
   // Allow Redux Rsvp status to update the local state when it changes.
   useEffect(() => {
-    console.log('Redux rsvp state changed.')
     setAccepted((accepted) => {
       if (rsvp == null) {
         return accepted
@@ -78,8 +78,17 @@ const GuestRsvp = ({ id, eventId }: GuestRsvpProps) => {
       return rsvp.entree == null ? ENTREE_OPTIONS.PENDING : rsvp.entree
     })
 
-    // NOTE: Do not update the allergies here - too many updates
+    // NOTE: Do not update the allergies here - just fire and forget.
   }, [rsvp])
+
+  const debouncededUpdateGuest = useDebounce(() => {
+    dispatch(
+      updateGuest({
+        allergies: allergies,
+        id: id,
+      }),
+    )
+  })
 
   //======================================
   // Derived state
@@ -112,8 +121,6 @@ const GuestRsvp = ({ id, eventId }: GuestRsvpProps) => {
     setEntree(entree)
 
     dispatch(
-      // TODO: We should probably ensure this is an existing Rsvp and use an
-      // update-only route.
       updateRsvp({
         id: rsvp?.id,
         entree: entree,
@@ -123,17 +130,8 @@ const GuestRsvp = ({ id, eventId }: GuestRsvpProps) => {
 
   // Update the existing Guest when the user edits their allergies.
   const onAllergiesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const newAllergies = event.currentTarget.value
-
-    setAllergies(newAllergies)
-
-    // TODO: Throttle this dispatch call.
-    dispatch(
-      updateGuest({
-        allergies: newAllergies,
-        id: id,
-      }),
-    )
+    setAllergies(event.currentTarget.value)
+    debouncededUpdateGuest()
   }
 
   return (

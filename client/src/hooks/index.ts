@@ -1,3 +1,4 @@
 import useTitle from './useTitle'
+import useDebounce from './useDebounce'
 
-export { useTitle }
+export { useDebounce, useTitle }

@@ -1,35 +1,37 @@
+import { useEffect } from 'react'
+import { useAppSelector, useAppDispatch } from '@/store'
 import { useTitle } from '@/hooks'
 import { STEPS } from '@/features/wedding/constants'
-import { getIsLoadingRsvpData, getRsvpStep } from '@/features/wedding/slice'
 import {
-  useGetGuestsQuery,
-  useGetRsvpsQuery,
-  useGetEventsQuery,
-  useGetInvitesQuery,
-} from '@/services/api'
+  fetchRsvpData,
+  getHasLoadedRsvpData,
+  getRsvpStep,
+} from '@/features/wedding/slice'
 import { Entry, Main, Lodging, Done, Declined } from '@/features/wedding/rsvp'
-import { useAppSelector } from '@/store'
 import { LoaderIcon } from 'lucide-react'
 
 const Rsvp = () => {
   useTitle('Wedding - RSVP')
 
   // Fetch all necessary data for the RSVP process right away.
-  useGetGuestsQuery()
-  useGetRsvpsQuery()
-  useGetEventsQuery()
-  useGetInvitesQuery()
+  const dispatch = useAppDispatch()
 
-  // const isLoadingRsvpData = useAppSelector(getIsLoadingRsvpData)
+  const hasLoadedRsvpData = useAppSelector(getHasLoadedRsvpData)
   const step = useAppSelector(getRsvpStep)
 
-  // if (isLoadingRsvpData) {
-  //   return (
-  //     <div className="flex h-screen w-screen items-center justify-center">
-  //       <LoaderIcon className="animate spin" />
-  //     </div>
-  //   )
-  // }
+  useEffect(() => {
+    if (fetchRsvpData && !hasLoadedRsvpData) {
+      dispatch(fetchRsvpData())
+    }
+  }, [dispatch, hasLoadedRsvpData])
+
+  if (!hasLoadedRsvpData) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <LoaderIcon className="animate spin" />
+      </div>
+    )
+  }
 
   switch (step) {
     case STEPS.ENTRY: {

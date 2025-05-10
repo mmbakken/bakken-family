@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 const Lodging = () => {
   useTitle('Wedding - RSVP - Lodging')
+
   const dispatch = useAppDispatch()
 
   const handleBackClick = () => {

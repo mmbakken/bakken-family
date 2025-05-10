@@ -1,5 +1,4 @@
 import { useTitle } from '@/hooks'
-import { Button } from '@/components/ui/button'
 
 const Declined = () => {
   useTitle('Wedding - RSVP - Declined')

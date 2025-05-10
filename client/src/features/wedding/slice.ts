@@ -1,24 +1,50 @@
-// This slice manages all of the global front-end state from the whole app. The
-// API slice is used for managing API state, but the selectors for those API
-// state values all live here.
-
-import { createSelector, createSlice } from '@reduxjs/toolkit'
-import { weddingAPI } from '@/services/api'
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
 import { STEPS } from '@/features/wedding/constants'
-import type { PayloadAction } from '@reduxjs/toolkit'
+// import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '@/store'
-import type { EventT, GuestT, InviteT, RsvpT } from '@/features/wedding/types'
+import type {
+  EventT,
+  GuestT,
+  InviteT,
+  RsvpT,
+  UserT,
+} from '@/features/wedding/types'
 
-// Define a type for the slice state
 interface WeddingState {
+  // Are we fetching any kind of data, right now?
+  isLoading: boolean
+
+  // Set to true once all necessary data for rendering the app has loaded.
+  hasLoaded: boolean
+
+  // API state. Stuff we fetch from the API and sometimes update.
+  entities: {
+    user: UserT | null
+    guests: GuestT[]
+    events: EventT[]
+    invites: InviteT[]
+
+    // These are the only entities we update.
+    rsvps: RsvpT[]
+  }
+
+  // State about the RSVP process.
   rsvps: {
     userHasInteracted: boolean
     step: number
   }
 }
 
-// Define the initial state using that type
 const initialState: WeddingState = {
+  isLoading: false,
+  hasLoaded: false,
+  entities: {
+    user: null,
+    guests: [],
+    events: [],
+    invites: [],
+    rsvps: [],
+  },
   rsvps: {
     userHasInteracted: false,
     step: STEPS.ENTRY,
@@ -30,6 +56,10 @@ export const weddingSlice = createSlice({
   initialState,
   reducers: {
     // clickedAttending: (state, action: PayloadAction<number>) => {
+
+    // Entry page RSVP creation.
+    // TODO: These two should be async thunks that call the API and make an RSVP
+    // and the side effect is that the step changes.
     clickedAttending: (state) => {
       state.rsvps.userHasInteracted = true
       state.rsvps.step = STEPS.MAIN
@@ -38,6 +68,9 @@ export const weddingSlice = createSlice({
       state.rsvps.userHasInteracted = true
       state.rsvps.step = STEPS.DECLINED
     },
+
+    // Step navigation actions.
+    // TODO: Need an action per-step for back and next, if applicable.
     clickedBack: (state) => {
       state.rsvps.userHasInteracted = true
       state.rsvps.step = STEPS.ENTRY
@@ -46,6 +79,40 @@ export const weddingSlice = createSlice({
       state.rsvps.userHasInteracted = true
       state.rsvps.step = STEPS.DONE
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchRsvpData.fulfilled, (state, action) => {
+      state.entities.user = action.payload.user
+      state.entities.events = action.payload.events
+      state.entities.guests = action.payload.guests
+      state.entities.invites = action.payload.invites
+      state.entities.rsvps = action.payload.rsvps
+      state.hasLoaded = true
+    })
+
+    builder.addCase(upsertRsvp.fulfilled, (state, action) => {
+      const rsvp = action.payload
+
+      if (rsvp == null) {
+        return
+      }
+
+      let found = false
+      const updatedRsvps = state.entities.rsvps.map((r) => {
+        if (r.id === rsvp.id) {
+          found = true
+          return rsvp
+        } else {
+          return r
+        }
+      })
+
+      if (!found) {
+        updatedRsvps.push(rsvp)
+      }
+
+      state.entities.rsvps = updatedRsvps
+    })
   },
 })
 
@@ -58,46 +125,185 @@ export const {
 export default weddingSlice.reducer
 
 //======================================
+// API calls
+//======================================
+
+const baseUrl = import.meta.env.VITE_ENV === 'production'
+  ? `${window.location.origin}/api/v1`
+  : `http://localhost:8000/api/v1`
+
+const weddingAPI = {
+  getUser: async () => {
+    const url = `${baseUrl}/wedding/user`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error fetching user.')
+    }
+
+    return await response.json()
+  },
+
+  getGuests: async () => {
+    const url = `${baseUrl}/wedding/guests`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error fetching guests.')
+    }
+
+    return await response.json()
+  },
+
+  getEvents: async () => {
+    const url = `${baseUrl}/wedding/events`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error fetching events.')
+    }
+
+    return await response.json()
+  },
+
+  getInvites: async () => {
+    const url = `${baseUrl}/wedding/invites`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error fetching invites.')
+    }
+
+    return await response.json()
+  },
+
+  getRsvps: async () => {
+    const url = `${baseUrl}/wedding/rsvps`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error fetching rsvps.')
+    }
+
+    return await response.json()
+  },
+
+  upsertRsvp: async (rsvp: Partial<RsvpT>) => {
+    const url = `${baseUrl}/wedding/rsvp`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+      body: JSON.stringify(rsvp),
+    })
+
+    if (!response.ok) {
+      throw new Error('Error upserting RSVP.')
+    }
+
+    return await response.json()
+  },
+}
+
+// Get the Rsvp data necessary to render the app
+export const fetchRsvpData = createAsyncThunk(
+  'wedding/fetchRsvpData',
+  async () => {
+    const user = await weddingAPI.getUser()
+    const guests = await weddingAPI.getGuests()
+    const events = await weddingAPI.getEvents()
+    const invites = await weddingAPI.getInvites()
+    const rsvps = await weddingAPI.getRsvps()
+
+    return {
+      user,
+      events,
+      guests,
+      invites,
+      rsvps,
+    }
+  },
+)
+
+// Create or update an Rsvp.
+export const upsertRsvp = createAsyncThunk(
+  'wedding/upsertRsvp',
+  async (rsvp: Partial<RsvpT>) => {
+    const response = await weddingAPI.upsertRsvp(rsvp)
+
+    return response
+  },
+)
+
+//======================================
 // Selectors - API Slice
 //======================================
 
 const emptyGuests: GuestT[] = []
-const emptyRsvps: RsvpT[] = []
 const emptyEvents: EventT[] = []
 const emptyInvites: InviteT[] = []
+const emptyRsvps: RsvpT[] = []
 
-export const getAllGuestsResult = weddingAPI.endpoints.getGuests.select()
-export const getAllRsvpsResult = weddingAPI.endpoints.getRsvps.select()
-export const getAllEventsResult = weddingAPI.endpoints.getEvents.select()
-export const getAllInvitesResult = weddingAPI.endpoints.getInvites.select()
+const getWeddingState = (state: RootState) => {
+  return state.wedding
+}
+
+// Returns true when the necessary API data for the RSVP process is loaded.
+export const getHasLoadedRsvpData = (state: RootState) =>
+  state.wedding.hasLoaded
 
 export const getAllGuests = createSelector(
-  [getAllGuestsResult],
-  (allGuestsResult) => {
-    if (allGuestsResult && allGuestsResult.isSuccess) {
-      return allGuestsResult.data ?? emptyGuests
+  [getWeddingState, getHasLoadedRsvpData],
+  (state, hasLoadedRsvpData) => {
+    const guests = state.entities.guests
+
+    if (hasLoadedRsvpData) {
+      return guests ?? emptyGuests
     }
 
     return emptyGuests
   },
 )
 
-export const getAllRsvps = createSelector(
-  [getAllRsvpsResult],
-  (allRsvpsResult) => {
-    if (allRsvpsResult && allRsvpsResult.isSuccess) {
-      return allRsvpsResult.data ?? emptyRsvps
-    }
-
-    return emptyRsvps
-  },
-)
-
 export const getAllEvents = createSelector(
-  [getAllEventsResult],
-  (allEventsResult) => {
-    if (allEventsResult && allEventsResult.isSuccess) {
-      return allEventsResult.data ?? emptyEvents
+  [getWeddingState, getHasLoadedRsvpData],
+  (state, hasLoadedRsvpData) => {
+    const events = state.entities.events
+
+    if (hasLoadedRsvpData) {
+      return events ?? emptyEvents
     }
 
     return emptyEvents
@@ -105,54 +311,30 @@ export const getAllEvents = createSelector(
 )
 
 export const getAllInvites = createSelector(
-  [getAllInvitesResult],
-  (allInvitesResult) => {
-    if (allInvitesResult && allInvitesResult.isSuccess) {
-      return allInvitesResult.data ?? emptyInvites
+  [getWeddingState, getHasLoadedRsvpData],
+  (state, hasLoadedRsvpData) => {
+    const invites = state.entities.invites
+
+    if (hasLoadedRsvpData) {
+      return invites ?? emptyInvites
     }
 
     return emptyInvites
   },
 )
 
-// Returns true if any of the necessary API data for the RSVP process is loading
-export const getIsLoadingRsvpData = createSelector(
-  [
-    getAllGuestsResult,
-    getAllRsvpsResult,
-    getAllEventsResult,
-    getAllInvitesResult,
-  ],
-  (allGuestsResult, allRsvpsResult, allEventsResult, allInvitesResult) => {
-    if (
-      allGuestsResult == null ||
-      allRsvpsResult == null ||
-      allEventsResult == null ||
-      allInvitesResult == null
-    ) {
-      return true
+export const getAllRsvps = createSelector(
+  [getWeddingState, getHasLoadedRsvpData],
+  (state, hasLoadedRsvpData) => {
+    const rsvps = state.entities.rsvps
+
+    if (hasLoadedRsvpData) {
+      return rsvps ?? emptyRsvps
     }
 
-    if (
-      allGuestsResult.isLoading ||
-      allRsvpsResult.isLoading ||
-      allEventsResult.isLoading ||
-      allInvitesResult.isLoading
-    ) {
-      return true
-    }
-
-    return false
+    return emptyRsvps
   },
 )
-
-//======================================
-// Selectors - Wedding Slice
-//======================================
-
-const getWeddingState = (state: RootState) => {
-  return state.wedding
-}
 
 // Returns the number of guests for this user.
 export const getGuestCount = createSelector(
@@ -388,7 +570,7 @@ export const getHasLodgingInvites = createSelector(
 export const getRsvpStep = createSelector(
   [
     getWeddingState,
-    getIsLoadingRsvpData,
+    getHasLoadedRsvpData,
     getAllRsvps,
     getHasCompletedAllMainInvites,
     getHasLodgingInvites,
@@ -396,7 +578,7 @@ export const getRsvpStep = createSelector(
   ],
   (
     wedding,
-    isLoadingRsvpData,
+    hasLoadedRsvpData,
     allRsvps,
     hasCompletedAllMainInvites,
     hasLodgingInvites,
@@ -407,7 +589,7 @@ export const getRsvpStep = createSelector(
     // step by dispatching simple actions. We should use the below logic AFTER
     // all of the
 
-    if (wedding.rsvps.userHasInteracted || isLoadingRsvpData) {
+    if (wedding.rsvps.userHasInteracted || !hasLoadedRsvpData) {
       return wedding.rsvps.step
     }
 

@@ -45,9 +45,6 @@ export const getRsvps = async (c: Context) => {
     }
   })
 
-  console.log('rsvps')
-  console.dir(rsvps)
-
   return c.json(rsvps)
 }
 
@@ -88,7 +85,7 @@ export const addRsvp = async (c: Context) => {
 
   // If found, update this RSVP with the new attending status.
   if (foundRsvp && foundRsvp.length) {
-    const updatedRsvp = await db.update(schema.rsvps).set({
+    const updatedRsvps = await db.update(schema.rsvps).set({
       accepted: accepted,
       entree: entree,
       updatedOn: new Date(),
@@ -99,22 +96,40 @@ export const addRsvp = async (c: Context) => {
       ),
     ).returning()
 
+    const updatedRsvp = updatedRsvps[0]
+
     console.log('updatedRsvp:')
     console.dir(updatedRsvp)
+
+    // Convert ids to strings
+    return c.json({
+      ...updatedRsvp,
+      id: `${updatedRsvp.id}`,
+      guestId: `${updatedRsvp.guestId}`,
+      eventId: `${updatedRsvp.eventId}`,
+    })
 
     return c.json(updatedRsvp)
   }
 
   // Otherwise, if no RSVP is found to update, just add a new one.
-  const newRsvp = await db.insert(schema.rsvps).values({
+  const newRsvps = await db.insert(schema.rsvps).values({
     guestId,
     eventId,
     accepted,
     entree,
   }).returning()
 
+  const newRsvp = newRsvps[0]
+
   console.log('newRsvp')
   console.dir(newRsvp)
 
-  return c.json(newRsvp)
+  // Convert ids to strings
+  return c.json({
+    ...newRsvp,
+    id: `${newRsvp.id}`,
+    guestId: `${newRsvp.guestId}`,
+    eventId: `${newRsvp.eventId}`,
+  })
 }

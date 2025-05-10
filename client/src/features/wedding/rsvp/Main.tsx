@@ -1,11 +1,7 @@
+import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { useTitle } from '@/hooks'
-import {
-  useAddRsvpMutation,
-  useGetRsvpsQuery,
-  useGetInvitesQuery,
-} from '@/services/api'
 import {
   clickedBack,
   clickedNext,
@@ -16,7 +12,8 @@ import {
   getMainEventsById,
   getGuestsById,
   getRsvpByEventIdAndGuestId,
-} from '../slice'
+  upsertRsvp,
+} from '@/features/wedding/slice'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -24,13 +21,6 @@ const Main = () => {
   useTitle('Wedding - RSVP')
 
   const dispatch = useAppDispatch()
-
-  // TODO
-  // - fetch all guests
-  // - fetch all Main invites
-  // - Iterate through all Main invites
-  // - Render their event name and event description
-  // - Show the guest name per invite
 
   const hasCompletedAllMainInvites = useAppSelector(
     getHasCompletedAllMainInvites,
@@ -113,35 +103,51 @@ type GuestRsvpProps = {
 }
 
 const GuestRsvp = ({ id, eventId }: GuestRsvpProps) => {
+  const dispatch = useAppDispatch()
   const guestsById = useAppSelector(getGuestsById)
   const guest = guestsById[id]
   const rsvp = useAppSelector((state) =>
     getRsvpByEventIdAndGuestId(state, eventId, id),
   )
-  const [addRsvp] = useAddRsvpMutation()
 
-  console.log(`Rsvp for guest ${id} and event ${eventId}`)
-  console.dir(rsvp)
-
-  // TODO: Find out if the user has submitted an Rsvp already for this invite.
-  const accepted =
-    rsvp == null
-      ? ATTENDING_STATUS.PENDING
-      : rsvp.accepted
+  // Prefer API state, but use local state as fallback.
+  const [accepted, setAccepted] = useState(() => {
+    if (rsvp != null) {
+      return rsvp.accepted
         ? ATTENDING_STATUS.ACCEPTED
         : ATTENDING_STATUS.DECLINED
+    }
 
-  // TODO:
+    return ATTENDING_STATUS.PENDING
+  })
+
+  // Allow Redux Rsvp status to update the local state, when it changes
+  useEffect(() => {
+    setAccepted((accepted) => {
+      if (rsvp != null) {
+        return rsvp.accepted
+          ? ATTENDING_STATUS.ACCEPTED
+          : ATTENDING_STATUS.DECLINED
+      }
+
+      return accepted
+    })
+  }, [rsvp])
+
   // When the user makes a decision on an invite, they are creating an Rsvp.
   const handleInviteRsvp = (attending: boolean) => {
-    // dispatch an upsertRsvp action here
-    console.log(`handleInviteRsvp // attending: ${attending}`)
+    // Update the local state immediately while waiting for update from API.
+    setAccepted(
+      attending ? ATTENDING_STATUS.ACCEPTED : ATTENDING_STATUS.DECLINED,
+    )
 
-    addRsvp({
-      accepted: attending,
-      eventId: eventId,
-      guestId: id,
-    })
+    dispatch(
+      upsertRsvp({
+        accepted: attending,
+        eventId: eventId,
+        guestId: id,
+      }),
+    )
   }
 
   return (
@@ -162,7 +168,7 @@ type RsvpButtonsProps = {
 // the exclusion of the other (like a radio button group). The status drives
 // the styles of both buttons.
 const RsvpButtons = ({ accepted, onSelect }: RsvpButtonsProps) => {
-  // TODO: Add styles
+  // TODO: Improve styles
   const pendingVariant = 'secondary'
   const activeVariant = 'default'
   const inactiveVariant = 'secondary'

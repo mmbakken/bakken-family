@@ -1,104 +1,55 @@
-import { useAppSelector } from '@/store'
+import { useAppDispatch, useAppSelector } from '@/store'
 import { useTitle } from '@/hooks'
 import {
-  useGetGuestsQuery,
-  useGetRsvpsQuery,
-  useGetEventsQuery,
-  useGetInvitesQuery,
-} from '@/services/api'
-import {
+  fetchRsvpData,
   getAllGuests,
   getAllRsvps,
   getAllEvents,
   getAllInvites,
 } from '@/features/wedding/slice'
-import { Loader } from 'lucide-react'
+import { useEffect } from 'react'
 
 const Admin = () => {
+  const dispatch = useAppDispatch()
   useTitle('Wedding - RSVP')
 
-  const {
-    error: guestsError,
-    isError: guestsIsError,
-    isLoading: isLoadingGuests,
-  } = useGetGuestsQuery()
-  const {
-    error: rsvpsError,
-    isError: rsvpsIsError,
-    isLoading: isLoadingRsvps,
-  } = useGetRsvpsQuery()
-  const {
-    error: eventsError,
-    isError: eventsIsError,
-    isLoading: isLoadingEvents,
-  } = useGetEventsQuery()
-  const {
-    error: invitesError,
-    isError: invitesIsError,
-    isLoading: isLoadingInvites,
-  } = useGetInvitesQuery()
+  useEffect(() => {
+    dispatch(fetchRsvpData())
+  }, [dispatch])
 
   const allGuests = useAppSelector(getAllGuests)
   const allRsvps = useAppSelector(getAllRsvps)
   const allEvents = useAppSelector(getAllEvents)
   const allInvites = useAppSelector(getAllInvites)
 
-  const isError =
-    guestsIsError || rsvpsIsError || eventsIsError || invitesIsError
-  const isLoading =
-    isLoadingGuests || isLoadingRsvps || isLoadingEvents || isLoadingInvites
-
-  if (guestsError != null) {
-    console.error('Error with loading guests:')
-    console.error(guestsError)
-    return null
-  }
-
-  if (rsvpsError != null) {
-    console.error('Error with loading rsvps:')
-    console.error(rsvpsError)
-    return null
-  }
-
-  if (eventsError != null) {
-    console.error('Error with loading events:')
-    console.error(eventsError)
-    return null
-  }
-
-  if (invitesError != null) {
-    console.error('Error with loading invites:')
-    console.error(invitesError)
-    return null
-  }
-
   return (
-    <div className="bg-app-blush-100">
+    <div className="bg-app-blush-100 min-h-screen min-w-screen p-4">
       <header>
-        <h1>Hello, this is the Admin Page</h1>
+        <h1 className="text-3xl">Admin Page</h1>
       </header>
 
       <section className="flex flex-col gap-4">
-        {isLoading && <Loader className="animate-spin" />}
+        <div>
+          <h2 className="text-xl">Guests</h2>
+          <pre>{JSON.stringify(allGuests, null, 2)}</pre>
 
-        {isError && (
-          <pre>
-            {JSON.stringify(
-              'Something went wrong :( - sorry about that. Try again later.',
-              null,
-              2,
-            )}
-          </pre>
-        )}
+          <hr className="border-app-purple-700 my-8 rounded-xl border" />
 
-        {!isLoading && !isError && (
-          <div>
-            <pre>{JSON.stringify(allGuests, null, 2)}</pre>
-            <pre>{JSON.stringify(allRsvps, null, 2)}</pre>
-            <pre>{JSON.stringify(allEvents, null, 2)}</pre>
-            <pre>{JSON.stringify(allInvites, null, 2)}</pre>
-          </div>
-        )}
+          <h2 className="text-xl">RSVPs</h2>
+          <pre>{JSON.stringify(allRsvps, null, 2)}</pre>
+
+          <hr className="border-app-purple-700 my-8 border" />
+
+          <h2 className="text-xl">Events</h2>
+          <pre>{JSON.stringify(allEvents, null, 2)}</pre>
+
+          <hr className="border-app-purple-700 my-8 border" />
+
+          <h2 className="text-xl">Invites</h2>
+          <pre>{JSON.stringify(allInvites, null, 2)}</pre>
+
+          <hr className="border-app-purple-700 my-8 border" />
+        </div>
       </section>
     </div>
   )

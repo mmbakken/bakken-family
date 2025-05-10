@@ -1,16 +1,20 @@
 import { useTitle } from '@/hooks'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { getEntryEvent, clickedAttending, clickedNotAttending } from '../slice'
-import { useAddRsvpMutation, useGetGuestsQuery } from '@/services/api'
+import {
+  getEntryEvent,
+  clickedAttending,
+  clickedNotAttending,
+  upsertRsvp,
+  getAllGuests,
+} from '@/features/wedding/slice'
 import { Button } from '@/components/ui/button'
 
 const Entry = () => {
   useTitle('Wedding - RSVP')
 
   const dispatch = useAppDispatch()
-  const { data: guests } = useGetGuestsQuery()
-  const [addRsvp] = useAddRsvpMutation()
   const entryEvent = useAppSelector(getEntryEvent)
+  const guests = useAppSelector(getAllGuests)
 
   const allowUpdates = entryEvent != null && guests != null
 
@@ -22,11 +26,13 @@ const Entry = () => {
     dispatch(clickedAttending())
 
     guests.map((guest) => {
-      addRsvp({
-        accepted: true,
-        eventId: entryEvent?.id,
-        guestId: guest.id,
-      })
+      dispatch(
+        upsertRsvp({
+          accepted: true,
+          eventId: entryEvent?.id,
+          guestId: guest.id,
+        }),
+      )
     })
   }
 
@@ -38,11 +44,13 @@ const Entry = () => {
     dispatch(clickedNotAttending())
 
     guests.map((guest) => {
-      addRsvp({
-        accepted: false,
-        eventId: entryEvent?.id,
-        guestId: guest.id,
-      })
+      dispatch(
+        upsertRsvp({
+          accepted: false,
+          eventId: entryEvent?.id,
+          guestId: guest.id,
+        }),
+      )
     })
   }
 

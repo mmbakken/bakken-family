@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@/store'
 import { useTitle } from '@/hooks'
-import { fetchRsvpData } from '@/features/wedding/slice'
+import { fetchRsvpData } from '@/features/wedding/thunks'
 import {
   getAllGuests,
   getAllRsvps,
@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 
 const Admin = () => {
   const dispatch = useAppDispatch()
-  useTitle('Wedding - RSVP')
+  useTitle('Wedding - Admin')
 
   useEffect(() => {
     dispatch(fetchRsvpData())

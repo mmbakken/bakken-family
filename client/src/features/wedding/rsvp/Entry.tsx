@@ -1,10 +1,9 @@
 import { useTitle } from '@/hooks'
 import { useAppDispatch, useAppSelector } from '@/store'
 import {
-  clickedAttending,
-  clickedNotAttending,
-  upsertRsvp,
-} from '@/features/wedding/slice'
+  clickedAttendingEntry,
+  clickedNotAttendingEntry,
+} from '@/features/wedding/thunks'
 import { getEntryEvent, getAllGuests } from '@/features/wedding/selectors'
 import { Button } from '@/components/ui/button'
 
@@ -22,11 +21,9 @@ const Entry = () => {
       return
     }
 
-    dispatch(clickedAttending())
-
     guests.map((guest) => {
       dispatch(
-        upsertRsvp({
+        clickedAttendingEntry({
           accepted: true,
           eventId: entryEvent?.id,
           guestId: guest.id,
@@ -40,11 +37,9 @@ const Entry = () => {
       return
     }
 
-    dispatch(clickedNotAttending())
-
     guests.map((guest) => {
       dispatch(
-        upsertRsvp({
+        clickedNotAttendingEntry({
           accepted: false,
           eventId: entryEvent?.id,
           guestId: guest.id,

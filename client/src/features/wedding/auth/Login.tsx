@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { Route as LoginRoute } from '@/routes/wedding/login'
 import { useTitle } from '@/hooks'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,6 +15,7 @@ const Login = () => {
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const { redirect } = LoginRoute.useSearch()
 
   //==================================================
   // Event handlers
@@ -67,9 +69,8 @@ const Login = () => {
       // Save the token to local storage and include with all future requests.
       localStorage.setItem('token', json.accessToken)
 
-      // Just always redirect to the wedding home page. I'm too tired to figure
-      // out how to use the redirect search param.
-      navigate({ to: '/wedding' })
+      // Redirect to where the user was trying to go before being sent here.
+      navigate({ to: redirect })
     } catch (error) {
       console.log('POST /login error:')
       console.error(error)
@@ -81,7 +82,7 @@ const Login = () => {
       <div className="flex max-w-md flex-col gap-8">
         <div className="flex flex-col gap-6">
           <h2 className="text-md text-center text-neutral-900">Welcome to</h2>
-          <h1 className="text-center text-3xl text-neutral-900">
+          <h1 className="text-app-purple-500 text-center text-3xl">
             Hilary & Matt's Wedding
           </h1>
           <h2 className="text-md text-center text-neutral-900">
@@ -116,7 +117,7 @@ const Login = () => {
           </div>
 
           <Button
-            className="disabled:cursor-disabled border-app-blush-900 bg-app-blush-700 w-40 cursor-pointer border"
+            className="disabled:cursor-disabled border-app-purple-500 bg-app-purple-500 w-40 cursor-pointer border"
             onKeyDown={handleKeyDown}
             onClick={handleLoginSubmit}
           >

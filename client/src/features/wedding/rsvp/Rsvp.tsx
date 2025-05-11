@@ -2,9 +2,9 @@ import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '@/store'
 import { useTitle } from '@/hooks'
 import { STEPS } from '@/features/wedding/constants'
-import { fetchRsvpData } from '@/features/wedding/slice'
+import { fetchRsvpData } from '@/features/wedding/thunks'
 import { getHasLoadedRsvpData, getRsvpStep } from '@/features/wedding/selectors'
-import { Entry, Main, Lodging, Done, Declined } from '@/features/wedding/rsvp'
+import { Entry, Main, Lodging, Done } from '@/features/wedding/rsvp'
 import { LoaderIcon } from 'lucide-react'
 
 const Rsvp = () => {
@@ -34,23 +34,15 @@ const Rsvp = () => {
     case STEPS.ENTRY: {
       return <Entry />
     }
-
     case STEPS.MAIN: {
       return <Main />
     }
-
     case STEPS.LODGING: {
       return <Lodging />
     }
-
     case STEPS.DONE: {
       return <Done />
     }
-
-    case STEPS.DECLINED: {
-      return <Declined />
-    }
-
     default: {
       return null
     }

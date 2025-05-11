@@ -1,7 +1,16 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import weddingAPI from '@/features/wedding/api'
+import { createSlice } from '@reduxjs/toolkit'
+import {
+  clickedAttendingEntry,
+  clickedNotAttendingEntry,
+  fetchRsvpData,
+  updateGuest,
+  updateRsvp,
+  upsertRsvp,
+} from '@/features/wedding/thunks'
+import { getHasLodgingInvites } from '@/features/wedding/selectors'
 import { STEPS } from '@/features/wedding/constants'
-// import type { PayloadAction } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
+import type { AppDispatch, RootState } from '@/store'
 import type {
   EventT,
   GuestT,
@@ -9,6 +18,33 @@ import type {
   RsvpT,
   UserT,
 } from '@/features/wedding/types'
+
+// Helper function. Given a list of Rsvps and an Rsvp that may exist in the main
+// list, returns the list of Rsvps that always includes the Rsvp (upserted).
+const getUpdatedRsvps = (rsvps: RsvpT[], upsertedRsvp: RsvpT) => {
+  // No-op
+  if (upsertedRsvp == null) {
+    return rsvps
+  }
+
+  // If the Rsvp exists in the list, update its object with the latest data.
+  let found = false
+  const updatedRsvps = rsvps.map((r) => {
+    if (r.id === upsertedRsvp.id) {
+      found = true
+      return upsertedRsvp
+    } else {
+      return r
+    }
+  })
+
+  // Otherwise, add the new Rsvp to the list.
+  if (!found) {
+    updatedRsvps.push(upsertedRsvp)
+  }
+
+  return updatedRsvps
+}
 
 interface WeddingState {
   // Are we fetching any kind of data, right now?
@@ -23,14 +59,11 @@ interface WeddingState {
     guests: GuestT[]
     events: EventT[]
     invites: InviteT[]
-
-    // These are the only entities we update.
     rsvps: RsvpT[]
   }
 
   // State about the RSVP process.
   rsvps: {
-    userHasInteracted: boolean
     step: number
   }
 }
@@ -46,7 +79,6 @@ const initialState: WeddingState = {
     rsvps: [],
   },
   rsvps: {
-    userHasInteracted: false,
     step: STEPS.ENTRY,
   },
 }
@@ -55,87 +87,132 @@ export const weddingSlice = createSlice({
   name: 'wedding',
   initialState,
   reducers: {
-    // clickedAttending: (state, action: PayloadAction<number>) => {
-
-    // Entry page RSVP creation.
-    // TODO: These two should be async thunks that call the API and make an RSVP
-    // and the side effect is that the step changes.
-    clickedAttending: (state) => {
-      state.rsvps.userHasInteracted = true
-      state.rsvps.step = STEPS.MAIN
-    },
-    clickedNotAttending: (state) => {
-      state.rsvps.userHasInteracted = true
-      state.rsvps.step = STEPS.DECLINED
-    },
-
-    // Step navigation actions.
-    // TODO: Need an action per-step for back and next, if applicable.
     clickedBack: (state) => {
-      state.rsvps.userHasInteracted = true
-      state.rsvps.step = STEPS.ENTRY
+      switch (state.rsvps.step) {
+        case STEPS.ENTRY: {
+          state.rsvps.step = STEPS.ENTRY
+          break
+        }
+        case STEPS.MAIN: {
+          state.rsvps.step = STEPS.ENTRY
+          break
+        }
+        case STEPS.LODGING: {
+          state.rsvps.step = STEPS.MAIN
+          break
+        }
+        case STEPS.DONE: {
+          state.rsvps.step = STEPS.ENTRY
+          break
+        }
+        // This shouldn't happen.
+        default: {
+          state.rsvps.step = STEPS.ENTRY
+        }
+      }
     },
-    clickedNext: (state) => {
-      state.rsvps.userHasInteracted = true
-      state.rsvps.step = STEPS.DONE
+    setNextStep: (state, action: PayloadAction<ClickedNextPayload>) => {
+      switch (state.rsvps.step) {
+        case STEPS.ENTRY: {
+          state.rsvps.step = STEPS.MAIN
+          break
+        }
+        case STEPS.MAIN: {
+          if (action.payload.hasLodgingInvites) {
+            state.rsvps.step = STEPS.LODGING
+            break
+          }
+
+          state.rsvps.step = STEPS.DONE
+          break
+        }
+        case STEPS.LODGING: {
+          state.rsvps.step = STEPS.DONE
+          break
+        }
+        case STEPS.DONE: {
+          state.rsvps.step = STEPS.ENTRY
+          break
+        }
+        default: {
+          state.rsvps.step = STEPS.DONE
+        }
+      }
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchRsvpData.fulfilled, (state, action) => {
-      state.entities.user = action.payload.user
-      state.entities.events = action.payload.events
-      state.entities.guests = action.payload.guests
-      state.entities.invites = action.payload.invites
-      state.entities.rsvps = action.payload.rsvps
+      const {
+        user,
+        events,
+        guests,
+        invites,
+        rsvps,
+        hasLodgingInvites,
+        hasCompletedEntryInvites,
+        hasCompletedAllMainInvites,
+        hasCompletedAllLodgingInvites,
+      } = action.payload
+
+      state.entities.user = user
+      state.entities.events = events
+      state.entities.guests = guests
+      state.entities.invites = invites
+      state.entities.rsvps = rsvps
       state.hasLoaded = true
+
+      // This is the only time the step should be set programatically. Otherwise
+      // the user should be free to go back any time. Going forward a step is
+      // restricted based on completion of the current step.
+
+      // If the user has no saved RSVPs, they're on the entry step.
+      if (action.payload.rsvps.length === 0) {
+        state.rsvps.step = STEPS.ENTRY
+        return
+      }
+
+      // Otherwise, see if they have Entry invites to finish.
+      if (!hasCompletedEntryInvites) {
+        state.rsvps.step = STEPS.MAIN
+        return
+      }
+
+      // Otherwise, see if they have Main invites to finish.
+      if (!hasCompletedAllMainInvites) {
+        state.rsvps.step = STEPS.MAIN
+        return
+      }
+
+      // Otherwise, see if they have Lodging invites to finish.
+      if (hasLodgingInvites && !hasCompletedAllLodgingInvites) {
+        state.rsvps.step = STEPS.LODGING
+        return
+      }
+
+      // Finally, the user may have completed all Invites.
+      state.rsvps.step = STEPS.DONE
+    })
+
+    builder.addCase(clickedAttendingEntry.fulfilled, (state, action) => {
+      const upsertedRsvp = action.payload
+      state.entities.rsvps = getUpdatedRsvps(state.entities.rsvps, upsertedRsvp)
+      state.rsvps.step = STEPS.MAIN
+    })
+
+    builder.addCase(clickedNotAttendingEntry.fulfilled, (state, action) => {
+      const upsertedRsvp = action.payload
+      state.entities.rsvps = getUpdatedRsvps(state.entities.rsvps, upsertedRsvp)
+      state.rsvps.step = STEPS.DONE
     })
 
     builder.addCase(upsertRsvp.fulfilled, (state, action) => {
-      const rsvp = action.payload
-
-      if (rsvp == null) {
-        return
-      }
-
-      let found = false
-      const updatedRsvps = state.entities.rsvps.map((r) => {
-        if (r.id === rsvp.id) {
-          found = true
-          return rsvp
-        } else {
-          return r
-        }
-      })
-
-      if (!found) {
-        updatedRsvps.push(rsvp)
-      }
-
-      state.entities.rsvps = updatedRsvps
+      const upsertedRsvp = action.payload
+      state.entities.rsvps = getUpdatedRsvps(state.entities.rsvps, upsertedRsvp)
     })
 
     builder.addCase(updateRsvp.fulfilled, (state, action) => {
-      const rsvp = action.payload
-
-      if (rsvp == null) {
-        return
-      }
-
-      let found = false
-      const updatedRsvps = state.entities.rsvps.map((r) => {
-        if (r.id === rsvp.id) {
-          found = true
-          return rsvp
-        } else {
-          return r
-        }
-      })
-
-      if (!found) {
-        updatedRsvps.push(rsvp)
-      }
-
-      state.entities.rsvps = updatedRsvps
+      const upsertedRsvp = action.payload
+      state.entities.rsvps = getUpdatedRsvps(state.entities.rsvps, upsertedRsvp)
     })
 
     builder.addCase(updateGuest.fulfilled, (state, action) => {
@@ -165,57 +242,24 @@ export const weddingSlice = createSlice({
 })
 
 export const {
-  clickedAttending,
-  clickedNotAttending,
   clickedBack,
-  clickedNext,
 } = weddingSlice.actions
 export default weddingSlice.reducer
 
 //======================================
-// Async thunks for API calls.
+// Sync thunks for injecting state into actions.
 //======================================
 
-// Get the Rsvp data necessary to render the app
-export const fetchRsvpData = createAsyncThunk(
-  'wedding/fetchRsvpData',
-  async () => {
-    const user = await weddingAPI.getUser()
-    const guests = await weddingAPI.getGuests()
-    const events = await weddingAPI.getEvents()
-    const invites = await weddingAPI.getInvites()
-    const rsvps = await weddingAPI.getRsvps()
+type ClickedNextPayload = {
+  hasLodgingInvites: boolean
+}
 
-    return {
-      user,
-      events,
-      guests,
-      invites,
-      rsvps,
-    }
-  },
-)
+interface Thunk {
+  (): (dispatch: AppDispatch, getState: () => RootState) => void
+}
 
-// Create or update an Rsvp.
-export const upsertRsvp = createAsyncThunk(
-  'wedding/upsertRsvp',
-  async (rsvp: Partial<RsvpT>) => {
-    return await weddingAPI.upsertRsvp(rsvp)
-  },
-)
-
-// Update an Rsvp.
-export const updateRsvp = createAsyncThunk(
-  'wedding/updateRsvp',
-  async (rsvp: Partial<RsvpT>) => {
-    return await weddingAPI.updateRsvp(rsvp)
-  },
-)
-
-// Update allergies for a Guest.
-export const updateGuest = createAsyncThunk(
-  'wedding/updateGuest',
-  async (guest: Partial<GuestT>) => {
-    return await weddingAPI.updateGuest(guest)
-  },
-)
+export const clickedNext: Thunk = () => (dispatch, getState) => {
+  const state = getState()
+  const hasLodgingInvites = getHasLodgingInvites(state)
+  dispatch(weddingSlice.actions.setNextStep({ hasLodgingInvites }))
+}

@@ -1,5 +1,4 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { STEPS } from '@/features/wedding/constants'
 import type { RootState } from '@/store'
 import type { EventT, GuestT, InviteT, RsvpT } from '@/features/wedding/types'
 
@@ -15,6 +14,8 @@ const getWeddingState = (state: RootState) => {
 // Returns true when the necessary API data for the RSVP process is loaded.
 export const getHasLoadedRsvpData = (state: RootState) =>
   state.wedding.hasLoaded
+
+export const getRsvpStep = (state: RootState) => state.wedding.rsvps.step
 
 //======================================
 // Guests
@@ -200,6 +201,26 @@ export const getAllInvites = createSelector(
   },
 )
 
+// Returns an array of invites which are for the Entry event.
+const getEntryInvites = createSelector(
+  [getAllInvites, getEntryEvent],
+  (allInvites, entryEvent) => {
+    if (entryEvent == null) {
+      return []
+    }
+
+    const entryInvites: InviteT[] = []
+
+    allInvites.map((invite) => {
+      if (invite.eventId === entryEvent.id) {
+        entryInvites.push(invite)
+      }
+    })
+
+    return entryInvites
+  },
+)
+
 // Returns an array of invites which are for Main events.
 const getMainInvites = createSelector(
   [getAllInvites, getMainEventIds],
@@ -310,6 +331,42 @@ export const getAllRsvps = createSelector(
   },
 )
 
+// Returns a list of all Rsvps which are for the Entry event.
+const getEntryRsvps = createSelector(
+  [getAllRsvps, getEntryEvent],
+  (allRsvps, entryEvent) => {
+    if (allRsvps == null || entryEvent == null) {
+      return []
+    }
+
+    const entryRsvps = allRsvps.filter((rsvp) => {
+      return rsvp.eventId === entryEvent.id
+    })
+
+    if (entryRsvps == null) {
+      return []
+    }
+
+    return entryRsvps
+  },
+)
+
+// Returns an arrya of Rsvps which are for Main events.
+const getMainRsvps = createSelector(
+  [getAllRsvps, getMainEventIds],
+  (allRsvps, mainEventIds) => {
+    const mainRsvps: RsvpT[] = []
+
+    allRsvps.map((rsvp) => {
+      if (mainEventIds.includes(rsvp.eventId)) {
+        mainRsvps.push(rsvp)
+      }
+    })
+
+    return mainRsvps
+  },
+)
+
 // Returns an array of RSVP ids which are for Main events.
 const getMainRsvpIds = createSelector(
   [getAllRsvps, getMainEventIds],
@@ -350,65 +407,18 @@ const getLodgingRsvpIds = createSelector(
   },
 )
 
+export const getHasCompletedEntryInvites = createSelector(
+  [getEntryRsvps, getEntryInvites],
+  (entryRsvps, entryInvites) => {
+    return entryRsvps.length === entryInvites.length
+  },
+)
+
 // Returns true if the user has an RSVP for each lodging event invite.
 export const getHasCompletedAllLodgingInvites = createSelector(
   [getLodgingRsvpIds, getLodgingInviteIds],
   (lodgingRsvpIds, lodgingInviteIds) => {
     return lodgingRsvpIds.length === lodgingInviteIds.length
-  },
-)
-
-// The active step for this user depends on how many steps they've completed.
-export const getRsvpStep = createSelector(
-  [
-    getWeddingState,
-    getHasLoadedRsvpData,
-    getAllRsvps,
-    getHasCompletedAllMainInvites,
-    getHasLodgingInvites,
-    getHasCompletedAllLodgingInvites,
-  ],
-  (
-    wedding,
-    hasLoadedRsvpData,
-    allRsvps,
-    hasCompletedAllMainInvites,
-    hasLodgingInvites,
-    hasCompletedAllLodgingInvites,
-  ) => {
-    // TODO: The below logic is good for determining what the initial state of
-    // the `step` should be. But for ease of use, just let the user update their
-    // step by dispatching simple actions. We should use the below logic AFTER
-    // all of the
-
-    if (wedding.rsvps.userHasInteracted || !hasLoadedRsvpData) {
-      return wedding.rsvps.step
-    }
-
-    // If the user has no saved RSVPs, they're on the entry step.
-    if (allRsvps.length === 0) {
-      return STEPS.ENTRY
-    }
-
-    // The first RSVP which must be completed is the general yes/no one. If that
-    // is the only RSVP, then show the main step.
-    if (allRsvps.length === 1) {
-      return STEPS.MAIN
-    }
-
-    // Otherwise, see if they have Main invites to finish.
-    if (!hasCompletedAllMainInvites) {
-      return STEPS.MAIN
-    }
-
-    // Otherwise, see if they have Lodging invites to finish.
-    if (hasLodgingInvites && !hasCompletedAllLodgingInvites) {
-      return STEPS.LODGING
-    }
-
-    // Finally, we assume they've completed all invites and created an RSVP for
-    // each one. They can view whatever step they want.
-    return wedding.rsvps.step
   },
 )
 
@@ -429,5 +439,39 @@ export const getRsvpByEventIdAndGuestId = createSelector(
     )
 
     return rsvp ?? null
+  },
+)
+
+// Returns true if the user is coming to anything during the wedding weekend.
+export const getIsComing = createSelector(
+  [getEntryRsvps, getMainRsvps],
+  (entryRsvps, mainRsvps) => {
+    if (entryRsvps == null || mainRsvps == null) {
+      return false
+    }
+
+    // The user is coming to the wedding if:
+    // 1. They said "yes" on the Entry invite (both guests).
+    // 2. They said "yes" to at least on Main event (>= 1 guest).
+
+    // Are all guests for this user coming to the wedding?
+    const isAttendingEntry = entryRsvps.reduce((carry, entryRsvp) => {
+      if (!carry) {
+        return false
+      }
+
+      return Boolean(entryRsvp.accepted)
+    }, true)
+
+    if (!isAttendingEntry) {
+      return false
+    }
+
+    // Check if any guests are coming to any Main events.
+    const isAttendingAnyMainEvent = mainRsvps.find((mainRsvp) => {
+      return Boolean(mainRsvp.accepted)
+    })
+
+    return isAttendingAnyMainEvent
   },
 )

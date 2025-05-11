@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { upsertRsvp, updateRsvp, updateGuest } from '@/features/wedding/slice'
+import { upsertRsvp, updateRsvp, updateGuest } from '@/features/wedding/thunks'
 import {
   getGuestsById,
   getRsvpByEventIdAndGuestId,

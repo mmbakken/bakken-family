@@ -1,7 +1,7 @@
 import { Context } from 'hono'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import * as schema from '../../db/schema.ts'
-import { and, eq, inArray } from 'drizzle-orm/expressions'
+import { and, eq, inArray, notInArray } from 'drizzle-orm/expressions'
 
 const db = drizzle(Deno.env.get('DATABASE_URL')!, { schema })
 
@@ -168,4 +168,105 @@ export const updateRsvp = async (c: Context) => {
     guestId: `${updatedRsvp.guestId}`,
     eventId: `${updatedRsvp.eventId}`,
   })
+}
+
+// Declines every Rsvp for every invite for every guest of the current user.
+export const declineAllRsvps = async (c: Context) => {
+  const user = c.get('user')
+
+  if (user == null) {
+    return c.json({ error: 'User not found.' }, 404)
+  }
+
+  // Find all guest ids for this user.
+  const userGuests = await db.select({
+    id: schema.guests.id,
+  }).from(
+    schema.guests,
+  ).where(eq(schema.guests.userId, user.id))
+
+  if (userGuests == null || userGuests.length === 0) {
+    return c.json({ error: 'User guests not found.' }, 404)
+  }
+
+  const userGuestIds = userGuests.map((guest) => guest.id)
+
+  if (userGuestIds == null || userGuestIds.length === 0) {
+    return c.json({ error: 'User guests not found.' }, 404)
+  }
+
+  console.log('userGuestIds:')
+  console.dir(userGuestIds)
+
+  // Step 1: Decline all existing Rsvps for these guests.
+  const existingRsvps = await db.update(schema.rsvps).set({
+    accepted: false,
+    updatedOn: new Date(),
+  }).where(
+    inArray(schema.rsvps.guestId, userGuestIds),
+  ).returning()
+
+  console.log('existingRsvps.length:')
+  console.dir(existingRsvps.length)
+
+  // Get the event and guest ids of these updated rsvps
+  const existingRsvpEventIds = existingRsvps.map((r) => r.eventId)
+
+  // Step 2: For all of the guest invites which do not yet have an Rsvp, we
+  // should create an Rsvp and mark it as declined.
+  const noRsvpGuestInvites = await db.select().from(schema.invites).where(
+    and(
+      notInArray(schema.invites.eventId, existingRsvpEventIds),
+      inArray(schema.invites.guestId, userGuestIds),
+    ),
+  )
+
+  let updatedRsvps = existingRsvps ?? []
+
+  if (noRsvpGuestInvites != null && noRsvpGuestInvites.length > 0) {
+    const newRsvps = await db.insert(schema.rsvps).values(
+      noRsvpGuestInvites.map((invite) => {
+        return {
+          guestId: invite.guestId,
+          eventId: invite.eventId,
+          accepted: false,
+        }
+      }),
+    ).returning()
+
+    console.log('newRsvps.length')
+    console.dir(newRsvps.length)
+
+    updatedRsvps = [
+      ...updatedRsvps,
+      ...newRsvps,
+    ]
+  }
+
+  console.log('updatedRsvps')
+  console.dir(updatedRsvps)
+
+  // Convert ids to strings
+  const rsvps = updatedRsvps.map((r) => {
+    return {
+      ...r,
+      id: `${r.id}`,
+      guestId: `${r.guestId}`,
+      eventId: `${r.eventId}`,
+    }
+  })
+
+  // Finally, set the user's submittedOn timestamp
+  const updatedUsers = await db.update(schema.users).set({
+    submittedOn: new Date(),
+  }).where(
+    eq(schema.users.id, user.id),
+  ).returning()
+
+  const updatedUser = updatedUsers[0]
+
+  console.log('updatedUser:')
+  console.dir(updatedUser)
+
+  return c.json(rsvps)
 }

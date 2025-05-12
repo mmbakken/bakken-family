@@ -22,6 +22,23 @@ const weddingAPI = {
     return await response.json()
   },
 
+  refreshUserToken: async () => {
+    const url = `${baseUrl}/wedding/refreshToken`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error refreshing user token.')
+    }
+
+    return await response.json()
+  },
+
   getGuests: async () => {
     const url = `${baseUrl}/wedding/guests`
     const response = await fetch(url, {
@@ -139,6 +156,40 @@ const weddingAPI = {
 
     if (!response.ok) {
       throw new Error('Error updating RSVP.')
+    }
+
+    return await response.json()
+  },
+
+  declineAll: async () => {
+    const url = `${baseUrl}/wedding/rsvp/declineAll`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error declining all RSVPs.')
+    }
+
+    return await response.json()
+  },
+
+  submit: async () => {
+    const url = `${baseUrl}/wedding/rsvp/submit`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error submitting RSVPs.')
     }
 
     return await response.json()

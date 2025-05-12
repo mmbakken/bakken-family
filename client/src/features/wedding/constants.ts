@@ -3,7 +3,8 @@ export const STEPS = {
   ENTRY: 0,
   MAIN: 1,
   LODGING: 2,
-  DONE: 3,
+  DECLINED: 3,
+  DONE: 4,
 }
 
 // Enum of types of attending values.

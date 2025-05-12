@@ -1,11 +1,16 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
-import { login } from './auth/login.ts'
+import { login, refreshToken } from './auth/login.ts'
 import { authenticateToken } from './auth/authenticateToken.ts'
-import { getUser, getUsers } from './routes/users.ts'
+import { getUser, getUsers, submitRsvps } from './routes/users.ts'
 import { getGuests, updateGuest } from './routes/guests.ts'
-import { getRsvps, updateRsvp, upsertRsvp } from './routes/rsvps.ts'
+import {
+  declineAllRsvps,
+  getRsvps,
+  updateRsvp,
+  upsertRsvp,
+} from './routes/rsvps.ts'
 import { getEvents } from './routes/events.ts'
 import { getInvites } from './routes/invites.ts'
 
@@ -47,6 +52,7 @@ app.get('/api/v1/wedding', (c) => {
 })
 
 app.post('/api/v1/wedding/login', login)
+app.post('/api/v1/wedding/refreshToken', authenticateToken, refreshToken)
 
 // Test endpoint to validate auth/token works. Do we need this anymore?
 app.get('/api/v1/wedding/users', authenticateToken, getUsers)
@@ -85,6 +91,16 @@ app.put(
   '/api/v1/wedding/rsvp',
   authenticateToken,
   updateRsvp,
+)
+app.post(
+  '/api/v1/wedding/rsvp/declineAll',
+  authenticateToken,
+  declineAllRsvps,
+)
+app.post(
+  '/api/v1/wedding/rsvp/submit',
+  authenticateToken,
+  submitRsvps,
 )
 
 Deno.serve(app.fetch)

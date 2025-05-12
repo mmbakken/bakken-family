@@ -6,7 +6,7 @@ interface AppProps {
 }
 
 const App = ({ children }: AppProps) => {
-  return <div className="">{children}</div>
+  return <div className="flex flex-col">{children}</div>
 }
 
 export default App

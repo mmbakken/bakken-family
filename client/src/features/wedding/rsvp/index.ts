@@ -7,9 +7,11 @@ import GuestRsvp from './GuestRsvp'
 import Allergies from './Allergies'
 import Lodging from './Lodging'
 import Done from './Done'
+import Declined from './Declined'
 
 export {
   Allergies,
+  Declined,
   Done,
   Entry,
   Event,

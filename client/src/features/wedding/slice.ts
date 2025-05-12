@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {
   clickedAttendingEntry,
+  clickedNotAttendingConfirmation,
   clickedNotAttendingEntry,
+  clickedSubmit,
   fetchRsvpData,
   updateGuest,
   updateRsvp,
@@ -149,8 +151,11 @@ export const weddingSlice = createSlice({
         invites,
         rsvps,
         hasLodgingInvites,
+        hasAcceptedEntryEvent,
+        hasDeclinedEntryEvent,
         hasCompletedEntryInvites,
         hasCompletedAllMainInvites,
+        hasDeclinedAllMainEvents,
         hasCompletedAllLodgingInvites,
       } = action.payload
 
@@ -165,26 +170,38 @@ export const weddingSlice = createSlice({
       // the user should be free to go back any time. Going forward a step is
       // restricted based on completion of the current step.
 
+      // If the user has submitted, then show them the Done screen.
+      if (user.submittedOn != null) {
+        state.rsvps.step = STEPS.DONE
+        return
+      }
+
       // If the user has no saved RSVPs, they're on the entry step.
-      if (action.payload.rsvps.length === 0) {
+      if (!hasCompletedEntryInvites) {
         state.rsvps.step = STEPS.ENTRY
         return
       }
 
-      // Otherwise, see if they have Entry invites to finish.
-      if (!hasCompletedEntryInvites) {
-        state.rsvps.step = STEPS.MAIN
+      // Did they decline the Entry event?
+      if (hasDeclinedEntryEvent) {
+        state.rsvps.step = STEPS.DECLINED
         return
       }
 
       // Otherwise, see if they have Main invites to finish.
-      if (!hasCompletedAllMainInvites) {
+      if (
+        (hasAcceptedEntryEvent &&
+          !hasCompletedAllMainInvites) || hasDeclinedAllMainEvents
+      ) {
         state.rsvps.step = STEPS.MAIN
         return
       }
 
       // Otherwise, see if they have Lodging invites to finish.
-      if (hasLodgingInvites && !hasCompletedAllLodgingInvites) {
+      if (
+        hasAcceptedEntryEvent && hasLodgingInvites &&
+        !hasCompletedAllLodgingInvites
+      ) {
         state.rsvps.step = STEPS.LODGING
         return
       }
@@ -202,7 +219,7 @@ export const weddingSlice = createSlice({
     builder.addCase(clickedNotAttendingEntry.fulfilled, (state, action) => {
       const upsertedRsvp = action.payload
       state.entities.rsvps = getUpdatedRsvps(state.entities.rsvps, upsertedRsvp)
-      state.rsvps.step = STEPS.DONE
+      state.rsvps.step = STEPS.DECLINED
     })
 
     builder.addCase(upsertRsvp.fulfilled, (state, action) => {
@@ -214,6 +231,24 @@ export const weddingSlice = createSlice({
       const upsertedRsvp = action.payload
       state.entities.rsvps = getUpdatedRsvps(state.entities.rsvps, upsertedRsvp)
     })
+
+    builder.addCase(
+      clickedNotAttendingConfirmation.fulfilled,
+      (state, action) => {
+        // Don't bother updating the RSVPs - we're done here.
+        state.entities.user = action.payload
+        state.rsvps.step = STEPS.DONE
+      },
+    )
+
+    builder.addCase(
+      clickedSubmit.fulfilled,
+      (state, action) => {
+        // Don't bother updating the RSVPs - we're done here.
+        state.entities.user = action.payload
+        state.rsvps.step = STEPS.DONE
+      },
+    )
 
     builder.addCase(updateGuest.fulfilled, (state, action) => {
       const guest = action.payload

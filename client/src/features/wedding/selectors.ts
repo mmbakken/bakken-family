@@ -351,6 +351,46 @@ const getEntryRsvps = createSelector(
   },
 )
 
+// Returns true if all Rsvps for the Entry Event are marked "accepted".
+export const getHasAcceptedEntryEvent = createSelector(
+  [getEntryRsvps],
+  (entryRsvps) => {
+    if (entryRsvps == null || entryRsvps.length === 0) {
+      return false
+    }
+
+    const declinedEntryRsvps = entryRsvps.filter((rsvp) => {
+      return !rsvp.accepted
+    })
+
+    if (declinedEntryRsvps == null) {
+      return true
+    }
+
+    return declinedEntryRsvps.length === 0
+  },
+)
+
+// Returns true if all Rsvps for the Entry Event are marked "declined".
+export const getHasDeclinedEntryEvent = createSelector(
+  [getEntryRsvps],
+  (entryRsvps) => {
+    if (entryRsvps == null || entryRsvps.length === 0) {
+      return false
+    }
+
+    const acceptedEntryRsvps = entryRsvps.filter((rsvp) => {
+      return rsvp.accepted
+    })
+
+    if (acceptedEntryRsvps == null) {
+      return true
+    }
+
+    return acceptedEntryRsvps.length === 0
+  },
+)
+
 // Returns an arrya of Rsvps which are for Main events.
 const getMainRsvps = createSelector(
   [getAllRsvps, getMainEventIds],
@@ -388,6 +428,26 @@ export const getHasCompletedAllMainInvites = createSelector(
   [getMainRsvpIds, getMainInviteIds],
   (mainRsvpIds, mainInviteIds) => {
     return mainRsvpIds.length === mainInviteIds.length
+  },
+)
+
+// Returns true if the user has completed all Rsvps for all Main event invites,
+// but has declined all of them.
+export const getHasDeclinedAllMainEvents = createSelector(
+  [getHasCompletedAllMainInvites, getMainRsvps],
+  (hasCompletedAllMainInvites, mainRsvps) => {
+    if (!hasCompletedAllMainInvites) {
+      return false
+    }
+
+    const acceptedRsvp = mainRsvps.find((r) => {
+      return Boolean(r.accepted)
+    })
+
+    console.log('acceptedRsvp')
+    console.dir(acceptedRsvp)
+
+    return acceptedRsvp == null
   },
 )
 

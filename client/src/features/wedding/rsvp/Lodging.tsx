@@ -1,13 +1,13 @@
 import { useAppDispatch, useAppSelector } from '@/store'
 import { useTitle, useScrollToTop } from '@/hooks'
-import { clickedBack, clickedNext } from '@/features/wedding/slice'
+import { clickedBack } from '@/features/wedding/slice'
+import { clickedSubmit } from '@/features/wedding/thunks'
 import {
   getHasCompletedAllLodgingInvites,
   getOrderedLodgingEventIds,
   getHasLodgingInvites,
 } from '@/features/wedding/selectors'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Event } from '@/features/wedding/rsvp'
 
 const Lodging = () => {
@@ -26,8 +26,8 @@ const Lodging = () => {
     dispatch(clickedBack())
   }
 
-  const handleNextClick = () => {
-    dispatch(clickedNext())
+  const handleSubmitClick = () => {
+    dispatch(clickedSubmit())
   }
 
   return (
@@ -54,10 +54,9 @@ const Lodging = () => {
             size="lg"
             disabled={!hasCompletedAllLodgingInvites}
             className="w-full"
-            onClick={handleNextClick}
+            onClick={handleSubmitClick}
           >
             Submit
-            <ChevronRight />
           </Button>
           <Button
             size="lg"
@@ -65,7 +64,6 @@ const Lodging = () => {
             className="w-full"
             onClick={handleBackClick}
           >
-            <ChevronLeft />
             Back
           </Button>
         </div>

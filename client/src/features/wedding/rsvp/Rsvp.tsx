@@ -4,7 +4,7 @@ import { useTitle } from '@/hooks'
 import { STEPS } from '@/features/wedding/constants'
 import { fetchRsvpData } from '@/features/wedding/thunks'
 import { getHasLoadedRsvpData, getRsvpStep } from '@/features/wedding/selectors'
-import { Entry, Main, Lodging, Done } from '@/features/wedding/rsvp'
+import { Entry, Main, Lodging, Done, Declined } from '@/features/wedding/rsvp'
 import { LoaderIcon } from 'lucide-react'
 
 const Rsvp = () => {
@@ -33,6 +33,9 @@ const Rsvp = () => {
   switch (step) {
     case STEPS.ENTRY: {
       return <Entry />
+    }
+    case STEPS.DECLINED: {
+      return <Declined />
     }
     case STEPS.MAIN: {
       return <Main />

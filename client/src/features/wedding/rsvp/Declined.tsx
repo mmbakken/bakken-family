@@ -2,9 +2,13 @@ import { useTitle } from '@/hooks'
 import { useAppDispatch, useAppSelector } from '@/store'
 import {
   clickedAttendingEntry,
-  clickedNotAttendingEntry,
+  clickedNotAttendingConfirmation,
 } from '@/features/wedding/thunks'
-import { getEntryEvent, getAllGuests } from '@/features/wedding/selectors'
+import {
+  getEntryEvent,
+  getAllGuests,
+  getGuestCount,
+} from '@/features/wedding/selectors'
 import { Button } from '@/components/ui/button'
 
 const Entry = () => {
@@ -13,8 +17,17 @@ const Entry = () => {
   const dispatch = useAppDispatch()
   const entryEvent = useAppSelector(getEntryEvent)
   const guests = useAppSelector(getAllGuests)
+  const guestCount = useAppSelector(getGuestCount)
 
   const allowUpdates = entryEvent != null && guests != null
+  const acceptText =
+    guestCount === 1
+      ? "Just kidding - I'll be there!"
+      : "Just kidding - we'll be there!"
+  const declineText =
+    guestCount === 1
+      ? "No, I really can't make it."
+      : "No, we really can't make it."
 
   const handleAttendingClick = () => {
     if (!allowUpdates) {
@@ -36,20 +49,11 @@ const Entry = () => {
     if (!allowUpdates) {
       return
     }
-
-    guests.map((guest) => {
-      dispatch(
-        clickedNotAttendingEntry({
-          accepted: false,
-          eventId: entryEvent?.id,
-          guestId: guest.id,
-        }),
-      )
-    })
+    dispatch(clickedNotAttendingConfirmation())
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col gap-12 overflow-hidden p-6">
+    <div className="flex h-screen w-screen flex-col gap-6 overflow-hidden px-6 py-4">
       <header className="flex flex-col">
         <div className="text-center text-sm text-neutral-700">
           <p>You're invited to the wedding of</p>
@@ -63,20 +67,19 @@ const Entry = () => {
         </div>
       </header>
 
-      <section className="flex w-full flex-col items-center justify-center gap-6 px-2">
+      <section className="flex h-full w-full flex-col items-center justify-center gap-6 px-2">
         <div className="flex flex-col gap-2">
+          <h2 className="text-center text-2xl">Are you sure??</h2>
           <img
             className="aspect-square size-full flex-shrink rounded-xl border"
-            src="/engagement-1.jpg"
-            alt="Engagement photo"
+            src="/hilary-are-you-sure.jpg"
+            alt="A photo of Hilary being sad :("
           />
         </div>
-      </section>
 
-      <section className="flex w-full flex-col items-center justify-center gap-6 px-2">
         <div className="flex w-full max-w-64 flex-col items-center justify-center gap-3">
           <Button size="lg" className="w-full" onClick={handleAttendingClick}>
-            Joyfully Accept
+            {acceptText}
           </Button>
           <Button
             size="lg"
@@ -84,7 +87,7 @@ const Entry = () => {
             className="w-full"
             onClick={handleNotAttendingClick}
           >
-            Regretfully Decline
+            {declineText}
           </Button>
         </div>
       </section>

@@ -2,6 +2,12 @@ import { useAppDispatch, useAppSelector } from '@/store'
 import { useTitle, useScrollToTop } from '@/hooks'
 import { clickedBack, clickedNext } from '@/features/wedding/slice'
 import {
+  clickedNotAttendingConfirmation,
+  clickedSubmit,
+} from '@/features/wedding/thunks'
+import {
+  getGuestCount,
+  getHasDeclinedAllMainEvents,
   getHasCompletedAllMainInvites,
   getOrderedMainEventIds,
   getHasMainInvites,
@@ -14,8 +20,11 @@ import { Event } from '@/features/wedding/rsvp'
 const Main = () => {
   useTitle('Wedding - RSVP')
   useScrollToTop()
-
   const dispatch = useAppDispatch()
+
+  //======================================
+  // Redux state
+  //======================================
 
   const hasCompletedAllMainInvites = useAppSelector(
     getHasCompletedAllMainInvites,
@@ -23,15 +32,41 @@ const Main = () => {
   const orderedMainEventIds = useAppSelector(getOrderedMainEventIds)
   const hasMainInvites = useAppSelector(getHasMainInvites)
   const hasLodgingInvites = useAppSelector(getHasLodgingInvites)
+  const hasDeclinedAllMainEvents = useAppSelector(getHasDeclinedAllMainEvents)
+  const guestCount = useAppSelector(getGuestCount)
 
-  const nextLabel = hasLodgingInvites ? 'Next' : 'Submit'
+  //======================================
+  // Derived state
+  //======================================
+
+  const declineAllLabel = `Actually, ${guestCount === 1 ? 'I' : 'we'} can't make it.`
+  const primaryButtonLabel = hasDeclinedAllMainEvents
+    ? declineAllLabel
+    : hasLodgingInvites
+      ? 'Next'
+      : 'Submit'
+  const showArrow = !hasDeclinedAllMainEvents && hasLodgingInvites
+
+  //======================================
+  // Event handlers
+  //======================================
 
   const handleBackClick = () => {
     dispatch(clickedBack())
   }
 
-  const handleNextClick = () => {
-    dispatch(clickedNext())
+  const handlePrimaryButtonClick = () => {
+    if (hasDeclinedAllMainEvents) {
+      dispatch(clickedNotAttendingConfirmation())
+      return
+    }
+
+    if (hasLodgingInvites) {
+      dispatch(clickedNext())
+      return
+    }
+
+    dispatch(clickedSubmit())
   }
 
   return (
@@ -51,11 +86,11 @@ const Main = () => {
             size="lg"
             disabled={!hasCompletedAllMainInvites}
             className="w-full"
-            onClick={handleNextClick}
+            onClick={handlePrimaryButtonClick}
           >
             <div className="w-4"></div>
-            {nextLabel}
-            <ChevronRight />
+            {primaryButtonLabel}
+            {showArrow && <ChevronRight />}
           </Button>
           <Button
             size="lg"

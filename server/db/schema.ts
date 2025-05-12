@@ -8,6 +8,7 @@ export const users = pgTable('users', {
   password: text().notNull(),
   role: integer().notNull().default(0),
   lastLogin: timestamp('last_login'),
+  submittedOn: timestamp('submitted_on'),
 })
 
 // Guests are people that are invited to our wedding.

@@ -61,6 +61,7 @@ export const login = async (c: Context) => {
       id: user.id,
       username: user.username,
       role: user.role,
+      submittedOn: user.submittedOn,
     }
 
     // TODO: Record the user's lastLogin as now.
@@ -76,4 +77,43 @@ export const login = async (c: Context) => {
   }
 
   return c.json({ message: 'Bad password.' }, 401)
+}
+
+// Given that the user is already logged in and has a valid token, send them a
+// new token.
+export const refreshToken = async (c: Context) => {
+  const userTokenData = c.get('user')
+
+  if (userTokenData == null) {
+    return c.json({ error: 'User not found.' }, 404)
+  }
+
+  // Find the user with this id.
+  const users = await db.select().from(
+    schema.users,
+  ).where(
+    eq(schema.users.id, userTokenData.id),
+  )
+
+  if (users == null || users.length === 0) {
+    return c.json({ message: 'Username not found.' }, 401)
+  }
+
+  const user = users[0]
+
+  const payload = {
+    id: user.id,
+    username: user.username,
+    role: user.role,
+    submittedOn: user.submittedOn,
+  }
+
+  // Generate JWT for public user data and send back as bearer token
+  try {
+    const token = await signJWT(payload)
+    return c.json({ user: payload, accessToken: `Bearer ${token}` })
+  } catch (error) {
+    console.error(error)
+    return c.json({ message: 'Server error while generating JWT.' }, 500)
+  }
 }

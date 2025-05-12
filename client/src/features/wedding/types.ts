@@ -3,6 +3,7 @@ export type UserT = {
   id: string
   username: string
   role: number
+  submittedOn: string // timestamp
 }
 
 export type GuestT = {

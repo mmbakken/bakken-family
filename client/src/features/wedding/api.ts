@@ -143,24 +143,6 @@ const weddingAPI = {
     return await response.json()
   },
 
-  updateRsvp: async (rsvp: Partial<RsvpT>) => {
-    const url = `${baseUrl}/wedding/rsvp`
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token') ?? '',
-      },
-      body: JSON.stringify(rsvp),
-    })
-
-    if (!response.ok) {
-      throw new Error('Error updating RSVP.')
-    }
-
-    return await response.json()
-  },
-
   declineAll: async () => {
     const url = `${baseUrl}/wedding/rsvp/declineAll`
     const response = await fetch(url, {

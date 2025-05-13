@@ -13,11 +13,3 @@ export const ATTENDING_STATUS = {
   PENDING: 0,
   ACCEPTED: 1,
 }
-
-// All entree selection statuses.
-export const ENTREE_OPTIONS = {
-  PENDING: null,
-  BEEF: 'Beef',
-  FISH: 'Fish',
-  VEGAN: 'Vegan',
-}

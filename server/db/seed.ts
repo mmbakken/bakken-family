@@ -340,16 +340,14 @@ const seed = async () => {
     name: 'Lodging - Thursday Night',
     sort: 5,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
-    description:
-      'Stay with us at the Sky Valley Chateau on the night of Thursday, October 9th. Room assignments TBD.',
+    description: 'Check-in is at 4pm MT',
   }
 
   const lodgingFri: typeof schema.events.$inferInsert = {
     name: 'Lodging - Friday Night',
     sort: 6,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
-    description:
-      'Stay with us at the Sky Valley Chateau on the night of Friday, October 10th. Room assignments TBD.',
+    description: '',
   }
 
   const lodgingSat: typeof schema.events.$inferInsert = {
@@ -357,15 +355,14 @@ const seed = async () => {
     sort: 7,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
-      'Stay with us at the Sky Valley Chateau on the night of Saturday, October 11th. Room assignments TBD. Please note - there will be an after party at the lodge following the wedding reception! This is not a good option if you need to go to bed early. Go to bed before midnight? Straight to jail.',
+      'Please note - there will be an after party at the lodge following the wedding reception! This is not a good option if you need to go to bed early. Go to bed before midnight? Straight to jail.',
   }
 
   const lodgingSun: typeof schema.events.$inferInsert = {
     name: 'Lodging - Sunday Night',
     sort: 8,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
-    description:
-      'Stay with us at the Sky Valley Chateau on the night of Sunday, October 12th. Room assignments TBD.',
+    description: '',
   }
 
   const events = [

@@ -129,47 +129,6 @@ export const upsertRsvp = async (c: Context) => {
   })
 }
 
-// Updates an existing RSVP id params.
-// NOTE: Only allow updating the entree field this way.
-export const updateRsvp = async (c: Context) => {
-  const user = c.get('user')
-
-  if (user == null) {
-    return c.json({ error: 'User not found.' }, 404)
-  }
-
-  const body = await c.req.json()
-  const id = Number(body.id)
-  const entree = body.entree ? String(body.entree) : null
-
-  if (
-    id == null ||
-    entree == null
-  ) {
-    return c.json({ error: 'Missing params' }, 422)
-  }
-
-  const updatedRsvps = await db.update(schema.rsvps).set({
-    entree: entree,
-    updatedOn: new Date(),
-  }).where(
-    eq(schema.rsvps.id, id),
-  ).returning()
-
-  const updatedRsvp = updatedRsvps[0]
-
-  console.log('updatedRsvp:')
-  console.dir(updatedRsvp)
-
-  // Convert ids to strings
-  return c.json({
-    ...updatedRsvp,
-    id: `${updatedRsvp.id}`,
-    guestId: `${updatedRsvp.guestId}`,
-    eventId: `${updatedRsvp.eventId}`,
-  })
-}
-
 // Declines every Rsvp for every invite for every guest of the current user.
 export const declineAllRsvps = async (c: Context) => {
   const user = c.get('user')

@@ -31,24 +31,33 @@ const Lodging = () => {
   }
 
   return (
-    <div className="flex min-h-screen w-screen flex-col gap-6 overflow-hidden px-6 py-4">
-      <header className="flex items-center justify-between gap-2">
-        <h1 className="text-primary text-center text-5xl leading-16">
-          RSVP - Lodging
-        </h1>
+    <div className="flex min-h-screen w-screen flex-col gap-6 overflow-hidden p-6">
+      <header className="flex flex-col items-center justify-between gap-4">
+        <h1 className="text-primary text-center text-5xl">Lodging</h1>
+        <p>
+          We'd love to have you stay with us at the Sky Valley Chateau for the
+          weekend of our wedding! It's a 10-bedroom, 10-bathroom vacation
+          rental, and it's the site of the ceremony and reception on Saturday
+          October 11th. Room assignments TBD - we need to know who is stayng
+          with us and which nights.
+        </p>
       </header>
 
-      <p>
-        Has completed all Lodging invites:{' '}
-        {String(hasCompletedAllLodgingInvites)}
-      </p>
+      <div>
+        {hasLodgingInvites &&
+          orderedLodgingEventIds.map((eventId, index) => {
+            return (
+              <>
+                <Event id={eventId} key={eventId} />
+                {index !== orderedLodgingEventIds.length - 1 && (
+                  <hr className="mx-8 my-10 h-px border-0 bg-neutral-300" />
+                )}
+              </>
+            )
+          })}
+      </div>
 
-      {hasLodgingInvites &&
-        orderedLodgingEventIds.map((eventId) => {
-          return <Event id={eventId} key={eventId} />
-        })}
-
-      <section className="flex h-full w-full flex-col items-center justify-center gap-6 px-2">
+      <section className="flex h-full w-full flex-col items-center justify-center pt-4">
         <div className="flex w-full max-w-64 flex-col items-center justify-center gap-3">
           <Button
             size="lg"

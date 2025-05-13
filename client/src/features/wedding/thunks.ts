@@ -34,14 +34,39 @@ export const fetchRsvpData = createAppAsyncThunk(
     const rsvps = await weddingAPI.getRsvps()
 
     const state = thunkApi.getState()
-    const hasAcceptedEntryEvent = getHasAcceptedEntryEvent(state)
-    const hasDeclinedEntryEvent = getHasDeclinedEntryEvent(state)
-    const hasLodgingInvites = getHasLodgingInvites(state)
-    const hasCompletedEntryInvites = getHasCompletedEntryInvites(state)
-    const hasCompletedAllMainInvites = getHasCompletedAllMainInvites(state)
-    const hasDeclinedAllMainEvents = getHasDeclinedAllMainEvents(state)
+
+    // The state has not yet updated with the new entity data. We should send an
+    // updated state value to the selectors
+    // TODO: This is sloppy - can we clean it up?
+    // - One action for "app on load" that fetches the data
+    // - One action for "app did load" that updates the state
+    // - Do the multiple dispatches in a thunk.
+
+    const updatedState = {
+      ...state,
+      wedding: {
+        ...state.wedding,
+        hasLoaded: true,
+        entities: {
+          user: user,
+          guests: guests,
+          events: events,
+          invites: invites,
+          rsvps: rsvps,
+        },
+      },
+    }
+
+    const hasAcceptedEntryEvent = getHasAcceptedEntryEvent(updatedState)
+    const hasDeclinedEntryEvent = getHasDeclinedEntryEvent(updatedState)
+    const hasLodgingInvites = getHasLodgingInvites(updatedState)
+    const hasCompletedEntryInvites = getHasCompletedEntryInvites(updatedState)
+    const hasCompletedAllMainInvites = getHasCompletedAllMainInvites(
+      updatedState,
+    )
+    const hasDeclinedAllMainEvents = getHasDeclinedAllMainEvents(updatedState)
     const hasCompletedAllLodgingInvites = getHasCompletedAllLodgingInvites(
-      state,
+      updatedState,
     )
 
     return {
@@ -91,14 +116,6 @@ export const upsertRsvp = createAppAsyncThunk(
   'wedding/upsertRsvp',
   async (rsvp: Partial<RsvpT>) => {
     return await weddingAPI.upsertRsvp(rsvp)
-  },
-)
-
-// Update an Rsvp.
-export const updateRsvp = createAppAsyncThunk(
-  'wedding/updateRsvp',
-  async (rsvp: Partial<RsvpT>) => {
-    return await weddingAPI.updateRsvp(rsvp)
   },
 )
 

@@ -6,9 +6,9 @@ type RsvpButtonsProps = {
   onSelect: (attending: boolean) => void
 }
 
-// UI component. Renders two buttons next to each other. Each is selectable at
-// the exclusion of the other (like a radio button group). The status drives
-// the styles of both buttons.
+// UI component. Renders two buttons next to each other. Each is selectable
+// at the exclusion of the other (like a radio button group). The status
+// drives the styles of both buttons.
 const RsvpButtons = ({ accepted, onSelect }: RsvpButtonsProps) => {
   // TODO: Improve styles
   const pendingVariant = 'secondary'
@@ -29,7 +29,7 @@ const RsvpButtons = ({ accepted, onSelect }: RsvpButtonsProps) => {
         : inactiveVariant
 
   return (
-    <div className="flex">
+    <div className="flex gap-1">
       <Button variant={attendingVariant} onClick={() => onSelect(true)}>
         Attending
       </Button>

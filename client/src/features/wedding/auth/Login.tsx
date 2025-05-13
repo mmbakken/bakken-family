@@ -78,20 +78,29 @@ const Login = () => {
   }
 
   return (
-    <div className="flex size-full flex-col items-center justify-center p-6 md:p-8">
+    <div className="flex min-h-screen w-screen flex-col justify-center gap-8 overflow-hidden px-6 py-4">
       <div className="flex max-w-md flex-col gap-8">
-        <div className="flex flex-col gap-6">
-          <h2 className="text-md text-center text-neutral-900">Welcome to</h2>
-          <h1 className="text-app-purple-500 text-center text-3xl">
-            Hilary & Matt's Wedding
-          </h1>
-          <h2 className="text-md text-center text-neutral-900">
+        <header className="flex flex-col gap-8">
+          <div className="flex flex-col">
+            <div className="text-center text-sm text-neutral-700">
+              <p>You're invited to the wedding of</p>
+            </div>
+            <h1 className="text-primary text-center text-5xl leading-16">
+              Hilary & Matt
+            </h1>
+            <div className="text-md flex flex-col gap-0.5 text-center leading-5">
+              <p>Steamboat Springs, CO</p>
+              <p>Saturday, October 11, 2025</p>
+            </div>
+          </div>
+
+          <h2 className="">
             Please enter the login info included on your invitation.
           </h2>
-        </div>
+        </header>
 
-        <div className="flex flex-col gap-8">
-          <div className="flex flex-col gap-2">
+        <div className="flex flex-col items-center gap-8">
+          <div className="flex w-full flex-col gap-2">
             <div className="flex flex-col gap-2">
               <label htmlFor="input-name">Names:</label>
               <Input
@@ -117,7 +126,7 @@ const Login = () => {
           </div>
 
           <Button
-            className="disabled:cursor-disabled border-app-purple-500 bg-app-purple-500 w-40 cursor-pointer border"
+            className="disabled:cursor-disabled w-40 cursor-pointer border"
             onKeyDown={handleKeyDown}
             onClick={handleLoginSubmit}
           >

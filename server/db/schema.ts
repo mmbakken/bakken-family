@@ -49,7 +49,6 @@ export const rsvps = pgTable('rsvps', {
   guestId: integer('guest_id').notNull().references(() => guests.id),
   eventId: integer('event_id').notNull().references(() => events.id),
   accepted: boolean().notNull(),
-  entree: text(),
   createdOn: timestamp('created_on').notNull().defaultNow(),
   updatedOn: timestamp('updated_on').notNull().defaultNow(),
 })

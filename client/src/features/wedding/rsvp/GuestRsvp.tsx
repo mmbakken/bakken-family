@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { upsertRsvp, updateRsvp, updateGuest } from '@/features/wedding/thunks'
+import { upsertRsvp, updateGuest } from '@/features/wedding/thunks'
 import {
   getGuestsById,
   getRsvpByEventIdAndGuestId,
   getHasEntree,
 } from '@/features/wedding/selectors'
 import { RsvpButtons } from '@/features/wedding/rsvp'
-import { ATTENDING_STATUS, ENTREE_OPTIONS } from '@/features/wedding/constants'
-import EntreeButtons from '@/features/wedding/rsvp/EntreeButtons'
+import { ATTENDING_STATUS } from '@/features/wedding/constants'
 import Allergies from '@/features/wedding/rsvp/Allergies'
 import { useDebounce } from '@/hooks'
 import type { ChangeEvent } from 'react'
@@ -41,15 +40,6 @@ const GuestRsvp = ({ id, eventId }: GuestRsvpProps) => {
   })
 
   // Prefer API state, but use local state as fallback.
-  const [entree, setEntree] = useState(() => {
-    if (rsvp == null) {
-      return ENTREE_OPTIONS.PENDING
-    }
-
-    return rsvp.entree == null ? ENTREE_OPTIONS.PENDING : rsvp.entree
-  })
-
-  // Prefer API state, but use local state as fallback.
   const [allergies, setAllergies] = useState(() => {
     if (guest == null) {
       return ''
@@ -68,14 +58,6 @@ const GuestRsvp = ({ id, eventId }: GuestRsvpProps) => {
       return rsvp.accepted
         ? ATTENDING_STATUS.ACCEPTED
         : ATTENDING_STATUS.DECLINED
-    })
-
-    setEntree((entree) => {
-      if (rsvp == null) {
-        return entree
-      }
-
-      return rsvp.entree == null ? ENTREE_OPTIONS.PENDING : rsvp.entree
     })
 
     // NOTE: Do not update the allergies here - just fire and forget.
@@ -116,18 +98,6 @@ const GuestRsvp = ({ id, eventId }: GuestRsvpProps) => {
     )
   }
 
-  // Update the existing Rsvp when the user selects an entree.
-  const onEntreeSelect = (entree: string) => {
-    setEntree(entree)
-
-    dispatch(
-      updateRsvp({
-        id: rsvp?.id,
-        entree: entree,
-      }),
-    )
-  }
-
   // Update the existing Guest when the user edits their allergies.
   const onAllergiesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setAllergies(event.currentTarget.value)
@@ -135,14 +105,15 @@ const GuestRsvp = ({ id, eventId }: GuestRsvpProps) => {
   }
 
   return (
-    <div>
-      <p>{guest.fullName}</p>
-
-      <RsvpButtons accepted={accepted} onSelect={onAttendingSelect} />
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="grow-1 text-xl">{guest.fullName}</h3>
+        <RsvpButtons accepted={accepted} onSelect={onAttendingSelect} />
+      </div>
 
       {showFoodOptions && (
-        <div>
-          <EntreeButtons entree={entree} onSelect={onEntreeSelect} />
+        <div className="flex w-full flex-col gap-1">
+          <h3>Dietary Restrictions</h3>
           <Allergies allergies={allergies} onChange={onAllergiesChange} />
         </div>
       )}

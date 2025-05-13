@@ -70,17 +70,26 @@ const Main = () => {
   }
 
   return (
-    <div className="flex min-h-screen w-screen flex-col gap-6 overflow-hidden px-6 py-4">
-      <header className="flex items-center justify-between gap-2">
-        <h1 className="text-primary text-center text-5xl leading-16">RSVP</h1>
+    <div className="flex min-h-screen w-screen flex-col gap-8 overflow-hidden px-6 py-6">
+      <header>
+        <h1 className="text-primary text-5xl">RSVP</h1>
       </header>
 
-      {hasMainInvites &&
-        orderedMainEventIds.map((eventId) => {
-          return <Event id={eventId} key={eventId} />
-        })}
+      <div>
+        {hasMainInvites &&
+          orderedMainEventIds.map((eventId, index) => {
+            return (
+              <>
+                <Event id={eventId} key={eventId} />
+                {index !== orderedMainEventIds.length - 1 && (
+                  <hr className="mx-8 my-10 h-px border-0 bg-neutral-300" />
+                )}
+              </>
+            )
+          })}
+      </div>
 
-      <section className="flex h-full w-full flex-col items-center justify-center gap-6 px-2">
+      <section className="flex h-full w-full flex-col items-center justify-center pt-4">
         <div className="flex w-full max-w-64 flex-col items-center justify-center gap-3">
           <Button
             size="lg"
@@ -88,7 +97,6 @@ const Main = () => {
             className="w-full"
             onClick={handlePrimaryButtonClick}
           >
-            <div className="w-4"></div>
             {primaryButtonLabel}
             {showArrow && <ChevronRight />}
           </Button>

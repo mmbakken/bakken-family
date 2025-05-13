@@ -19,7 +19,6 @@ export type RsvpT = {
   guestId: string
   eventId: string
   accepted: boolean
-  entree: string | null
   createdOn: string // timestamp
   updatedOn: string // timestamp
 }

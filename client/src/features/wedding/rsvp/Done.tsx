@@ -9,42 +9,37 @@ const Done = () => {
   const navigate = useNavigate()
   const isComing = useAppSelector(getIsComing)
 
-  const greeting = isComing
-    ? "We're so glad you can make it!"
-    : "We're sorry you can't make it :("
+  const greeting = isComing ? 'Thanks!' : 'Thank you'
+
+  const message = isComing
+    ? "We'll see you there! In the meantime, swipe around our wedding website and see if you find something you like."
+    : "We're sorry you can't make it to the wedding. You can still look around our wedding website if you'd like to."
+
+  const ps =
+    'If you need to edit your RSVP, please contact Hilary or Matt directly.'
 
   const handleHomeClick = () => {
     navigate({ to: '/wedding' })
   }
 
   return (
-    <div className="flex min-h-screen w-screen flex-col gap-6 overflow-hidden px-6 py-4">
-      <header className="flex items-center justify-between gap-2">
+    <div className="flex min-h-screen w-screen flex-col justify-center gap-8 overflow-hidden px-6 py-4">
+      <header>
         <h1 className="text-primary text-center text-5xl leading-16 text-pretty">
           {greeting}
         </h1>
       </header>
 
-      {isComing && (
-        <section className="flex flex-col gap-4">
-          <p>
-            We'll see you there! In the meantime, swipe around our wedding
-            website and see if you find something you like.
-          </p>
-          <Button className="max-w-40" onClick={handleHomeClick}>
-            Home
-          </Button>
-        </section>
-      )}
+      <section className="flex flex-col items-center gap-4">
+        <p className="text-pretty md:text-center">{message}</p>
+        <p className="text-pretty md:text-center">{ps}</p>
+      </section>
 
-      {!isComing && (
-        <section className="flex flex-col gap-4">
-          <p>You can still look around our wedding website if you'd like to.</p>
-          <Button className="max-w-40" onClick={handleHomeClick}>
-            Home
-          </Button>
-        </section>
-      )}
+      <section className="flex flex-col items-center">
+        <Button className="w-full max-w-40" onClick={handleHomeClick}>
+          Home
+        </Button>
+      </section>
     </div>
   )
 }

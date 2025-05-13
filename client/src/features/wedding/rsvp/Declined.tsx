@@ -53,7 +53,7 @@ const Entry = () => {
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col gap-6 overflow-hidden px-6 py-4">
+    <div className="flex h-screen w-screen flex-col justify-center gap-6 overflow-hidden px-6 py-4">
       <header className="flex flex-col">
         <div className="text-center text-sm text-neutral-700">
           <p>You're invited to the wedding of</p>
@@ -67,7 +67,7 @@ const Entry = () => {
         </div>
       </header>
 
-      <section className="flex h-full w-full flex-col items-center justify-center gap-6 px-2">
+      <section className="flex w-full flex-col items-center justify-center gap-6 px-2">
         <div className="flex flex-col gap-2">
           <h2 className="text-center text-2xl">Are you sure??</h2>
           <img

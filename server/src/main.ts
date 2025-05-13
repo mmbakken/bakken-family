@@ -5,12 +5,7 @@ import { login, refreshToken } from './auth/login.ts'
 import { authenticateToken } from './auth/authenticateToken.ts'
 import { getUser, getUsers, submitRsvps } from './routes/users.ts'
 import { getGuests, updateGuest } from './routes/guests.ts'
-import {
-  declineAllRsvps,
-  getRsvps,
-  updateRsvp,
-  upsertRsvp,
-} from './routes/rsvps.ts'
+import { declineAllRsvps, getRsvps, upsertRsvp } from './routes/rsvps.ts'
 import { getEvents } from './routes/events.ts'
 import { getInvites } from './routes/invites.ts'
 
@@ -86,11 +81,6 @@ app.post(
   '/api/v1/wedding/rsvp',
   authenticateToken,
   upsertRsvp,
-)
-app.put(
-  '/api/v1/wedding/rsvp',
-  authenticateToken,
-  updateRsvp,
 )
 app.post(
   '/api/v1/wedding/rsvp/declineAll',

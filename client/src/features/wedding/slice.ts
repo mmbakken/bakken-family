@@ -6,7 +6,6 @@ import {
   clickedSubmit,
   fetchRsvpData,
   updateGuest,
-  updateRsvp,
   upsertRsvp,
 } from '@/features/wedding/thunks'
 import { getHasLodgingInvites } from '@/features/wedding/selectors'
@@ -223,11 +222,6 @@ export const weddingSlice = createSlice({
     })
 
     builder.addCase(upsertRsvp.fulfilled, (state, action) => {
-      const upsertedRsvp = action.payload
-      state.entities.rsvps = getUpdatedRsvps(state.entities.rsvps, upsertedRsvp)
-    })
-
-    builder.addCase(updateRsvp.fulfilled, (state, action) => {
       const upsertedRsvp = action.payload
       state.entities.rsvps = getUpdatedRsvps(state.entities.rsvps, upsertedRsvp)
     })

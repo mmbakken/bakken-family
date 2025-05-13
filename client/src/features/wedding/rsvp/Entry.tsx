@@ -49,7 +49,7 @@ const Entry = () => {
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col gap-12 overflow-hidden p-6">
+    <div className="flex min-h-screen w-screen flex-col justify-center gap-10 overflow-hidden px-6 py-4">
       <header className="flex flex-col">
         <div className="text-center text-sm text-neutral-700">
           <p>You're invited to the wedding of</p>

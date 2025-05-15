@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 set -eo pipefail
 
 # Delete all app data, then restart back end services and re-seed db.

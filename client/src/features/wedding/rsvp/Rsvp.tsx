@@ -24,7 +24,7 @@ const Rsvp = () => {
 
   if (!hasLoadedRsvpData) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center">
+      <div className="flex h-dvh w-screen items-center justify-center">
         <LoaderIcon className="animate spin" />
       </div>
     )

@@ -1,3 +1,4 @@
+import { Fragment } from 'react/jsx-runtime'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { useTitle, useScrollToTop } from '@/hooks'
 import { clickedBack, clickedNext } from '@/features/wedding/slice'
@@ -44,7 +45,7 @@ const Main = () => {
     ? declineAllLabel
     : hasLodgingInvites
       ? 'Next'
-      : 'Submit'
+      : 'Submit RSVP'
   const showArrow = !hasDeclinedAllMainEvents && hasLodgingInvites
 
   //======================================
@@ -70,21 +71,23 @@ const Main = () => {
   }
 
   return (
-    <div className="flex min-h-screen w-screen flex-col gap-8 overflow-hidden px-6 py-6">
+    <div className="flex min-h-dvh w-screen flex-col gap-8 overflow-hidden px-6 py-6">
       <header>
-        <h1 className="text-primary text-5xl">RSVP</h1>
+        <h1 className="font-birthstone text-primary text-center text-7xl leading-24">
+          RSVP
+        </h1>
       </header>
 
       <div>
         {hasMainInvites &&
           orderedMainEventIds.map((eventId, index) => {
             return (
-              <>
-                <Event id={eventId} key={eventId} />
+              <Fragment key={eventId}>
+                <Event id={eventId} />
                 {index !== orderedMainEventIds.length - 1 && (
                   <hr className="mx-8 my-10 h-px border-0 bg-neutral-300" />
                 )}
-              </>
+              </Fragment>
             )
           })}
       </div>
@@ -97,6 +100,7 @@ const Main = () => {
             className="w-full"
             onClick={handlePrimaryButtonClick}
           >
+            {showArrow && <div className="w-4" />}
             {primaryButtonLabel}
             {showArrow && <ChevronRight />}
           </Button>

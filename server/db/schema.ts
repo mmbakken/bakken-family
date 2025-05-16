@@ -29,6 +29,7 @@ export const events = pgTable('events', {
   name: text().notNull().unique(),
   description: text(),
   location: text(),
+  isLodging: boolean().notNull().default(false),
   hasEntree: boolean().notNull().default(false),
   startsAt: timestamp('starts_at'),
   endsAt: timestamp('ends_at'),

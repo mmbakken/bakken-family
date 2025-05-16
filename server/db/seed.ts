@@ -73,22 +73,22 @@ const seed = async () => {
   const Ashli_Rupe = {
     fullName: 'Ashli Rupe',
     givenName: 'Ashli',
-    userId: usersByName['Ashli & Dave'].id,
+    userId: usersByName['The Rupes'].id,
   }
   const David_Rupe = {
     fullName: 'David Rupe',
     givenName: 'Dave',
-    userId: usersByName['Ashli & Dave'].id,
+    userId: usersByName['The Rupes'].id,
   }
   const Henry_Rupe = {
     fullName: 'Henry Rupe',
     givenName: 'Henry',
-    userId: usersByName['Ashli & Dave'].id,
+    userId: usersByName['The Rupes'].id,
   }
   const Madelyn_Rupe = {
     fullName: 'Madelyn Rupe',
     givenName: 'Madelyn',
-    userId: usersByName['Ashli & Dave'].id,
+    userId: usersByName['The Rupes'].id,
   }
   const Hannah_Lohman = {
     fullName: 'Hannah Lohman',
@@ -303,7 +303,7 @@ const seed = async () => {
     sort: 1,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
-      'Join us for an evening of tacos & margaritas to kick off the wedding weekend! Vegan & non-alcoholic options available as well.',
+      'Join us for an evening of tacos & margaritas to kick off the wedding weekend! Vegan & non-alcoholic options available as well. Casual attire.',
     startsAt: new Date('2025-10-10T22:00:00.000Z'), // 4pm MDT
     endsAt: new Date('2025-10-11T03:00:00.000Z'), // 9pm MDT
   }
@@ -322,7 +322,7 @@ const seed = async () => {
     sort: 3,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
-      'Celebrate with us after the ceremony! Dinner, drinks, music, and good times.',
+      'Celebrate with us after the ceremony! Dinner, drinks, music, and good times. Semi-formal attire.',
     hasEntree: true,
     startsAt: new Date('2025-10-11T21:00:00.000Z'), // 3pm MDT
     endsAt: new Date('2025-10-13T03:00:00.000Z'), // 9pm MDT
@@ -337,32 +337,40 @@ const seed = async () => {
   }
 
   const lodgingThu: typeof schema.events.$inferInsert = {
-    name: 'Lodging - Thursday Night',
+    name: 'Thursday Night',
+    isLodging: true,
     sort: 5,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description: 'Check-in is at 4pm MT',
+    startsAt: new Date('2025-10-09T22:00:00.000Z'), // 4pm MDT
   }
 
   const lodgingFri: typeof schema.events.$inferInsert = {
-    name: 'Lodging - Friday Night',
+    name: 'Friday Night',
+    isLodging: true,
     sort: 6,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description: '',
+    startsAt: new Date('2025-10-10T22:00:00.000Z'), // 4pm MDT
   }
 
   const lodgingSat: typeof schema.events.$inferInsert = {
-    name: 'Lodging - Saturday Night',
+    name: 'Saturday Night',
+    isLodging: true,
     sort: 7,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description:
       'Please note - there will be an after party at the lodge following the wedding reception! This is not a good option if you need to go to bed early. Go to bed before midnight? Straight to jail.',
+    startsAt: new Date('2025-10-11T22:00:00.000Z'), // 4pm MDT
   }
 
   const lodgingSun: typeof schema.events.$inferInsert = {
-    name: 'Lodging - Sunday Night',
+    name: 'Sunday Night',
+    isLodging: true,
     sort: 8,
     location: 'Sky Valley Chateau, Steamboat Springs, CO',
     description: '',
+    startsAt: new Date('2025-10-12T22:00:00.000Z'), // 4pm MDT
   }
 
   const events = [

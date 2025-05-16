@@ -29,6 +29,7 @@ export type EventT = {
   name: string
   location: string | null
   description: string | null
+  isLodging: boolean
   hasEntree: boolean
   startsAt: Date | null
   endsAt: Date | null

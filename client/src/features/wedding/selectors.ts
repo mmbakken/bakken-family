@@ -121,19 +121,12 @@ export const getOrderedMainEventIds = createSelector(
   },
 )
 
-const LODGING_EVENT_NAMES = [
-  'Lodging - Thursday Night',
-  'Lodging - Friday Night',
-  'Lodging - Saturday Night',
-  'Lodging - Sunday Night',
-]
-
 // Returns an array of event ids which are Lodging events.
 const getLodgingEventIds = createSelector(
   [getAllEvents],
   (allEvents) => {
     const lodgingEvents = allEvents.filter((event) => {
-      return LODGING_EVENT_NAMES.includes(event.name)
+      return event.isLodging
     }) ?? []
 
     return lodgingEvents.map((event) => event.id)
@@ -145,7 +138,7 @@ const getLodgingEvents = createSelector(
   [getAllEvents],
   (allEvents) => {
     const lodgingEvents = allEvents.filter((event) => {
-      return LODGING_EVENT_NAMES.includes(event.name)
+      return event.isLodging
     }) ?? []
 
     return lodgingEvents
@@ -443,9 +436,6 @@ export const getHasDeclinedAllMainEvents = createSelector(
     const acceptedRsvp = mainRsvps.find((r) => {
       return Boolean(r.accepted)
     })
-
-    console.log('acceptedRsvp')
-    console.dir(acceptedRsvp)
 
     return acceptedRsvp == null
   },

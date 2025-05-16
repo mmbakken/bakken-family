@@ -1,3 +1,4 @@
+import { Fragment } from 'react/jsx-runtime'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { useTitle, useScrollToTop } from '@/hooks'
 import { clickedBack } from '@/features/wedding/slice'
@@ -31,9 +32,11 @@ const Lodging = () => {
   }
 
   return (
-    <div className="flex min-h-screen w-screen flex-col gap-6 overflow-hidden p-6">
+    <div className="flex min-h-dvh w-screen flex-col gap-6 overflow-hidden p-6">
       <header className="flex flex-col items-center justify-between gap-4">
-        <h1 className="text-primary text-center text-5xl">Lodging</h1>
+        <h1 className="font-birthstone text-primary text-center text-7xl leading-24">
+          Lodging
+        </h1>
         <p>
           We'd love to have you stay with us at the Sky Valley Chateau for the
           weekend of our wedding! It's a 10-bedroom, 10-bathroom vacation
@@ -47,25 +50,29 @@ const Lodging = () => {
         {hasLodgingInvites &&
           orderedLodgingEventIds.map((eventId, index) => {
             return (
-              <>
-                <Event id={eventId} key={eventId} />
+              <Fragment key={eventId}>
+                <Event id={eventId} />
                 {index !== orderedLodgingEventIds.length - 1 && (
                   <hr className="mx-8 my-10 h-px border-0 bg-neutral-300" />
                 )}
-              </>
+              </Fragment>
             )
           })}
       </div>
 
+      <section>
+        <p>Check-out is at 11am on Monday 10/13</p>
+      </section>
+
       <section className="flex h-full w-full flex-col items-center justify-center pt-4">
-        <div className="flex w-full max-w-64 flex-col items-center justify-center gap-3">
+        <div className="flex w-full max-w-72 flex-col items-center justify-center gap-3">
           <Button
             size="lg"
             disabled={!hasCompletedAllLodgingInvites}
             className="w-full"
             onClick={handleSubmitClick}
           >
-            Submit
+            Submit RSVP
           </Button>
           <Button
             size="lg"

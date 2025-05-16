@@ -9,7 +9,7 @@ const Done = () => {
   const navigate = useNavigate()
   const isComing = useAppSelector(getIsComing)
 
-  const greeting = isComing ? 'Thanks!' : 'Thank you'
+  const greeting = isComing ? 'Thank you' : 'Thank you'
 
   const message = isComing
     ? "We'll see you there! In the meantime, swipe around our wedding website and see if you find something you like."
@@ -23,9 +23,9 @@ const Done = () => {
   }
 
   return (
-    <div className="flex min-h-screen w-screen flex-col justify-center gap-8 overflow-hidden px-6 py-4">
+    <div className="flex h-dvh w-screen flex-col justify-center gap-8 overflow-hidden px-6 py-4">
       <header>
-        <h1 className="text-primary text-center text-5xl leading-16 text-pretty">
+        <h1 className="font-birthstone text-primary text-center text-7xl leading-12 text-pretty">
           {greeting}
         </h1>
       </header>

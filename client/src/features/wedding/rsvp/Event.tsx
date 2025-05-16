@@ -22,21 +22,30 @@ const Event = ({ id }: EventProps) => {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
-        <h2 className="text-2xl">{event.name}</h2>
+      <header className="flex flex-col">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-3xl">{event.name}</h2>
 
-        <div>
-          {event.startsAt != null && (
-            <p className="text-sm text-neutral-500">
-              {format(event.startsAt, "EEEE', 'MMMM do' at 'haaa' MT'")}
-            </p>
-          )}
-          <p className="text-sm text-neutral-500">{event.location}</p>
+          <div>
+            {event.endsAt == null && event.startsAt != null && (
+              <p className="text-neutral-400">
+                {format(event.startsAt, "EEEE', 'MMMM do'")}
+              </p>
+            )}
+            {event.endsAt != null && event.startsAt != null && (
+              <p className="text-neutral-400">
+                {format(event.startsAt, "EEEE', 'MMMM do' at 'haaa' MT'")}
+              </p>
+            )}
+            <p className="text-neutral-400">{event.location}</p>
+          </div>
         </div>
 
-        <div>
-          <p>{event.description}</p>
-        </div>
+        {event.description && (
+          <div>
+            <p className="pt-2">{event.description}</p>
+          </div>
+        )}
       </header>
 
       <section className={inviteCN}>

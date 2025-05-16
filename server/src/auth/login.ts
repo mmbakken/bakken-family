@@ -1,6 +1,6 @@
 import { Context } from 'hono'
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { eq } from 'drizzle-orm'
+import { eq, or } from 'drizzle-orm'
 import * as schema from '../../db/schema.ts'
 import * as bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
@@ -35,18 +35,35 @@ export const login = async (c: Context) => {
   const password = body.password
 
   if (username == null || password == null) {
-    return c.json({ message: 'Username and password are required.' }, 401)
+    return c.json({ message: 'Username and password are required.' }, 422)
   }
 
+  const parts = username.split('&')
+  const name1 = parts[0]
+  const name2 = parts[1]
+  const altUsername = name2 == null ? null : `${name2.trim()} & ${name1.trim()}`
+
   // Find the user with this username.
-  const users = await db.select().from(
-    schema.users,
-  ).where(
-    eq(schema.users.username, username),
-  )
+  let users = []
+  if (altUsername != null) {
+    users = await db.select().from(
+      schema.users,
+    ).where(
+      or(
+        eq(schema.users.username, username),
+        eq(schema.users.username, altUsername),
+      ),
+    )
+  } else {
+    users = await db.select().from(
+      schema.users,
+    ).where(
+      eq(schema.users.username, username),
+    )
+  }
 
   if (users == null || users.length === 0) {
-    return c.json({ message: 'Username not found.' }, 401)
+    return c.json({ message: 'Username not found.' }, 422)
   }
 
   const user = users[0]
@@ -76,7 +93,7 @@ export const login = async (c: Context) => {
     }
   }
 
-  return c.json({ message: 'Bad password.' }, 401)
+  return c.json({ message: 'Password is incorrect.' }, 401)
 }
 
 // Given that the user is already logged in and has a valid token, send them a

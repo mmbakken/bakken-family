@@ -30,11 +30,19 @@ const RsvpButtons = ({ accepted, onSelect }: RsvpButtonsProps) => {
 
   return (
     <div className="flex gap-1">
-      <Button variant={attendingVariant} onClick={() => onSelect(true)}>
+      <Button
+        className="w-24"
+        variant={attendingVariant}
+        onClick={() => onSelect(true)}
+      >
         Attending
       </Button>
-      <Button variant={notAttendingVariant} onClick={() => onSelect(false)}>
-        Not Attending
+      <Button
+        className="w-24"
+        variant={notAttendingVariant}
+        onClick={() => onSelect(false)}
+      >
+        Declined
       </Button>
     </div>
   )

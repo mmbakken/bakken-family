@@ -8,14 +8,17 @@ import { Input } from '@/components/ui/input'
 const baseUrl =
   import.meta.env.VITE_ENV === 'production'
     ? `${window.location.origin}/api/v1`
-    : `http://localhost:8000/api/v1`
+    : `${window.location.protocol}//${window.location.hostname}:8000/api/v1`
 
 const Login = () => {
   useTitle('Wedding - Login')
   const navigate = useNavigate()
+  const { redirect } = LoginRoute.useSearch()
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const { redirect } = LoginRoute.useSearch()
+  const [error, setError] = useState(null)
+  const allowSubmit = username && username.length && password && password.length
 
   //==================================================
   // Event handlers
@@ -23,10 +26,12 @@ const Login = () => {
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.currentTarget.value)
+    setError(null)
   }
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value)
+    setError(null)
   }
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -60,11 +65,15 @@ const Login = () => {
         }),
       })
 
+      const json = await response.json()
+
       if (!response.ok) {
-        throw new Error('Unauthorized.')
+        console.log('json:')
+        console.dir(json)
+        throw new Error(json.message)
       }
 
-      const json = await response.json()
+      setError(null)
 
       // Save the token to local storage and include with all future requests.
       localStorage.setItem('token', json.accessToken)
@@ -74,35 +83,39 @@ const Login = () => {
     } catch (error) {
       console.log('POST /login error:')
       console.error(error)
+
+      setError(error.message)
     }
   }
 
   return (
-    <div className="flex min-h-screen w-screen flex-col justify-center gap-8 overflow-hidden px-6 py-4">
-      <div className="flex max-w-md flex-col gap-8">
-        <header className="flex flex-col gap-8">
-          <div className="flex flex-col">
-            <div className="text-center text-sm text-neutral-700">
-              <p>You're invited to the wedding of</p>
-            </div>
-            <h1 className="text-primary text-center text-5xl leading-16">
-              Hilary & Matt
-            </h1>
-            <div className="text-md flex flex-col gap-0.5 text-center leading-5">
-              <p>Steamboat Springs, CO</p>
-              <p>Saturday, October 11, 2025</p>
-            </div>
-          </div>
-
-          <h2 className="">
-            Please enter the login info included on your invitation.
-          </h2>
+    <div className="flex h-dvh w-screen flex-col items-center justify-center gap-8 overflow-hidden px-6 py-4">
+      <div className="flex max-w-md flex-col gap-12">
+        <header className="flex flex-col gap-2">
+          <h1 className="flex flex-col">
+            <span className="font-birthstone text-center text-2xl text-neutral-500">
+              You are cordially invited to the wedding of
+            </span>
+            <span className="font-birthstone text-primary text-center text-5xl leading-16">
+              Hilary Lohman
+            </span>
+            <span className="font-birthstone text-center text-2xl leading-4 text-neutral-500">
+              and
+            </span>
+            <span className="font-birthstone text-primary -mt-px text-center text-5xl leading-16">
+              Matthew Bakken
+            </span>
+          </h1>
         </header>
 
         <div className="flex flex-col items-center gap-8">
-          <div className="flex w-full flex-col gap-2">
+          <div className="flex w-full flex-col gap-4">
+            <div>
+              <h2 className="text-lg">Please log in to continue.</h2>
+            </div>
+
             <div className="flex flex-col gap-2">
-              <label htmlFor="input-name">Names:</label>
+              <label htmlFor="input-name">Username:</label>
               <Input
                 className="border-app-blush-900 bg-app-offwhite text-md text-app-blush-900 border"
                 id="input-name"
@@ -114,7 +127,7 @@ const Login = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="input-password">Password</label>
+              <label htmlFor="input-password">Password:</label>
               <Input
                 className="border-app-blush-900 bg-app-offwhite text-md text-app-blush-900 border"
                 id="input-password"
@@ -123,12 +136,18 @@ const Login = () => {
                 value={password}
               />
             </div>
+
+            <div className="h-4">
+              {error != null && <span className="text-red-700">{error}</span>}
+            </div>
           </div>
 
           <Button
-            className="disabled:cursor-disabled w-40 cursor-pointer border"
+            size="lg"
+            className="disabled:cursor-disabled w-36 cursor-pointer border"
             onKeyDown={handleKeyDown}
             onClick={handleLoginSubmit}
+            // disabled={!allowSubmit}
           >
             Log In
           </Button>

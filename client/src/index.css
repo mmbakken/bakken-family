@@ -1,9 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Birthstone&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Fancy font */
+  --font-birthstone: 'Birthstone', serif;
+
   /* Custom colors */
   --color-app-purple-300: var(--app-purple-300);
   --color-app-purple-500: var(--app-purple-500);

@@ -15,12 +15,14 @@ const Allergies = ({ allergies, onChange }: AllergiesProps) => {
     'Please let us know about any food allergies, dietary restrictions, or aversions you have.'
 
   return (
-    <Textarea
-      className="resize-y"
-      placeholder={placeholder}
-      value={allergies}
-      onChange={onChange}
-    />
+    <div className="pb-2">
+      <Textarea
+        className="max-h-96 resize-y"
+        placeholder={placeholder}
+        value={allergies}
+        onChange={onChange}
+      />
+    </div>
   )
 }
 

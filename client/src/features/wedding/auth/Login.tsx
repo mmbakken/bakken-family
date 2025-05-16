@@ -147,7 +147,7 @@ const Login = () => {
             className="disabled:cursor-disabled w-36 cursor-pointer border"
             onKeyDown={handleKeyDown}
             onClick={handleLoginSubmit}
-            // disabled={!allowSubmit}
+            disabled={!allowSubmit}
           >
             Log In
           </Button>

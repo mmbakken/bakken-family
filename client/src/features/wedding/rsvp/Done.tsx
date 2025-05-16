@@ -23,7 +23,7 @@ const Done = () => {
   }
 
   return (
-    <div className="flex h-dvh w-screen flex-col justify-center gap-8 overflow-hidden px-6 py-4">
+    <div className="flex h-dvh w-screen flex-col justify-center gap-12 overflow-hidden px-6 py-4">
       <header>
         <h1 className="font-birthstone text-primary text-center text-7xl leading-12 text-pretty">
           {greeting}

@@ -73,7 +73,7 @@ const Main = () => {
   return (
     <div className="flex min-h-dvh w-screen flex-col gap-8 overflow-hidden px-6 py-6">
       <header>
-        <h1 className="font-birthstone text-primary text-center text-7xl leading-24">
+        <h1 className="font-birthstone text-primary text-center text-7xl leading-16">
           RSVP
         </h1>
       </header>

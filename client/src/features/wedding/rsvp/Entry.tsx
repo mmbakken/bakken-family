@@ -49,15 +49,15 @@ const Entry = () => {
   }
 
   return (
-    <div className="flex min-h-dvh w-screen flex-col justify-center gap-10 overflow-hidden px-6 py-4">
+    <div className="flex h-dvh w-screen flex-col justify-center gap-8 overflow-hidden px-6 py-4">
       <header className="flex flex-col">
-        <div className="text-center text-sm text-neutral-700">
+        <div className="font-birthstone text-center text-2xl text-neutral-500">
           <p>You're invited to the wedding of</p>
         </div>
         <h1 className="font-birthstone text-primary -mt-2 text-center text-7xl leading-24">
           Hilary & Matt
         </h1>
-        <div className="text-md flex flex-col gap-0.5 text-center leading-5">
+        <div className="font-birthstone flex flex-col gap-1 text-center text-2xl leading-5 text-neutral-500">
           <p>Steamboat Springs, CO</p>
           <p>Saturday, October 11, 2025</p>
         </div>

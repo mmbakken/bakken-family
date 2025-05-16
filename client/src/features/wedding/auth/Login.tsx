@@ -96,13 +96,13 @@ const Login = () => {
             <span className="font-birthstone text-center text-2xl text-neutral-500">
               You are cordially invited to the wedding of
             </span>
-            <span className="font-birthstone text-primary text-center text-5xl leading-16">
+            <span className="font-birthstone text-primary text-center text-6xl leading-20">
               Hilary Lohman
             </span>
             <span className="font-birthstone text-center text-2xl leading-4 text-neutral-500">
               and
             </span>
-            <span className="font-birthstone text-primary -mt-px text-center text-5xl leading-16">
+            <span className="font-birthstone text-primary -mt-px text-center text-6xl leading-20">
               Matthew Bakken
             </span>
           </h1>

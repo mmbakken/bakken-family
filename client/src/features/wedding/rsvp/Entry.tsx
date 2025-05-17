@@ -54,13 +54,16 @@ const Entry = () => {
         <div className="font-birthstone text-center text-2xl text-neutral-500">
           <p>You're invited to the wedding of</p>
         </div>
-        <h1 className="font-birthstone text-primary -mt-2 text-center text-7xl leading-24">
+        <h1 className="font-birthstone text-primary -mt-4 text-center text-7xl leading-24">
           Hilary & Matt
         </h1>
-        <div className="font-birthstone flex flex-col gap-1 text-center text-2xl leading-5 text-neutral-500">
-          <p>Steamboat Springs, CO</p>
-          <p>Saturday, October 11, 2025</p>
+        <div className="font-birthstone flex flex-col gap-1 text-center text-2xl leading-6 text-neutral-500">
+          <span>Steamboat Springs, CO</span>
+          <span>
+            Saturday, October 11<sup className="ml-1 text-sm">th</sup> 2025
+          </span>
         </div>
+        <span className="font-birthstone text-center text-2xl text-neutral-500"></span>
       </header>
 
       <section className="flex w-full flex-col items-center justify-center gap-6 px-2">

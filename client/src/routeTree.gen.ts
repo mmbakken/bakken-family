@@ -13,8 +13,14 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as WeddingIndexImport } from './routes/wedding/index'
+import { Route as WeddingTreeNutsImport } from './routes/wedding/tree-nuts'
+import { Route as WeddingThingsToDoImport } from './routes/wedding/things-to-do'
 import { Route as WeddingRsvpImport } from './routes/wedding/rsvp'
+import { Route as WeddingRegistryImport } from './routes/wedding/registry'
+import { Route as WeddingQuestionsImport } from './routes/wedding/questions'
+import { Route as WeddingOurStoryImport } from './routes/wedding/our-story'
 import { Route as WeddingLoginImport } from './routes/wedding/login'
+import { Route as WeddingEventsImport } from './routes/wedding/events'
 import { Route as WeddingAdminImport } from './routes/wedding/admin'
 
 // Create/Update Routes
@@ -31,15 +37,51 @@ const WeddingIndexRoute = WeddingIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const WeddingTreeNutsRoute = WeddingTreeNutsImport.update({
+  id: '/wedding/tree-nuts',
+  path: '/wedding/tree-nuts',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const WeddingThingsToDoRoute = WeddingThingsToDoImport.update({
+  id: '/wedding/things-to-do',
+  path: '/wedding/things-to-do',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const WeddingRsvpRoute = WeddingRsvpImport.update({
   id: '/wedding/rsvp',
   path: '/wedding/rsvp',
   getParentRoute: () => rootRoute,
 } as any)
 
+const WeddingRegistryRoute = WeddingRegistryImport.update({
+  id: '/wedding/registry',
+  path: '/wedding/registry',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const WeddingQuestionsRoute = WeddingQuestionsImport.update({
+  id: '/wedding/questions',
+  path: '/wedding/questions',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const WeddingOurStoryRoute = WeddingOurStoryImport.update({
+  id: '/wedding/our-story',
+  path: '/wedding/our-story',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const WeddingLoginRoute = WeddingLoginImport.update({
   id: '/wedding/login',
   path: '/wedding/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const WeddingEventsRoute = WeddingEventsImport.update({
+  id: '/wedding/events',
+  path: '/wedding/events',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WeddingAdminImport
       parentRoute: typeof rootRoute
     }
+    '/wedding/events': {
+      id: '/wedding/events'
+      path: '/wedding/events'
+      fullPath: '/wedding/events'
+      preLoaderRoute: typeof WeddingEventsImport
+      parentRoute: typeof rootRoute
+    }
     '/wedding/login': {
       id: '/wedding/login'
       path: '/wedding/login'
@@ -74,11 +123,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WeddingLoginImport
       parentRoute: typeof rootRoute
     }
+    '/wedding/our-story': {
+      id: '/wedding/our-story'
+      path: '/wedding/our-story'
+      fullPath: '/wedding/our-story'
+      preLoaderRoute: typeof WeddingOurStoryImport
+      parentRoute: typeof rootRoute
+    }
+    '/wedding/questions': {
+      id: '/wedding/questions'
+      path: '/wedding/questions'
+      fullPath: '/wedding/questions'
+      preLoaderRoute: typeof WeddingQuestionsImport
+      parentRoute: typeof rootRoute
+    }
+    '/wedding/registry': {
+      id: '/wedding/registry'
+      path: '/wedding/registry'
+      fullPath: '/wedding/registry'
+      preLoaderRoute: typeof WeddingRegistryImport
+      parentRoute: typeof rootRoute
+    }
     '/wedding/rsvp': {
       id: '/wedding/rsvp'
       path: '/wedding/rsvp'
       fullPath: '/wedding/rsvp'
       preLoaderRoute: typeof WeddingRsvpImport
+      parentRoute: typeof rootRoute
+    }
+    '/wedding/things-to-do': {
+      id: '/wedding/things-to-do'
+      path: '/wedding/things-to-do'
+      fullPath: '/wedding/things-to-do'
+      preLoaderRoute: typeof WeddingThingsToDoImport
+      parentRoute: typeof rootRoute
+    }
+    '/wedding/tree-nuts': {
+      id: '/wedding/tree-nuts'
+      path: '/wedding/tree-nuts'
+      fullPath: '/wedding/tree-nuts'
+      preLoaderRoute: typeof WeddingTreeNutsImport
       parentRoute: typeof rootRoute
     }
     '/wedding/': {
@@ -96,16 +180,28 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/wedding/admin': typeof WeddingAdminRoute
+  '/wedding/events': typeof WeddingEventsRoute
   '/wedding/login': typeof WeddingLoginRoute
+  '/wedding/our-story': typeof WeddingOurStoryRoute
+  '/wedding/questions': typeof WeddingQuestionsRoute
+  '/wedding/registry': typeof WeddingRegistryRoute
   '/wedding/rsvp': typeof WeddingRsvpRoute
+  '/wedding/things-to-do': typeof WeddingThingsToDoRoute
+  '/wedding/tree-nuts': typeof WeddingTreeNutsRoute
   '/wedding': typeof WeddingIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/wedding/admin': typeof WeddingAdminRoute
+  '/wedding/events': typeof WeddingEventsRoute
   '/wedding/login': typeof WeddingLoginRoute
+  '/wedding/our-story': typeof WeddingOurStoryRoute
+  '/wedding/questions': typeof WeddingQuestionsRoute
+  '/wedding/registry': typeof WeddingRegistryRoute
   '/wedding/rsvp': typeof WeddingRsvpRoute
+  '/wedding/things-to-do': typeof WeddingThingsToDoRoute
+  '/wedding/tree-nuts': typeof WeddingTreeNutsRoute
   '/wedding': typeof WeddingIndexRoute
 }
 
@@ -113,8 +209,14 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/wedding/admin': typeof WeddingAdminRoute
+  '/wedding/events': typeof WeddingEventsRoute
   '/wedding/login': typeof WeddingLoginRoute
+  '/wedding/our-story': typeof WeddingOurStoryRoute
+  '/wedding/questions': typeof WeddingQuestionsRoute
+  '/wedding/registry': typeof WeddingRegistryRoute
   '/wedding/rsvp': typeof WeddingRsvpRoute
+  '/wedding/things-to-do': typeof WeddingThingsToDoRoute
+  '/wedding/tree-nuts': typeof WeddingTreeNutsRoute
   '/wedding/': typeof WeddingIndexRoute
 }
 
@@ -123,17 +225,40 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/wedding/admin'
+    | '/wedding/events'
     | '/wedding/login'
+    | '/wedding/our-story'
+    | '/wedding/questions'
+    | '/wedding/registry'
     | '/wedding/rsvp'
+    | '/wedding/things-to-do'
+    | '/wedding/tree-nuts'
     | '/wedding'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/wedding/admin' | '/wedding/login' | '/wedding/rsvp' | '/wedding'
+  to:
+    | '/'
+    | '/wedding/admin'
+    | '/wedding/events'
+    | '/wedding/login'
+    | '/wedding/our-story'
+    | '/wedding/questions'
+    | '/wedding/registry'
+    | '/wedding/rsvp'
+    | '/wedding/things-to-do'
+    | '/wedding/tree-nuts'
+    | '/wedding'
   id:
     | '__root__'
     | '/'
     | '/wedding/admin'
+    | '/wedding/events'
     | '/wedding/login'
+    | '/wedding/our-story'
+    | '/wedding/questions'
+    | '/wedding/registry'
     | '/wedding/rsvp'
+    | '/wedding/things-to-do'
+    | '/wedding/tree-nuts'
     | '/wedding/'
   fileRoutesById: FileRoutesById
 }
@@ -141,16 +266,28 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   WeddingAdminRoute: typeof WeddingAdminRoute
+  WeddingEventsRoute: typeof WeddingEventsRoute
   WeddingLoginRoute: typeof WeddingLoginRoute
+  WeddingOurStoryRoute: typeof WeddingOurStoryRoute
+  WeddingQuestionsRoute: typeof WeddingQuestionsRoute
+  WeddingRegistryRoute: typeof WeddingRegistryRoute
   WeddingRsvpRoute: typeof WeddingRsvpRoute
+  WeddingThingsToDoRoute: typeof WeddingThingsToDoRoute
+  WeddingTreeNutsRoute: typeof WeddingTreeNutsRoute
   WeddingIndexRoute: typeof WeddingIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   WeddingAdminRoute: WeddingAdminRoute,
+  WeddingEventsRoute: WeddingEventsRoute,
   WeddingLoginRoute: WeddingLoginRoute,
+  WeddingOurStoryRoute: WeddingOurStoryRoute,
+  WeddingQuestionsRoute: WeddingQuestionsRoute,
+  WeddingRegistryRoute: WeddingRegistryRoute,
   WeddingRsvpRoute: WeddingRsvpRoute,
+  WeddingThingsToDoRoute: WeddingThingsToDoRoute,
+  WeddingTreeNutsRoute: WeddingTreeNutsRoute,
   WeddingIndexRoute: WeddingIndexRoute,
 }
 
@@ -166,8 +303,14 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/wedding/admin",
+        "/wedding/events",
         "/wedding/login",
+        "/wedding/our-story",
+        "/wedding/questions",
+        "/wedding/registry",
         "/wedding/rsvp",
+        "/wedding/things-to-do",
+        "/wedding/tree-nuts",
         "/wedding/"
       ]
     },
@@ -177,11 +320,29 @@ export const routeTree = rootRoute
     "/wedding/admin": {
       "filePath": "wedding/admin.tsx"
     },
+    "/wedding/events": {
+      "filePath": "wedding/events.tsx"
+    },
     "/wedding/login": {
       "filePath": "wedding/login.tsx"
     },
+    "/wedding/our-story": {
+      "filePath": "wedding/our-story.tsx"
+    },
+    "/wedding/questions": {
+      "filePath": "wedding/questions.tsx"
+    },
+    "/wedding/registry": {
+      "filePath": "wedding/registry.tsx"
+    },
     "/wedding/rsvp": {
       "filePath": "wedding/rsvp.tsx"
+    },
+    "/wedding/things-to-do": {
+      "filePath": "wedding/things-to-do.tsx"
+    },
+    "/wedding/tree-nuts": {
+      "filePath": "wedding/tree-nuts.tsx"
     },
     "/wedding/": {
       "filePath": "wedding/index.tsx"

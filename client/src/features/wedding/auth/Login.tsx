@@ -40,7 +40,7 @@ const Login = () => {
     }
   }
 
-  const handleLoginSubmit = async (e: React.MouseEvent<HTMLElement>) => {
+  const handleLoginSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     await login()
   }
@@ -90,7 +90,7 @@ const Login = () => {
 
   return (
     <div className="flex h-dvh w-screen flex-col items-center justify-center gap-8 overflow-hidden px-6 py-4">
-      <div className="flex max-w-md flex-col gap-12">
+      <div className="flex max-w-md flex-col gap-10">
         <header className="flex flex-col gap-2">
           <h1 className="flex flex-col">
             <span className="font-birthstone text-center text-2xl text-neutral-500">
@@ -108,7 +108,7 @@ const Login = () => {
           </h1>
         </header>
 
-        <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-col items-center gap-6">
           <div className="flex w-full flex-col gap-4">
             <div>
               <h2 className="text-lg">Please log in to continue.</h2>
@@ -137,7 +137,7 @@ const Login = () => {
               />
             </div>
 
-            <div className="h-4">
+            <div className="h-6">
               {error != null && <span className="text-red-700">{error}</span>}
             </div>
           </div>

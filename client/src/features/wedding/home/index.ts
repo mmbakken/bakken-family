@@ -1,3 +1,8 @@
-import Home from './Home'
-
-export { Home }
+export { default as Events } from './Events'
+export { default as Header } from './Header'
+export { default as Home } from './Home'
+export { default as OurStory } from './OurStory'
+export { default as Questions } from './Questions'
+export { default as Registry } from './Registry'
+export { default as ThingsToDo } from './ThingsToDo'
+export { default as TreeNuts } from './TreeNuts'

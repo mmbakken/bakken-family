@@ -1,59 +1,80 @@
-import { useEffect, useState } from 'react'
 import { useTitle } from '@/hooks'
-
-const baseUrl =
-  import.meta.env.VITE_ENV === 'production'
-    ? `${window.location.origin}/api/v1`
-    : `http://localhost:8000/api/v1`
+import { Link, useNavigate } from '@tanstack/react-router'
+import { Route as LoginRoute } from '@/routes/wedding/login'
+import { Header } from '@/features/wedding/home'
+import { Button } from '@/components/ui/button'
 
 const Home = () => {
   useTitle('Wedding')
-  const [apiResponse, setApiResponse] = useState('')
-  const [usersResponse, setUsersResponse] = useState('')
 
-  useEffect(() => {
-    const url = `${baseUrl}/wedding`
+  const navigate = useNavigate()
 
-    fetch(url)
-      .then((data) => {
-        data.json().then((res) => {
-          setApiResponse(res)
-        })
-      })
-      .catch((err) => {
-        console.dir(err)
-      })
-  }, [])
+  //==================================================
+  // Event handlers
+  //==================================================
 
-  useEffect(() => {
-    const url = `${baseUrl}/wedding/users`
-
-    const options = {
-      headers: {
-        Authorization: localStorage.getItem('token') ?? '',
-      },
+  const handleLogoutKeyDown = async (
+    e: React.KeyboardEvent<HTMLButtonElement>,
+  ) => {
+    if (e.key === 'Enter') {
+      logout()
     }
+  }
 
-    fetch(url, options)
-      .then((data) => {
-        data.json().then((res) => {
-          setUsersResponse(res)
-        })
-      })
-      .catch((err) => {
-        console.dir(err)
-      })
-  }, [])
+  const handleLogoutClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    logout()
+  }
+
+  //==================================================
+  // API calls
+  //==================================================
+
+  // TODO: Move to slice?
+  const logout = async () => {
+    localStorage.removeItem('token')
+    navigate({ to: LoginRoute.fullPath })
+  }
 
   return (
-    <div>
-      <header>
-        <h1 className="text-xl text-amber-300">Wedding Home Page</h1>
-        <p>Hey, we're logged in!</p>
-      </header>
+    <div className="flex h-dvh w-screen flex-col items-center justify-between gap-8 overflow-hidden px-6 py-4">
+      <Header />
 
-      <h2>API Response: {JSON.stringify(apiResponse, null, 2)}</h2>
-      <h2>Users: {JSON.stringify(usersResponse, null, 2)}</h2>
+      <main>
+        <ul className="flex flex-col items-center gap-4">
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+            <Link to="/wedding/rsvp">RSVP</Link>
+          </li>
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+            <Link to="/wedding/our-story">Our Story</Link>
+          </li>
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+            <Link to="/wedding/events">Weekend Events</Link>
+          </li>
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+            <Link to="/wedding/things-to-do">Things to Do</Link>
+          </li>
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+            <Link to="/wedding/questions">Q&A</Link>
+          </li>
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+            <Link to="/wedding/tree-nuts">Tree Nuts</Link>
+          </li>
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+            <Link to="/wedding/registry">Registry</Link>
+          </li>
+        </ul>
+      </main>
+
+      <section>
+        <Button
+          onKeyDown={handleLogoutKeyDown}
+          onClick={handleLogoutClick}
+          variant="link"
+        >
+          Log out
+        </Button>
+      </section>
     </div>
   )
 }

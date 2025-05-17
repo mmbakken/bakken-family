@@ -6,6 +6,7 @@
 
 @theme inline {
   /* Fancy font */
+  --font-montserrat: 'Montserrat', sans-serif;
   --font-birthstone: 'Birthstone', serif;
 
   /* Custom colors */

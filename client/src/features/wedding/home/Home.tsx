@@ -37,7 +37,7 @@ const Home = () => {
   }
 
   return (
-    <div className="flex h-dvh w-screen flex-col items-center justify-between gap-8 overflow-hidden px-6 py-4">
+    <div className="flex h-dvh max-h-[60rem] w-screen flex-col items-center justify-between gap-8 overflow-hidden px-6 py-4">
       <Header />
 
       <main>

@@ -190,8 +190,8 @@ const seed = async () => {
     givenName: 'Alexandria',
     userId: usersByName['Nathan & Alexandria'].id,
   }
-  const Heggi_Aschul = {
-    fullName: 'Heggi Aschul',
+  const Heggi_Lee = {
+    fullName: 'Heggi Lee',
     givenName: 'Heggi',
     userId: usersByName['Heggi & Will'].id,
   }
@@ -270,7 +270,7 @@ const seed = async () => {
     Jack_Stigler,
     Nathan_Vogel,
     Alexandria_Odekirk,
-    Heggi_Aschul,
+    Heggi_Lee,
     William_Lee,
     Kelsey_Carroll,
     Jon_Carroll,
@@ -1206,41 +1206,41 @@ const seed = async () => {
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
-  const Heggi_Aschul_Invites = [
+  const Heggi_Lee_Invites = [
     {
-      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      guestId: guestsByFullName[Heggi_Lee.fullName].id,
       eventId: eventsByName[wedding.name].id,
     },
     {
-      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      guestId: guestsByFullName[Heggi_Lee.fullName].id,
       eventId: eventsByName[welcomeParty.name].id,
     },
     {
-      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      guestId: guestsByFullName[Heggi_Lee.fullName].id,
       eventId: eventsByName[ceremony.name].id,
     },
     {
-      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      guestId: guestsByFullName[Heggi_Lee.fullName].id,
       eventId: eventsByName[reception.name].id,
     },
     {
-      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      guestId: guestsByFullName[Heggi_Lee.fullName].id,
       eventId: eventsByName[sundayHangout.name].id,
     },
     {
-      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      guestId: guestsByFullName[Heggi_Lee.fullName].id,
       eventId: eventsByName[lodgingThu.name].id,
     },
     {
-      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      guestId: guestsByFullName[Heggi_Lee.fullName].id,
       eventId: eventsByName[lodgingFri.name].id,
     },
     {
-      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      guestId: guestsByFullName[Heggi_Lee.fullName].id,
       eventId: eventsByName[lodgingSat.name].id,
     },
     {
-      guestId: guestsByFullName[Heggi_Aschul.fullName].id,
+      guestId: guestsByFullName[Heggi_Lee.fullName].id,
       eventId: eventsByName[lodgingSun.name].id,
     },
   ]
@@ -1734,7 +1734,7 @@ const seed = async () => {
     ...Jack_Stigler_Invites,
     ...Nathan_Vogel_Invites,
     ...Alexandria_Odekirk_Invites,
-    ...Heggi_Aschul_Invites,
+    ...Heggi_Lee_Invites,
     ...William_Lee_Invites,
     ...Kelsey_Carroll_Invites,
     ...Jon_Carroll_Invites,

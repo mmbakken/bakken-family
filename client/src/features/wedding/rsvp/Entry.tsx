@@ -69,7 +69,7 @@ const Entry = () => {
       <section className="flex w-full flex-col items-center justify-center gap-6 px-2">
         <div className="flex flex-col gap-2">
           <img
-            className="aspect-square size-full flex-shrink rounded-xl border"
+            className="aspect-square size-full max-w-96 flex-shrink rounded-xl border"
             src="/engagement-1.jpg"
             alt="Engagement photo"
           />

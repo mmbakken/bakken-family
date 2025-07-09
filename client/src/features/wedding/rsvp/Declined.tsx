@@ -71,7 +71,7 @@ const Entry = () => {
         <div className="flex flex-col gap-2">
           <h2 className="text-center text-2xl">Are you sure??</h2>
           <img
-            className="aspect-square size-full flex-shrink rounded-xl border"
+            className="aspect-square size-full max-w-96 flex-shrink rounded-xl border"
             src="/hilary-are-you-sure.jpg"
             alt="A photo of Hilary being sad :("
           />

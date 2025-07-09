@@ -17,7 +17,7 @@ const Login = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<null | string>(null)
   const allowSubmit = username && username.length && password && password.length
 
   //==================================================
@@ -79,12 +79,18 @@ const Login = () => {
       localStorage.setItem('token', json.accessToken)
 
       // Redirect to where the user was trying to go before being sent here.
-      navigate({ to: redirect })
-    } catch (error) {
+      navigate({ to: redirect ?? '/wedding' })
+    } catch (error: unknown) {
       console.log('POST /login error:')
       console.error(error)
 
-      setError(error.message)
+      if (error instanceof Error) {
+        setError(error.message)
+        return
+      }
+
+      setError('An unknown error occurred')
+      return
     }
   }
 

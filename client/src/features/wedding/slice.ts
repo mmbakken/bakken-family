@@ -4,6 +4,7 @@ import {
   clickedNotAttendingConfirmation,
   clickedNotAttendingEntry,
   clickedSubmit,
+  fetchAdminData,
   fetchRsvpData,
   updateGuest,
   upsertRsvp,
@@ -54,7 +55,8 @@ interface WeddingState {
   // Set to true once all necessary data for rendering the app has loaded.
   hasLoaded: boolean
 
-  // API state. Stuff we fetch from the API and sometimes update.
+  // API state. Stuff we fetch from the API and sometimes update. Includes only
+  // data relevant to this user.
   entities: {
     user: UserT | null
     guests: GuestT[]
@@ -66,6 +68,16 @@ interface WeddingState {
   // State about the RSVP process.
   rsvps: {
     step: number
+  }
+
+  // State for the Admin page. Includes data from across many users.
+  admin: {
+    hasLoaded: boolean
+    users: UserT[]
+    guests: GuestT[]
+    events: EventT[]
+    invites: InviteT[]
+    rsvps: RsvpT[]
   }
 }
 
@@ -81,6 +93,14 @@ const initialState: WeddingState = {
   },
   rsvps: {
     step: STEPS.ENTRY,
+  },
+  admin: {
+    hasLoaded: false,
+    users: [],
+    guests: [],
+    events: [],
+    invites: [],
+    rsvps: [],
   },
 }
 
@@ -207,6 +227,27 @@ export const weddingSlice = createSlice({
 
       // Finally, the user may have completed all Invites.
       state.rsvps.step = STEPS.DONE
+    })
+
+    builder.addCase(fetchAdminData.fulfilled, (state, action) => {
+      const {
+        hasLoaded,
+        users,
+        events,
+        guests,
+        invites,
+        rsvps,
+      } = action.payload
+
+      console.log('fetchAdminData action.payload')
+      console.dir(action.payload)
+
+      state.admin.users = users
+      state.admin.events = events
+      state.admin.guests = guests
+      state.admin.invites = invites
+      state.admin.rsvps = rsvps
+      state.admin.hasLoaded = hasLoaded
     })
 
     builder.addCase(clickedAttendingEntry.fulfilled, (state, action) => {

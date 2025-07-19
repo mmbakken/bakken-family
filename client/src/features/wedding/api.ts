@@ -5,6 +5,40 @@ const baseUrl = import.meta.env.VITE_ENV === 'production'
   : `http://localhost:8000/api/v1`
 
 const weddingAPI = {
+  getAdmin: async () => {
+    const url = `${baseUrl}/wedding/admin`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error fetching admin data.')
+    }
+
+    return await response.json()
+  },
+
+  getAllUsers: async () => {
+    const url = `${baseUrl}/wedding/users`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error fetching all users.')
+    }
+
+    return await response.json()
+  },
+
   getUser: async () => {
     const url = `${baseUrl}/wedding/user`
     const response = await fetch(url, {

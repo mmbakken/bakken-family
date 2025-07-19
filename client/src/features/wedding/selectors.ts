@@ -525,3 +525,9 @@ export const getIsComing = createSelector(
     return isAttendingAnyMainEvent
   },
 )
+
+//======================================
+// Admin Page data
+//======================================
+
+export const getAdminData = (state: RootState) => state.wedding.admin

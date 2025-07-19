@@ -14,7 +14,7 @@ const Events = () => {
         <aside>
           All events are at{' '}
           <a
-            className="text-primary text-primary font-semibold underline-offset-2 hover:underline"
+            className="text-primary font-semibold underline-offset-2 hover:underline"
             href="https://maps.app.goo.gl/Vhj2q61LGrpQNjSE8"
             target="_blank"
           >

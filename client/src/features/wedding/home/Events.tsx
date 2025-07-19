@@ -205,6 +205,24 @@ const Events = () => {
           </section>
         </section>
 
+        <section className="flex w-full flex-col gap-4">
+          <section className="flex w-full flex-col items-center">
+            <h2 className="font-birthstone text-primary text-center text-4xl">
+              Monday - Farewell
+            </h2>
+            <h3 className="font-birthstone text-center text-2xl text-neutral-500">
+              October 13<sup className="ml-1">th</sup> 2025
+            </h3>
+          </section>
+
+          <section className="flex flex-col gap-2">
+            <p>
+              <span className="text-primary font-semibold">11am:</span> Check
+              out of Sky Valley Chateau.
+            </p>
+          </section>
+        </section>
+
         <section className="flex w-full flex-col items-center pb-4">
           <Link to="/wedding">
             <Button variant="link">Wedding Home</Button>

@@ -1,4 +1,5 @@
 export { default as Events } from './Events'
+export { default as Faq } from './Faq'
 export { default as Header } from './Header'
 export { default as Home } from './Home'
 export { default as OurStory } from './OurStory'

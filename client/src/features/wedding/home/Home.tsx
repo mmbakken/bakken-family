@@ -37,7 +37,7 @@ const Home = () => {
   }
 
   return (
-    <div className="flex h-dvh max-h-[60rem] w-screen flex-col items-center justify-between gap-8 overflow-hidden px-6 py-4">
+    <div className="flex h-dvh w-screen flex-col items-center justify-between gap-8 overflow-hidden px-6 py-4">
       <Header />
 
       <main>
@@ -55,7 +55,7 @@ const Home = () => {
             <Link to="/wedding/things-to-do">Things to Do</Link>
           </li>
           <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
-            <Link to="/wedding/questions">Q&A</Link>
+            <Link to="/wedding/questions">FAQs</Link>
           </li>
           <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
             <Link to="/wedding/tree-nuts">Tree Nuts</Link>

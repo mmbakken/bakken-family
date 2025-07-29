@@ -274,7 +274,7 @@ const Questions = () => {
         />
       </main>
 
-      <footer className="pb-2">
+      <footer>
         <Link to="/wedding">
           <Button variant="link">Home</Button>
         </Link>

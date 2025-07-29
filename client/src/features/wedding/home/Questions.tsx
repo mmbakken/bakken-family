@@ -228,8 +228,7 @@ const Questions = () => {
 
         <Faq
           question="I have an allergy or dietary restriction?"
-          answer="
-            'We gotcha. The RSVP form has a place to tell us about allergies. You can also text Hilary or Matt about your dietary concerns and we'll make sure to handle it."
+          answer="We gotcha. The RSVP form has a place to tell us about allergies. You can also text Hilary or Matt about your dietary concerns and we'll make sure to handle it."
         />
 
         <Faq question="Where can I find X in Steamboat?">

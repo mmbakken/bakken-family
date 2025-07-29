@@ -108,7 +108,7 @@ const Events = () => {
                   <span className="inline-block w-20">1:00pm</span>Shuttle
                   pickup in town at the{' '}
                   <a
-                    className="text-primary font-semibold underline-offset-2 hover:underline"
+                    className="text-primary text-primary font-semibold underline-offset-2 hover:underline"
                     href="https://maps.app.goo.gl/uobUuCu8N18rNNVi7"
                     target="_blank"
                   >
@@ -186,7 +186,7 @@ const Events = () => {
             <p>
               <span className="text-primary font-semibold">2pm:</span> Visit{' '}
               <a
-                className="text-primary font-semibold underline-offset-2 hover:underline"
+                className="text-primary text-primary font-semibold underline-offset-2 hover:underline"
                 href="https://strawberryhotsprings.com/"
                 target="_blank"
               >
@@ -223,11 +223,11 @@ const Events = () => {
           </section>
         </section>
 
-        <footer className="flex w-full flex-col items-center pb-2">
+        <section className="flex w-full flex-col items-center pb-4">
           <Link to="/wedding">
-            <Button variant="link">Home</Button>
+            <Button variant="link">Wedding Home</Button>
           </Link>
-        </footer>
+        </section>
       </main>
     </div>
   )

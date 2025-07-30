@@ -36,8 +36,8 @@ const TreeNuts = () => {
 
         <section className="flex w-full flex-col gap-8">
           <p className="w-full">
-            Due to her her severe tree nut allergy and her very important role
-            in this wedding weekend
+            Due to her severe tree nut allergy and her very important role in
+            the wedding:
             <span className="text-primary flex w-full flex-col items-center pt-8 text-center text-2xl">
               Please: Do not bring tree nuts to the wedding venue.
             </span>

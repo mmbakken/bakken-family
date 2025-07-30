@@ -222,13 +222,25 @@ const Questions = () => {
         />
 
         <Faq
-          question="Should I bring my bathing suit?"
-          answer="Yes - there's a 16-person hot tub at the lodge and we're definitely going to use it."
-        />
-
-        <Faq
           question="I have an allergy or dietary restriction?"
           answer="We gotcha. The RSVP form has a place to tell us about allergies. You can also text Hilary or Matt about your dietary concerns and we'll make sure to handle it."
+        />
+
+        <Faq question="Is _____ a tree nut?">
+          <span>
+            We wrote a whole page about{' '}
+            <Link to="/wedding/events">
+              <a className="text-primary cursor-pointer font-semibold underline-offset-2 hover:underline">
+                Tree Nuts
+              </a>
+            </Link>{' '}
+            and their dastardly properties.
+          </span>
+        </Faq>
+
+        <Faq
+          question="Should I bring my bathing suit?"
+          answer="Yes - there's a 16-person hot tub at the lodge and we're definitely going to use it."
         />
 
         <Faq question="Where can I find X in Steamboat?">

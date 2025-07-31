@@ -41,26 +41,26 @@ const Home = () => {
       <Header />
 
       <main>
-        <ul className="flex flex-col items-center gap-4">
-          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+        <ul className="flex flex-col items-center gap-4 md:gap-6">
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline md:text-xl">
             <Link to="/wedding/rsvp">RSVP</Link>
           </li>
-          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline md:text-xl">
             <Link to="/wedding/our-story">Our Story</Link>
           </li>
-          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline md:text-xl">
             <Link to="/wedding/events">Weekend Events</Link>
           </li>
-          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline md:text-xl">
             <Link to="/wedding/things-to-do">Things to Do</Link>
           </li>
-          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline md:text-xl">
             <Link to="/wedding/questions">FAQs</Link>
           </li>
-          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline md:text-xl">
             <Link to="/wedding/tree-nuts">Tree Nuts</Link>
           </li>
-          <li className="cursor-pointer text-lg underline-offset-2 hover:underline">
+          <li className="cursor-pointer text-lg underline-offset-2 hover:underline md:text-xl">
             <Link to="/wedding/registry">Registry</Link>
           </li>
         </ul>

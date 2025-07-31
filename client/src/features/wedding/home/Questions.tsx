@@ -180,12 +180,12 @@ const Questions = () => {
           <ul className="flex flex-col gap-2">
             <li>
               We're incredibly grateful to be able to celebrate our marriage
-              with you for the weekend, so please don't feel obligated to
-              purchase us a gift. Your time and presence is all we want.
+              with you, so please don't feel obligated to purchase us a gift.
+              Your time and presence is all we want.
             </li>
             <li>
               <span>
-                If you still want to give us a wedding gift, then we do have a{' '}
+                If you still want to give us a wedding gift, please see our{' '}
                 <a
                   href="https://www.crateandbarrel.com/gift-registry/registrant-list/7344128"
                   className="text-primary cursor-pointer font-semibold underline-offset-2 hover:underline"

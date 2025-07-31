@@ -229,7 +229,7 @@ const Questions = () => {
         <Faq question="Is _____ a tree nut?">
           <span>
             We wrote a whole page about{' '}
-            <Link to="/wedding/events">
+            <Link to="/wedding/tree-nuts">
               <a className="text-primary cursor-pointer font-semibold underline-offset-2 hover:underline">
                 Tree Nuts
               </a>

@@ -238,11 +238,6 @@ const Questions = () => {
           </span>
         </Faq>
 
-        <Faq
-          question="Should I bring my bathing suit?"
-          answer="Yes - there's a 16-person hot tub at the lodge and we're definitely going to use it."
-        />
-
         <Faq question="Where can I find X in Steamboat?">
           <span>Please see the </span>
           <Link to="/wedding/events">

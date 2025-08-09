@@ -23,7 +23,27 @@ const createAppAsyncThunk = createAsyncThunk.withTypes<{
 // Async thunks for API calls.
 //======================================
 
-// Get the Rsvp data necessary to render the app
+// Get the Rsvp data necessary to render the app.
+export const fetchAdminData = createAppAsyncThunk(
+  'wedding/fetchAdmin',
+  async () => {
+    const admin = await weddingAPI.getAdmin()
+
+    console.log('admin response:')
+    console.dir(admin)
+
+    return {
+      hasLoaded: true,
+      users: admin.users,
+      guests: admin.guests,
+      events: admin.events,
+      invites: admin.invites,
+      rsvps: admin.rsvps,
+    }
+  },
+)
+
+// Get the Rsvp data necessary to render the app.
 export const fetchRsvpData = createAppAsyncThunk(
   'wedding/fetchRsvpData',
   async (_, thunkApi) => {

@@ -3,6 +3,8 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { login, refreshToken } from './auth/login.ts'
 import { authenticateToken } from './auth/authenticateToken.ts'
+import { validateAdminUser } from './auth/validateAdminUser.ts'
+import { getAdmin } from './routes/admin.ts'
 import { getUser, getUsers, submitRsvps } from './routes/users.ts'
 import { getGuests, updateGuest } from './routes/guests.ts'
 import { declineAllRsvps, getRsvps, upsertRsvp } from './routes/rsvps.ts'
@@ -45,6 +47,9 @@ app.get('/', (c) => {
 app.get('/api/v1/wedding', (c) => {
   return c.json({ message: 'Wedding API is loading. Does it update?' })
 })
+
+app.use('/api/v1/wedding/admin', authenticateToken, validateAdminUser)
+app.get('/api/v1/wedding/admin', getAdmin)
 
 app.post('/api/v1/wedding/login', login)
 app.post('/api/v1/wedding/refreshToken', authenticateToken, refreshToken)

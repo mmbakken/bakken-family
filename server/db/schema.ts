@@ -1,4 +1,5 @@
 import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { relations } from 'drizzle-orm'
 
 // Users are a means to restrict who can view parts of the site, and allow
 // guests to RSVP for everyone in their party.
@@ -43,6 +44,12 @@ export const invites = pgTable('invites', {
   eventId: integer('event_id').notNull().references(() => events.id),
 })
 
+// Export the Relations for the Invites table so we can use db.query methods.
+export const invitesRelations = relations(invites, ({ one }) => ({
+  events: one(events, { fields: [invites.eventId], references: [events.id] }),
+  guests: one(guests, { fields: [invites.guestId], references: [guests.id] }),
+}))
+
 // RSVPs are responses to invitations. They can be created or updated by the
 // user for this guest.
 export const rsvps = pgTable('rsvps', {
@@ -53,3 +60,9 @@ export const rsvps = pgTable('rsvps', {
   createdOn: timestamp('created_on').notNull().defaultNow(),
   updatedOn: timestamp('updated_on').notNull().defaultNow(),
 })
+
+// Export the Relations for the Rsvps table so we can use db.query methods.
+export const rsvpsRelations = relations(rsvps, ({ one }) => ({
+  events: one(events, { fields: [rsvps.eventId], references: [events.id] }),
+  guests: one(guests, { fields: [rsvps.guestId], references: [guests.id] }),
+}))

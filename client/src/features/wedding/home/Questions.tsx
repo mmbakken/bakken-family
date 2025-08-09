@@ -187,7 +187,7 @@ const Questions = () => {
               <span>
                 If you still want to give us a wedding gift, please see our{' '}
                 <a
-                  href="https://www.crateandbarrel.com/gift-registry/registrant-list/7344128"
+                  href="https://www.crateandbarrel.com/gift-registry/matthew-bakken-and-hilary-lohman/r7344128"
                   className="text-primary cursor-pointer font-semibold underline-offset-2 hover:underline"
                   target="_blank"
                 >

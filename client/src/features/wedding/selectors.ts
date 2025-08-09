@@ -530,4 +530,26 @@ export const getIsComing = createSelector(
 // Admin Page data
 //======================================
 
-export const getAdminData = (state: RootState) => state.wedding.admin
+// Returns all Admin page data.
+export const getAdminData = createSelector(
+  [getWeddingState],
+  (state) => state.admin,
+)
+
+// Returns a map of RSVPs by their guest id.
+export const getRsvpsByGuestId = createSelector(
+  [getAdminData],
+  (adminState) => {
+    const map = adminState.rsvps.reduce((acc, rsvp) => {
+      if (acc[rsvp.guestId] == null) {
+        acc[rsvp.guestId] = [rsvp]
+      } else {
+        acc[rsvp.guestId].push(rsvp)
+      }
+
+      return acc
+    }, {} as Record<string, RsvpWithEventAndGuest[]>)
+
+    return map
+  },
+)

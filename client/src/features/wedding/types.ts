@@ -46,3 +46,15 @@ export type InviteT = {
   eventStartsAt: Date | null
   eventEndsAt: Date | null
 }
+
+// RsvpT, but it has extra data from relational tables.
+export interface RsvpWithEventAndGuest extends RsvpT {
+  guests: {
+    id: number
+    fullName: string
+  }
+  events: {
+    id: number
+    name: string
+  }
+}

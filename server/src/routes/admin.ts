@@ -22,6 +22,8 @@ export const getAdmin = async (c: Context) => {
     columns: {
       id: true,
       accepted: true,
+      guestId: true,
+      eventId: true,
     },
     with: {
       guests: {
@@ -39,17 +41,30 @@ export const getAdmin = async (c: Context) => {
     },
   })
 
+  const rawEvents = await db.select().from(
+    schema.events,
+  )
+
   // Convert ids to strings
   const rsvps = rawRsvps.map((rsvp) => {
     return {
       ...rsvp,
       id: `${rsvp.id}`,
-      // guestId: `${rsvp.guestId}`,
-      // eventId: `${rsvp.eventId}`,
+      guestId: `${rsvp.guestId}`,
+      eventId: `${rsvp.eventId}`,
+    }
+  })
+
+  // Convert ids to strings
+  const events = rawEvents.map((event) => {
+    return {
+      ...event,
+      id: `${event.id}`,
     }
   })
 
   return c.json({
     rsvps,
+    events,
   })
 }

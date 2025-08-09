@@ -25,12 +25,9 @@ const createAppAsyncThunk = createAsyncThunk.withTypes<{
 
 // Get the Rsvp data necessary to render the app.
 export const fetchAdminData = createAppAsyncThunk(
-  'wedding/fetchAdmin',
+  'wedding/fetchAdminData',
   async () => {
     const admin = await weddingAPI.getAdmin()
-
-    console.log('admin response:')
-    console.dir(admin)
 
     return {
       hasLoaded: true,

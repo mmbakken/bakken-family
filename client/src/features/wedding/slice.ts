@@ -17,7 +17,9 @@ import type {
   EventT,
   GuestT,
   InviteT,
+  InviteWithEventAndGuest,
   RsvpT,
+  RsvpWithEventAndGuest,
   UserT,
 } from '@/features/wedding/types'
 
@@ -76,8 +78,8 @@ interface WeddingState {
     users: UserT[]
     guests: GuestT[]
     events: EventT[]
-    invites: InviteT[]
-    rsvps: RsvpT[]
+    invites: InviteWithEventAndGuest[]
+    rsvps: RsvpWithEventAndGuest[]
   }
 }
 
@@ -238,9 +240,6 @@ export const weddingSlice = createSlice({
         invites,
         rsvps,
       } = action.payload
-
-      console.log('fetchAdminData action.payload')
-      console.dir(action.payload)
 
       state.admin.users = users
       state.admin.events = events

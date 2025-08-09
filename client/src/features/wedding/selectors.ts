@@ -1,6 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from '@/store'
-import type { EventT, GuestT, InviteT, RsvpT } from '@/features/wedding/types'
+import type {
+  EventT,
+  GuestT,
+  InviteT,
+  RsvpT,
+  RsvpWithEventAndGuest,
+} from '@/features/wedding/types'
 
 const emptyGuests: GuestT[] = []
 const emptyEvents: EventT[] = []
@@ -551,5 +557,76 @@ export const getRsvpsByGuestId = createSelector(
     }, {} as Record<string, RsvpWithEventAndGuest[]>)
 
     return map
+  },
+)
+
+// Returns a list of event summary objects to display on the Admin page.
+export const getEventSummaries = createSelector(
+  [getAdminData],
+  (adminState) => {
+    // Find the counts for these events based on invite and rsvp records.
+    const eventSummaries = adminState.events.map((event) => {
+      // For each event, find its Rsvps.
+      let acceptedCount = 0
+      let declinedCount = 0
+      adminState.rsvps.map((rsvp) => {
+        if (rsvp.eventId === event.id && rsvp.accepted) {
+          acceptedCount += 1
+          return
+        }
+
+        if (rsvp.eventId === event.id && !rsvp.accepted) {
+          declinedCount += 1
+        }
+      })
+
+      // For each event, find its Invites.
+      let eventInvitesCount = 0
+      adminState.invites.map((invite) => {
+        if (invite.eventId === event.id) {
+          eventInvitesCount += 1
+        }
+      })
+
+      const pendingCount = eventInvitesCount - acceptedCount - declinedCount
+
+      // Return the summary object for this event.
+      return {
+        id: event.id,
+        name: event.name,
+        acceptedCount: acceptedCount,
+        declinedCount: declinedCount,
+        pendingCount: pendingCount,
+      }
+    })
+
+    return eventSummaries
+  },
+)
+
+// Returns a list of Invites which have not been responded to yet.
+export const getPendingInvites = createSelector(
+  [getAdminData],
+  (adminState) => {
+    // Find all Invites which have no RSVP yet.
+    return adminState.invites.filter((invite) => {
+      const hasRsvp = adminState.rsvps.find((rsvp) => {
+        return rsvp.eventId === invite.eventId &&
+          rsvp.guestId === invite.guestId
+      })
+
+      return !hasRsvp
+    })
+  },
+)
+
+// Returns a list of Guests which have allergies.
+export const getGuestAllergies = createSelector(
+  [getAdminData],
+  (adminState) => {
+    // Find all Guests who have an allergy noted on their record.
+    return adminState.guests.filter((guest) => {
+      return guest.allergies != null && guest.allergies !== ''
+    })
   },
 )

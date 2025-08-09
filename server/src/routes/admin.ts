@@ -45,6 +45,37 @@ export const getAdmin = async (c: Context) => {
     schema.events,
   )
 
+  const rawGuests = await db.select().from(
+    schema.guests,
+  )
+
+  // const rawInvites = await db.select().from(
+  //   schema.invites,
+  // )
+
+  // Get all Invites for all guests.
+  const rawInvites = await db.query.invites.findMany({
+    columns: {
+      id: true,
+      guestId: true,
+      eventId: true,
+    },
+    with: {
+      guests: {
+        columns: {
+          id: true,
+          fullName: true,
+        },
+      },
+      events: {
+        columns: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  })
+
   // Convert ids to strings
   const rsvps = rawRsvps.map((rsvp) => {
     return {
@@ -55,7 +86,6 @@ export const getAdmin = async (c: Context) => {
     }
   })
 
-  // Convert ids to strings
   const events = rawEvents.map((event) => {
     return {
       ...event,
@@ -63,8 +93,28 @@ export const getAdmin = async (c: Context) => {
     }
   })
 
+  const guests = rawGuests.map((guest) => {
+    return {
+      ...guest,
+      id: `${guest.id}`,
+      userId: `${guest.userId}`,
+    }
+  })
+
+  // Convert ids to strings
+  const invites = rawInvites.map((invite) => {
+    return {
+      ...invite,
+      id: `${invite.id}`,
+      guestId: `${invite.guestId}`,
+      eventId: `${invite.eventId}`,
+    }
+  })
+
   return c.json({
     rsvps,
     events,
+    guests,
+    invites,
   })
 }

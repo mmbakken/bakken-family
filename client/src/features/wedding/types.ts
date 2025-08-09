@@ -58,3 +58,14 @@ export interface RsvpWithEventAndGuest extends RsvpT {
     name: string
   }
 }
+
+export interface InviteWithEventAndGuest extends InviteT {
+  guests: {
+    id: string
+    fullName: string
+  }
+  events: {
+    id: string
+    name: string
+  }
+}

@@ -260,10 +260,22 @@ const Questions = () => {
           page for more info on this.
         </Faq>
 
-        <Faq
-          question="Where should we go hiking? Is there good fall color anywhere we should check out?"
-          answer="We'd love to suggest some trails, just text us! We also recommend using the AllTrails app to find all kinds of hikes. It really depends how much time/effort you want to spend out there and where you're coming from."
-        />
+        <Faq question="Where should we go hiking? Is there good fall color anywhere we should check out?">
+          <span>First, check out the </span>
+          <Link to="/wedding/things-to-do">
+            <a className="text-primary cursor-pointer font-semibold underline-offset-2 hover:underline">
+              Things to Do
+            </a>
+          </Link>
+          <span>
+            {' '}
+            page and see if that gives you any ideas. We'd love to suggest some
+            trails too - just text us! We also recommend using the AllTrails app
+            to find all kinds of hikes. There are many great trails, so it
+            really depends how much time/effort you want to spend out there and
+            where you're coming from.
+          </span>
+        </Faq>
 
         <Faq
           question="This part of the website it broken"

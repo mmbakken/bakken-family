@@ -71,14 +71,14 @@ const Main = () => {
   }
 
   return (
-    <div className="flex min-h-dvh w-screen flex-col gap-8 overflow-hidden px-6 py-6">
-      <header>
+    <div className="flex min-h-dvh w-screen flex-col items-center gap-8 overflow-hidden px-6 py-6">
+      <header className="w-full max-w-2xl">
         <h1 className="font-birthstone text-primary text-center text-7xl leading-16">
           RSVP
         </h1>
       </header>
 
-      <div>
+      <div className="w-full max-w-2xl">
         {hasMainInvites &&
           orderedMainEventIds.map((eventId, index) => {
             return (
@@ -92,7 +92,7 @@ const Main = () => {
           })}
       </div>
 
-      <section className="flex h-full w-full flex-col items-center justify-center pt-4">
+      <section className="flex h-full w-full max-w-2xl flex-col items-center justify-center pt-4">
         <div className="flex w-full max-w-64 flex-col items-center justify-center gap-3">
           <Button
             size="lg"

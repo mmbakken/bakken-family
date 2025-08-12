@@ -32,8 +32,8 @@ const Lodging = () => {
   }
 
   return (
-    <div className="flex min-h-dvh w-screen flex-col gap-6 overflow-hidden p-6">
-      <header className="flex flex-col items-center justify-between gap-4">
+    <div className="flex min-h-dvh w-screen flex-col items-center gap-6 overflow-hidden p-6">
+      <header className="flex w-full max-w-2xl flex-col items-center justify-between gap-4">
         <h1 className="font-birthstone text-primary text-center text-7xl leading-24">
           Lodging
         </h1>
@@ -46,7 +46,7 @@ const Lodging = () => {
         </p>
       </header>
 
-      <div>
+      <div className="w-full max-w-2xl">
         {hasLodgingInvites &&
           orderedLodgingEventIds.map((eventId, index) => {
             return (
@@ -60,11 +60,11 @@ const Lodging = () => {
           })}
       </div>
 
-      <section>
+      <section className="w-full max-w-2xl">
         <p>Check-out is at 11am on Monday 10/13</p>
       </section>
 
-      <section className="flex h-full w-full flex-col items-center justify-center pt-4">
+      <section className="flex h-full w-full max-w-2xl flex-col items-center justify-center pt-4">
         <div className="flex w-full max-w-72 flex-col items-center justify-center gap-3">
           <Button
             size="lg"

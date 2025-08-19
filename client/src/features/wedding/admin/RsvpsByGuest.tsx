@@ -1,6 +1,7 @@
 import { useAppSelector } from '@/store'
 import {
-  getAdmin,
+  getSortedEventIds,
+  getAllEventsById,
   getPendingInvites,
   getSortedGuestIds,
   getAllGuestsById,
@@ -85,28 +86,39 @@ const findStatusClassname = (status: number) => {
 }
 
 const RsvpsByGuest = () => {
-  const allGuestIds = useAppSelector(getSortedGuestIds)
+  const sortedGuestIds = useAppSelector(getSortedGuestIds)
   const allGuestsById = useAppSelector(getAllGuestsById)
   const rsvpsByGuestId = useAppSelector(getRsvpsByGuestId)
-  const { events } = useAppSelector(getAdmin)
+  const sortedEventIds = useAppSelector(getSortedEventIds)
+  const allEventsById = useAppSelector(getAllEventsById)
   const pendingInvites = useAppSelector(getPendingInvites)
 
   if (rsvpsByGuestId == null) {
     return null
   }
 
+  console.log('sortedEventIds:')
+  console.dir(sortedEventIds)
+
+  console.log('allGuestsById')
+  console.dir(allGuestsById)
+
   return (
     <div className="w-full">
       <h2 className="pb-4 text-2xl">RSVPs</h2>
 
+      {/* Headers, with events in sorted order */}
       <div className="flex w-full gap-2">
         <div key="empty" className="w-46 shrink-0 pb-2 text-sm font-semibold">
           Guest
         </div>
-        {events.map((event) => {
+
+        {sortedEventIds.map((eventId) => {
+          const event = allEventsById[eventId]
+
           return (
             <div
-              key={event.id}
+              key={eventId}
               className="w-20 shrink-0 pb-2 text-sm font-semibold"
             >
               {event.name}
@@ -115,9 +127,14 @@ const RsvpsByGuest = () => {
         })}
       </div>
 
-      {allGuestIds.map((guestId) => {
+      {/* Each guest has their RSVP statuses listed in order of each event */}
+      {sortedGuestIds.map((guestId) => {
         const guestRsvps = rsvpsByGuestId[guestId]
         const guest = allGuestsById[guestId]
+
+        console.log('guest id: ' + guestId)
+        console.log('guestRsvps:')
+        console.dir(guestRsvps)
 
         if (guest == null) {
           return
@@ -129,14 +146,14 @@ const RsvpsByGuest = () => {
               {guest.fullName}
             </div>
 
-            {events.map((event) => {
+            {sortedEventIds.map((eventId) => {
+              const event = allEventsById[eventId]
               const status = findGuestEventStatus(
                 guest,
                 event,
                 guestRsvps,
                 pendingInvites,
               )
-
               const statusLabel = findStatusLabel(status)
               const statusClassname = findStatusClassname(status)
 

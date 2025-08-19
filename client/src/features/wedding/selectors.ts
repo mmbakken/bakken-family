@@ -645,6 +645,34 @@ export const getRsvpsByGuestId = createSelector(
   },
 )
 
+// Returns a list of event ids, sorted in numerical order.
+export const getSortedEventIds = createSelector(
+  [getAdmin],
+  (admin) => {
+    if (admin == null) {
+      return []
+    }
+
+    return admin.events.toSorted((eventA, eventB) => {
+      return Number(eventA.id) - Number(eventB.id)
+    }).map((g) => g.id)
+  },
+)
+
+// Returns a map of Events by their id.
+export const getAllEventsById = createSelector(
+  [getAdmin],
+  (admin) => {
+    const eventsById: Record<string, EventT> = {}
+
+    admin.events.forEach((event) => {
+      eventsById[event.id] = event
+    })
+
+    return eventsById
+  },
+)
+
 // Returns a list of event summary objects to display on the Admin page.
 export const getEventSummaries = createSelector(
   [getAdmin],

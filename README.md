@@ -29,7 +29,7 @@
 - Push changes to `main` branch (via PR or directly)
 - SSH into DigitalOcean server
 - `$ cd bakken-family`
-- `$ git pull`
+- `$ git pull --rebase`
 - Deploy the client
   - `$ cd /home/matt/bakken-family/client`
   - `$ nvm use 22.14.0`

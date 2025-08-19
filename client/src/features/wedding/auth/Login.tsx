@@ -1,24 +1,39 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Route as LoginRoute } from '@/routes/wedding/login'
 import { useTitle } from '@/hooks'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
-const baseUrl =
-  import.meta.env.VITE_ENV === 'production'
-    ? `${window.location.origin}/api/v1`
-    : `${window.location.protocol}//${window.location.hostname}:8000/api/v1`
+import { useAppDispatch, useAppSelector } from '@/store'
+import { login } from '../thunks'
+import { getCurrentUserId } from '@/features/wedding/selectors'
 
 const Login = () => {
   useTitle('Wedding - Login')
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const { redirect } = LoginRoute.useSearch()
+  const userId = useAppSelector(getCurrentUserId)
+
+  // Redirect to where the user was trying to go before being sent here..
+  useEffect(() => {
+    if (userId != null) {
+      navigate({ to: redirect ?? '/wedding' })
+    }
+  }, [dispatch, navigate, redirect, userId])
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<null | string>(null)
   const allowSubmit = username && username.length && password && password.length
+
+  //==================================================
+  // API calls
+  //==================================================
+
+  const loginUser = () => {
+    dispatch(login({ username, password }))
+  }
 
   //==================================================
   // Event handlers
@@ -36,62 +51,13 @@ const Login = () => {
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter') {
-      await login()
+      loginUser()
     }
   }
 
   const handleLoginSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    await login()
-  }
-
-  //==================================================
-  // API calls
-  //==================================================
-
-  // TODO: Move to API slice?
-  const login = async () => {
-    const url = `${baseUrl}/wedding/login`
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      })
-
-      const json = await response.json()
-
-      if (!response.ok) {
-        console.log('json:')
-        console.dir(json)
-        throw new Error(json.message)
-      }
-
-      setError(null)
-
-      // Save the token to local storage and include with all future requests.
-      localStorage.setItem('token', json.accessToken)
-
-      // Redirect to where the user was trying to go before being sent here.
-      navigate({ to: redirect ?? '/wedding' })
-    } catch (error: unknown) {
-      console.log('POST /login error:')
-      console.error(error)
-
-      if (error instanceof Error) {
-        setError(error.message)
-        return
-      }
-
-      setError('An unknown error occurred')
-      return
-    }
+    loginUser()
   }
 
   return (

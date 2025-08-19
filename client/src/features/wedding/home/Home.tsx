@@ -1,13 +1,28 @@
+import { useEffect } from 'react'
 import { useTitle } from '@/hooks'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Route as LoginRoute } from '@/routes/wedding/login'
 import { Header } from '@/features/wedding/home'
 import { Button } from '@/components/ui/button'
+import { getIsAdminUser } from '@/features/wedding/selectors'
+import { useAppDispatch, useAppSelector } from '@/store'
+import { logout } from '@/features/wedding/slice'
+import { getCurrentUserId } from '@/features/wedding/selectors'
+import { fetchUser } from '@/features/wedding/thunks'
 
 const Home = () => {
   useTitle('Wedding')
-
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const userId = useAppSelector(getCurrentUserId)
+  const isAdminUser = useAppSelector(getIsAdminUser)
+
+  // Fetch user data whenver the app loads and the user is already logged in.
+  useEffect(() => {
+    if (userId == null && localStorage.getItem('token') != null) {
+      dispatch(fetchUser())
+    }
+  }, [dispatch, userId])
 
   //==================================================
   // Event handlers
@@ -17,22 +32,21 @@ const Home = () => {
     e: React.KeyboardEvent<HTMLButtonElement>,
   ) => {
     if (e.key === 'Enter') {
-      logout()
+      logoutUser()
     }
   }
 
   const handleLogoutClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    logout()
+    logoutUser()
   }
 
   //==================================================
   // API calls
   //==================================================
 
-  // TODO: Move to slice?
-  const logout = async () => {
-    localStorage.removeItem('token')
+  const logoutUser = () => {
+    dispatch(logout())
     navigate({ to: LoginRoute.fullPath })
   }
 
@@ -63,6 +77,12 @@ const Home = () => {
           <li className="cursor-pointer text-lg underline-offset-2 hover:underline md:text-xl">
             <Link to="/wedding/registry">Registry</Link>
           </li>
+
+          {isAdminUser && (
+            <li className="cursor-pointer text-lg underline-offset-2 hover:underline md:text-xl">
+              <Link to="/wedding/admin">Admin</Link>
+            </li>
+          )}
         </ul>
       </main>
 

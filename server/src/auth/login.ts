@@ -74,14 +74,38 @@ export const login = async (c: Context) => {
   console.log(`Password match? => ${isMatch}`)
 
   if (isMatch) {
-    const payload = {
-      id: user.id,
-      username: user.username,
-      role: user.role,
-      submittedOn: user.submittedOn,
-    }
+    console.log(`User "${user.username}" has logged in successfully.`)
+    let payload = null
 
-    // TODO: Record the user's lastLogin as now.
+    try {
+      // Record the user's lastLogin timestamp.
+      const updatedUsers = await db.update(schema.users).set({
+        lastLogin: new Date(),
+      }).where(
+        eq(schema.users.id, user.id),
+      ).returning()
+
+      const updatedUser = updatedUsers[0]
+
+      payload = {
+        id: updatedUser.id,
+        username: updatedUser.username,
+        role: updatedUser.role,
+        lastLogin: updatedUser.lastLogin,
+        submittedOn: updatedUser.submittedOn,
+      }
+    } catch (error) {
+      console.error("Server error while updating user's lastLogin timestamp:")
+      console.error(error)
+
+      payload = {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+        lastLogin: user.lastLogin,
+        submittedOn: user.submittedOn,
+      }
+    }
 
     // Generate JWT for public user data and send back as bearer token
     try {

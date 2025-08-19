@@ -25,6 +25,32 @@ export const getHasLoadedRsvpData = (state: RootState) =>
 export const getRsvpStep = (state: RootState) => state.wedding.rsvps.step
 
 //======================================
+// User
+// The currently logged in user.
+//======================================
+
+export const getCurrentUserId = createSelector(
+  [getWeddingState],
+  (state) => {
+    const user = state.entities.user
+
+    if (user == null || user.id == null) {
+      return null
+    }
+
+    return user.id
+  },
+)
+
+// Returns true if the user is logged in as an Admin user.
+export const getIsAdminUser = createSelector(
+  [getWeddingState],
+  (state) => {
+    return state.entities.user?.role === 1
+  },
+)
+
+//======================================
 // Guests
 //======================================
 

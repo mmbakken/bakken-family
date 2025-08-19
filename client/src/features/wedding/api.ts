@@ -5,6 +5,32 @@ const baseUrl = import.meta.env.VITE_ENV === 'production'
   : `http://localhost:8000/api/v1`
 
 const weddingAPI = {
+  login: async (username: string, password: string) => {
+    const url = `${baseUrl}/wedding/login`
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    })
+
+    const json = await response.json()
+
+    if (!response.ok) {
+      throw new Error(json.message)
+    }
+
+    // Save the token to local storage and include with all future requests.
+    localStorage.setItem('token', json.accessToken)
+
+    return json.user
+  },
+
   getAdmin: async () => {
     const url = `${baseUrl}/wedding/admin`
     const response = await fetch(url, {

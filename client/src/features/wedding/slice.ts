@@ -6,6 +6,8 @@ import {
   clickedSubmit,
   fetchAdminData,
   fetchRsvpData,
+  fetchUser,
+  login,
   resetUserRsvps,
   updateGuest,
   upsertRsvp,
@@ -58,6 +60,11 @@ interface WeddingState {
   // Set to true once all necessary data for rendering the app has loaded.
   hasLoaded: boolean
 
+  auth: {
+    isLoading: boolean
+    error: null | string
+  }
+
   // API state. Stuff we fetch from the API and sometimes update. Includes only
   // data relevant to this user.
   entities: {
@@ -87,6 +94,10 @@ interface WeddingState {
 const initialState: WeddingState = {
   isLoading: false,
   hasLoaded: false,
+  auth: {
+    error: null,
+    isLoading: false,
+  },
   entities: {
     user: null,
     guests: [],
@@ -111,6 +122,14 @@ export const weddingSlice = createSlice({
   name: 'wedding',
   initialState,
   reducers: {
+    logout: (state) => {
+      localStorage.removeItem('token')
+      state.isLoading = initialState.isLoading
+      state.hasLoaded = initialState.hasLoaded
+      state.entities = initialState.entities
+      state.rsvps = initialState.rsvps
+      state.admin = initialState.admin
+    },
     clickedBack: (state) => {
       switch (state.rsvps.step) {
         case STEPS.ENTRY: {
@@ -165,6 +184,20 @@ export const weddingSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // Login thunk
+    builder.addCase(login.fulfilled, (state, action) => {
+      state.entities.user = action.payload
+    })
+    builder.addCase(login.rejected, (state, action) => {
+      console.error('Error on login:')
+      console.error(action.payload)
+      state.entities.user = initialState.entities.user
+    })
+
+    builder.addCase(fetchUser.fulfilled, (state, action) => {
+      state.entities.user = action.payload
+    })
+
     builder.addCase(fetchRsvpData.fulfilled, (state, action) => {
       const {
         user,
@@ -350,6 +383,7 @@ export const weddingSlice = createSlice({
 
 export const {
   clickedBack,
+  logout,
 } = weddingSlice.actions
 export default weddingSlice.reducer
 

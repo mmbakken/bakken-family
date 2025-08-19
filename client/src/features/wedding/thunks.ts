@@ -23,6 +23,25 @@ const createAppAsyncThunk = createAsyncThunk.withTypes<{
 // Async thunks for API calls.
 //======================================
 
+type LoginParams = {
+  username: string
+  password: string
+}
+
+export const login = createAppAsyncThunk(
+  'wedding/login',
+  async ({ username, password }: LoginParams) => {
+    return await weddingAPI.login(username, password)
+  },
+)
+
+export const fetchUser = createAppAsyncThunk(
+  'wedding/fetchUser',
+  async () => {
+    return await weddingAPI.getUser()
+  },
+)
+
 // Get the Rsvp data necessary to render the app.
 export const fetchAdminData = createAppAsyncThunk(
   'wedding/fetchAdminData',

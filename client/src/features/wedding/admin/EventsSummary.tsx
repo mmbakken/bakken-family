@@ -10,22 +10,32 @@ const EventsSummary = () => {
 
   return (
     <div className="w-full">
-      <h2 className="pb-4 text-2xl">Events Summary</h2>
+      <h2 className="pb-4 text-2xl">Summary</h2>
 
       <div className="flex w-full gap-2">
-        <div className="w-48 shrink-0 pb-2 font-semibold">Event</div>
-        <div className="w-24 shrink-0 pb-2 font-semibold">Accepted</div>
-        <div className="w-24 shrink-0 pb-2 font-semibold">Declined</div>
-        <div className="w-24 shrink-0 pb-2 font-semibold">Pending</div>
+        <div className="w-36 shrink-0 pb-2 text-sm font-semibold">Event</div>
+        <div className="w-10 shrink-0 pb-2 text-sm font-semibold">Total</div>
+        <div className="w-10 shrink-0 pb-2 text-sm font-semibold">Yes</div>
+        <div className="w-10 shrink-0 pb-2 text-sm font-semibold">No</div>
+        <div className="w-10 shrink-0 pb-2 text-sm font-semibold">?</div>
       </div>
 
       {eventSummaries.map((eventSummary) => {
         return (
           <div key={eventSummary.id} className="flex gap-2">
-            <div className="w-48 shrink-0">{eventSummary.name}</div>
-            <div className="w-24 shrink-0">{eventSummary.acceptedCount}</div>
-            <div className="w-24 shrink-0">{eventSummary.declinedCount}</div>
-            <div className="w-24 shrink-0">{eventSummary.pendingCount}</div>
+            <div className="w-36 shrink-0 text-sm">{eventSummary.name}</div>
+            <div className="w-10 shrink-0 text-sm">
+              {eventSummary.totalCount}
+            </div>
+            <div className="w-10 shrink-0 text-sm">
+              {eventSummary.acceptedCount}
+            </div>
+            <div className="w-10 shrink-0 text-sm">
+              {eventSummary.declinedCount}
+            </div>
+            <div className="w-10 shrink-0 text-sm">
+              {eventSummary.pendingCount}
+            </div>
           </div>
         )
       })}

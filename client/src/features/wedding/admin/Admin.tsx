@@ -5,7 +5,6 @@ import { fetchAdminData } from '@/features/wedding/thunks'
 import {
   RsvpsByGuest,
   EventsSummary,
-  PendingInvites,
   GuestAllergies,
   Users,
 } from '@/features/wedding/admin'
@@ -19,17 +18,15 @@ const Admin = () => {
   }, [dispatch])
 
   return (
-    <div className="flex h-dvh w-screen max-w-7xl flex-col gap-4 px-6 py-4">
+    <div className="flex h-dvh w-screen max-w-7xl flex-col gap-4 px-2 py-4">
       <header>
         <h1 className="text-4xl">Admin Page</h1>
       </header>
 
       <section className="flex w-full flex-col gap-8">
-        <EventsSummary />
-        <hr className="border-app-purple-700 my-4 border" />
         <RsvpsByGuest />
         <hr className="border-app-purple-700 my-4 border" />
-        <PendingInvites />
+        <EventsSummary />
         <hr className="border-app-purple-700 my-4 border" />
         <GuestAllergies />
         <hr className="border-app-purple-700 my-4 border" />

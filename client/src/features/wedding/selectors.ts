@@ -564,39 +564,97 @@ export const getIsComing = createSelector(
 //======================================
 
 // Returns all Admin page data.
-export const getAdminData = createSelector(
+export const getAdmin = createSelector(
   [getWeddingState],
   (state) => state.admin,
 )
 
-// Returns a map of RSVPs by their guest id.
-export const getRsvpsByGuestId = createSelector(
-  [getAdminData],
-  (adminState) => {
-    const map = adminState.rsvps.reduce((acc, rsvp) => {
-      if (acc[rsvp.guestId] == null) {
-        acc[rsvp.guestId] = [rsvp]
-      } else {
-        acc[rsvp.guestId].push(rsvp)
+// Returns a list of all guest ids.
+export const getAllGuestIds = createSelector(
+  [getAdmin],
+  (admin) => {
+    if (admin == null) {
+      return []
+    }
+
+    return admin.guests.map((g) => g.id)
+  },
+)
+
+export const getSortedGuestIds = createSelector(
+  [getAdmin],
+  (admin) => {
+    if (admin == null) {
+      return []
+    }
+
+    return admin.guests.toSorted((guestA, guestB) => {
+      if (guestA.userId === guestB.userId) {
+        return Number(guestA.id) - Number(guestB.id)
       }
 
-      return acc
-    }, {} as Record<string, RsvpWithEventAndGuest[]>)
+      return Number(guestA.id) - Number(guestB.id)
+    }).map((g) => g.id)
+  },
+)
 
-    return map
+// Returns a map of Guests by their id.
+export const getAllGuestsById = createSelector(
+  [getAdmin],
+  (admin) => {
+    const guestsById: Record<string, GuestT> = {}
+
+    admin.guests.forEach((guest) => {
+      guestsById[guest.id] = guest
+    })
+
+    return guestsById
+  },
+)
+
+// TODO: Use this in a component as with a selector that passes guestId.
+// Given a guest id, returns the guest object, or null
+export const getGuest = createSelector(
+  [getAllGuestsById, (_state, guestId) => guestId],
+  (guestsById, guestId) => {
+    const guest = guestsById[guestId]
+
+    if (guest == null) {
+      return null
+    }
+
+    return guest
+  },
+)
+
+// Returns a map of RSVPs by their guest id.
+export const getRsvpsByGuestId = createSelector(
+  [getAdmin, getAllGuestIds],
+  (admin, allGuestIds) => {
+    const rsvpsByGuestId: Record<string, RsvpWithEventAndGuest[]> = {}
+
+    allGuestIds.forEach((guestId) => {
+      rsvpsByGuestId[guestId] = []
+    })
+
+    admin.rsvps.forEach((rsvp) => {
+      rsvpsByGuestId[rsvp.guestId].push(rsvp)
+    })
+
+    return rsvpsByGuestId
   },
 )
 
 // Returns a list of event summary objects to display on the Admin page.
 export const getEventSummaries = createSelector(
-  [getAdminData],
-  (adminState) => {
+  [getAdmin],
+  (admin) => {
     // Find the counts for these events based on invite and rsvp records.
-    const eventSummaries = adminState.events.map((event) => {
+    const eventSummaries = admin.events.map((event) => {
       // For each event, find its Rsvps.
       let acceptedCount = 0
       let declinedCount = 0
-      adminState.rsvps.map((rsvp) => {
+      admin.rsvps.map((rsvp) => {
         if (rsvp.eventId === event.id && rsvp.accepted) {
           acceptedCount += 1
           return
@@ -609,7 +667,7 @@ export const getEventSummaries = createSelector(
 
       // For each event, find its Invites.
       let eventInvitesCount = 0
-      adminState.invites.map((invite) => {
+      admin.invites.map((invite) => {
         if (invite.eventId === event.id) {
           eventInvitesCount += 1
         }
@@ -621,6 +679,7 @@ export const getEventSummaries = createSelector(
       return {
         id: event.id,
         name: event.name,
+        totalCount: eventInvitesCount,
         acceptedCount: acceptedCount,
         declinedCount: declinedCount,
         pendingCount: pendingCount,
@@ -633,11 +692,11 @@ export const getEventSummaries = createSelector(
 
 // Returns a list of Invites which have not been responded to yet.
 export const getPendingInvites = createSelector(
-  [getAdminData],
-  (adminState) => {
+  [getAdmin],
+  (admin) => {
     // Find all Invites which have no RSVP yet.
-    return adminState.invites.filter((invite) => {
-      const hasRsvp = adminState.rsvps.find((rsvp) => {
+    return admin.invites.filter((invite) => {
+      const hasRsvp = admin.rsvps.find((rsvp) => {
         return rsvp.eventId === invite.eventId &&
           rsvp.guestId === invite.guestId
       })
@@ -649,10 +708,10 @@ export const getPendingInvites = createSelector(
 
 // Returns a list of Guests which have allergies.
 export const getGuestAllergies = createSelector(
-  [getAdminData],
-  (adminState) => {
+  [getAdmin],
+  (admin) => {
     // Find all Guests who have an allergy noted on their record.
-    return adminState.guests.filter((guest) => {
+    return admin.guests.filter((guest) => {
       return guest.allergies != null && guest.allergies !== ''
     })
   },
@@ -660,19 +719,19 @@ export const getGuestAllergies = createSelector(
 
 // Returns a list of user ids.
 export const getAllUserIds = createSelector(
-  [getAdminData],
-  (adminState) => {
-    return adminState.users.map((u) => u.id)
+  [getAdmin],
+  (admin) => {
+    return admin.users.map((u) => u.id)
   },
 )
 
 // Returns a map of all users by id.
 export const getAllUsersById = createSelector(
-  [getAdminData],
-  (adminState) => {
+  [getAdmin],
+  (admin) => {
     const usersById: Record<string, UserT> = {}
 
-    adminState.users.forEach((user) => {
+    admin.users.forEach((user) => {
       usersById[user.id] = user
     })
 

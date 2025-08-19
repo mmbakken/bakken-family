@@ -9,6 +9,7 @@ export const STEPS = {
 
 // Enum of types of attending values.
 export const ATTENDING_STATUS = {
+  NOT_INVITED: -2,
   DECLINED: -1,
   PENDING: 0,
   ACCEPTED: 1,

@@ -13,15 +13,17 @@ const GuestAllergies = () => {
       <h2 className="pb-4 text-2xl">Guest Allergies</h2>
 
       <div className="flex w-full gap-2">
-        <div className="w-48 shrink-0 font-semibold">Name</div>
-        <div className="w-48 shrink-0 font-semibold">Allergy</div>
+        <div className="w-46 shrink-0 text-sm font-semibold">Name</div>
+        <div className="w-46 shrink-0 text-sm font-semibold">Allergy</div>
       </div>
 
       {guestAllergies.map((guestAllergy) => {
         return (
           <div key={guestAllergy.id} className="flex gap-2">
-            <div className="w-48 shrink-0">{guestAllergy.fullName}</div>
-            <div className="w-48 shrink-0">{guestAllergy.allergies}</div>
+            <div className="w-46 shrink-0 text-sm">{guestAllergy.fullName}</div>
+            <div className="w-46 shrink-0 text-sm">
+              {guestAllergy.allergies}
+            </div>
           </div>
         )
       })}

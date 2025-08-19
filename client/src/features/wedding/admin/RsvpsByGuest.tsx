@@ -97,12 +97,6 @@ const RsvpsByGuest = () => {
     return null
   }
 
-  console.log('sortedEventIds:')
-  console.dir(sortedEventIds)
-
-  console.log('allGuestsById')
-  console.dir(allGuestsById)
-
   return (
     <div className="w-full">
       <h2 className="pb-4 text-2xl">RSVPs</h2>
@@ -131,10 +125,6 @@ const RsvpsByGuest = () => {
       {sortedGuestIds.map((guestId) => {
         const guestRsvps = rsvpsByGuestId[guestId]
         const guest = allGuestsById[guestId]
-
-        console.log('guest id: ' + guestId)
-        console.log('guestRsvps:')
-        console.dir(guestRsvps)
 
         if (guest == null) {
           return

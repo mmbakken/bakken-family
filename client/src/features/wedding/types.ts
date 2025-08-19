@@ -3,6 +3,7 @@ export type UserT = {
   id: string
   username: string
   role: number
+  lastLogin: string
   submittedOn: string // timestamp
 }
 

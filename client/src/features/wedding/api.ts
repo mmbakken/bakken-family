@@ -210,6 +210,23 @@ const weddingAPI = {
 
     return await response.json()
   },
+
+  resetUserRsvps: async (userId: string) => {
+    const url = `${baseUrl}/wedding/admin/users/${userId}/rsvps/reset`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token') ?? '',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Error resetting user RSVPs.')
+    }
+
+    return await response.json()
+  },
 }
 
 export default weddingAPI

@@ -7,6 +7,7 @@ import {
   EventsSummary,
   PendingInvites,
   GuestAllergies,
+  Users,
 } from '@/features/wedding/admin'
 
 const Admin = () => {
@@ -31,6 +32,8 @@ const Admin = () => {
         <PendingInvites />
         <hr className="border-app-purple-700 my-4 border" />
         <GuestAllergies />
+        <hr className="border-app-purple-700 my-4 border" />
+        <Users />
       </section>
     </div>
   )

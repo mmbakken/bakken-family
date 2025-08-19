@@ -6,6 +6,7 @@ import type {
   InviteT,
   RsvpT,
   RsvpWithEventAndGuest,
+  UserT,
 } from '@/features/wedding/types'
 
 const emptyGuests: GuestT[] = []
@@ -628,5 +629,41 @@ export const getGuestAllergies = createSelector(
     return adminState.guests.filter((guest) => {
       return guest.allergies != null && guest.allergies !== ''
     })
+  },
+)
+
+// Returns a list of user ids.
+export const getAllUserIds = createSelector(
+  [getAdminData],
+  (adminState) => {
+    return adminState.users.map((u) => u.id)
+  },
+)
+
+// Returns a map of all users by id.
+export const getAllUsersById = createSelector(
+  [getAdminData],
+  (adminState) => {
+    const usersById: Record<string, UserT> = {}
+
+    adminState.users.forEach((user) => {
+      usersById[user.id] = user
+    })
+
+    return usersById
+  },
+)
+
+// Given a user id, returns the user object, or null
+export const getUser = createSelector(
+  [getAllUsersById, (_state, userId) => userId],
+  (usersById, userId) => {
+    const user = usersById[userId]
+
+    if (user == null) {
+      return null
+    }
+
+    return user
   },
 )

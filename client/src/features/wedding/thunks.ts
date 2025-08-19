@@ -159,3 +159,27 @@ export const clickedSubmit = createAppAsyncThunk(
     return user
   },
 )
+
+// Removes all RSVPs for a user. Allows user to start the RSVP process over.
+export const resetUserRsvps = createAppAsyncThunk(
+  'wedding/resetUserRsvps',
+  async (userId: string) => {
+    const {
+      deletedRsvpIds: deletedRsvpIds,
+      updatedUser: updatedUser,
+    } = await weddingAPI.resetUserRsvps(userId)
+
+    const response = await weddingAPI.refreshUserToken()
+
+    const token = response.accessToken
+    localStorage.setItem('token', token)
+
+    const user = await weddingAPI.getUser()
+
+    return {
+      user,
+      updatedUser,
+      deletedRsvpIds,
+    }
+  },
+)

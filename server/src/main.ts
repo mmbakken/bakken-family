@@ -4,8 +4,8 @@ import { logger } from 'hono/logger'
 import { login, refreshToken } from './auth/login.ts'
 import { authenticateToken } from './auth/authenticateToken.ts'
 import { validateAdminUser } from './auth/validateAdminUser.ts'
-import { getAdmin } from './routes/admin.ts'
-import { getUser, getUsers, submitRsvps } from './routes/users.ts'
+import { getAdmin, resetUserRsvps } from './routes/admin.ts'
+import { getUser, submitRsvps } from './routes/users.ts'
 import { getGuests, updateGuest } from './routes/guests.ts'
 import { declineAllRsvps, getRsvps, upsertRsvp } from './routes/rsvps.ts'
 import { getEvents } from './routes/events.ts'
@@ -50,12 +50,11 @@ app.get('/api/v1/wedding', (c) => {
 
 app.use('/api/v1/wedding/admin', authenticateToken, validateAdminUser)
 app.get('/api/v1/wedding/admin', getAdmin)
+app.post('/api/v1/wedding/admin/users/:userId/rsvps/reset', resetUserRsvps)
 
 app.post('/api/v1/wedding/login', login)
 app.post('/api/v1/wedding/refreshToken', authenticateToken, refreshToken)
 
-// Test endpoint to validate auth/token works. Do we need this anymore?
-app.get('/api/v1/wedding/users', authenticateToken, getUsers)
 app.get('/api/v1/wedding/user', authenticateToken, getUser)
 
 app.get('/api/v1/wedding/guests', authenticateToken, getGuests)

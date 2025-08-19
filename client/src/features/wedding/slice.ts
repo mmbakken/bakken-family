@@ -6,6 +6,7 @@ import {
   clickedSubmit,
   fetchAdminData,
   fetchRsvpData,
+  resetUserRsvps,
   updateGuest,
   upsertRsvp,
 } from '@/features/wedding/thunks'
@@ -307,6 +308,43 @@ export const weddingSlice = createSlice({
 
       state.entities.guests = updatedGuests
     })
+
+    builder.addCase(
+      resetUserRsvps.fulfilled,
+      (state, action) => {
+        // Refresh the user's token in case they reset their own RSVPs.
+        state.entities.user = action.payload.user
+
+        // Update the user
+        state.admin.users = state.admin.users.map((user) => {
+          if (user.id === action.payload.updatedUser.id) {
+            return action.payload.updatedUser
+          }
+
+          return user
+        })
+
+        // If this user deleted their own RSVPs, we should delete them from the
+        // normal Redux state for RSVPs.
+        const rsvpsToKeep: RsvpT[] = []
+        state.entities.rsvps.forEach((rsvp) => {
+          if (!action.payload.deletedRsvpIds.includes(rsvp.id)) {
+            rsvpsToKeep.push(rsvp)
+          }
+        })
+
+        // Delete each of the returned Rsvp ids from the Admin RSVP objects.
+        const adminRsvpsToKeep: RsvpWithEventAndGuest[] = []
+        state.admin.rsvps.forEach((rsvp) => {
+          if (!action.payload.deletedRsvpIds.includes(rsvp.id)) {
+            adminRsvpsToKeep.push(rsvp)
+          }
+        })
+
+        state.entities.rsvps = rsvpsToKeep
+        state.admin.rsvps = adminRsvpsToKeep
+      },
+    )
   },
 })
 

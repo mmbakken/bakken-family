@@ -9,19 +9,6 @@ export const getUser = (c: Context) => {
   return c.json(c.get('user'))
 }
 
-export const getUsers = async (c: Context) => {
-  const allUsers = await db.select({
-    username: schema.users.username,
-    role: schema.users.role,
-  }).from(
-    schema.users,
-  )
-
-  return c.json({
-    users: allUsers,
-  })
-}
-
 // Finalizes the state of all existing Rsvps. Basically this just sets a field
 // on the user model to say "don't let more updates happen".
 export const submitRsvps = async (c: Context) => {
@@ -39,9 +26,6 @@ export const submitRsvps = async (c: Context) => {
   ).returning()
 
   const updatedUser = updatedUsers[0]
-
-  console.log('updatedUser:')
-  console.dir(updatedUser)
 
   return c.json(updatedUser)
 }

@@ -64,7 +64,7 @@ const TreeNuts = () => {
         <hr className="border-primary w-full border" />
 
         <section className="flex w-full flex-col gap-8">
-          <p className="flex w-full flex-col gap-2">
+          <div className="flex w-full flex-col gap-2">
             <span className="">Here's a list of tree nuts:</span>
             <ul className="flex list-disc flex-col gap-2 px-4 text-sm">
               <li>Almonds</li>
@@ -78,9 +78,9 @@ const TreeNuts = () => {
               <li>Macadamia nuts</li>
               <li>Pine nuts</li>
             </ul>
-          </p>
+          </div>
 
-          <p className="flex w-full flex-col gap-2">
+          <div className="flex w-full flex-col gap-2">
             <span className="">
               And here's a list of common nut-containing products:
             </span>
@@ -97,9 +97,9 @@ const TreeNuts = () => {
                 even if the dessert doesn't have nuts in it)
               </li>
             </ul>
-          </p>
+          </div>
 
-          <p className="flex w-full flex-col gap-2">
+          <div className="flex w-full flex-col gap-2">
             <span className="">
               And here's a list of things that are not tree nuts:
             </span>
@@ -116,7 +116,7 @@ const TreeNuts = () => {
                 Deez nuts (boffa)
               </li>
             </ul>
-          </p>
+          </div>
         </section>
       </main>
 

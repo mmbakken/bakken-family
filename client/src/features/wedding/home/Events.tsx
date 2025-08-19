@@ -97,7 +97,7 @@ const Events = () => {
               <span className="text-primary font-semibold">Attire:</span>{' '}
               Semi-formal or Cocktail
             </p>
-            <p>
+            <div>
               <span className="text-primary font-semibold">Details:</span>
               <ul className="flex w-full flex-col gap-1 pt-2">
                 <li>
@@ -164,7 +164,7 @@ const Events = () => {
                   </a>
                 </li>
               </ul>
-            </p>
+            </div>
           </section>
         </section>
 

@@ -105,21 +105,6 @@ const Events = () => {
                   anyone who wants to join!
                 </li>
                 <li>
-                  <span className="inline-block w-20">1:00pm</span>Shuttle
-                  pickup in town at the{' '}
-                  <a
-                    className="text-primary font-semibold underline-offset-2 hover:underline"
-                    href="https://maps.app.goo.gl/uobUuCu8N18rNNVi7"
-                    target="_blank"
-                  >
-                    Residence Inn Steamboat Springs
-                  </a>
-                </li>
-                <li>
-                  <span className="inline-block w-20">1:20pm</span>Shuttle
-                  arrives at Sky Valley Chateau
-                </li>
-                <li>
                   <span className="inline-block w-20">2:00pm</span>Ceremony on
                   the lawn
                 </li>
@@ -145,23 +130,8 @@ const Events = () => {
                   <span className="inline-block w-20">6:00pm</span>Reception
                 </li>
                 <li>
-                  <span className="inline-block w-20">9:45pm</span>Shuttle
-                  arrives
-                </li>
-                <li>
-                  <span className="inline-block w-20">10:00pm</span>Shuttle
-                  departs - all non-lodging guests must depart
-                </li>
-                <li>
-                  <span className="inline-block w-20">10:15pm</span>Shuttle
-                  arrives back at the{' '}
-                  <a
-                    className="text-primary text-primary font-semibold underline-offset-2 hover:underline"
-                    href="https://maps.app.goo.gl/uobUuCu8N18rNNVi7"
-                    target="_blank"
-                  >
-                    Residence Inn Steamboat Springs
-                  </a>
+                  <span className="inline-block w-20">10:00pm</span>Reception
+                  ends. Non-lodging guests must start to leave at this time.
                 </li>
               </ul>
             </div>

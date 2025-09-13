@@ -48,14 +48,10 @@ const Questions = () => {
           <ul className="flex flex-col gap-2">
             <li>
               We do not have a hotel block, but there are a variety of hotels in
-              Steamboat Springs. For guests that are not staying at the lodge we
-              are providing a shuttle to and from the venue for the ceremony and
-              reception. This is a requirement of our contract with the venue,
-              so please don't get us yelled at by the venue owners – Hilary
-              isn't a big rule-breaker. Please plan on taking the shuttle.
+              Steamboat Springs.
             </li>
             <li>
-              <span>Shuttle pick-up will be at the </span>
+              <span>We recommend staying at or near the </span>
               <a
                 href="https://maps.app.goo.gl/7MeWm1hKFoAAM5xy8"
                 className="text-primary cursor-pointer font-semibold underline-offset-2 hover:underline"
@@ -63,7 +59,7 @@ const Questions = () => {
               >
                 Residence Inn Steamboat Springs
               </a>
-              <span>. We recommend staying here or nearby.</span>
+              <span>, as an example of hotels that are in town.</span>
             </li>
             <li>
               If you're staying at the lodge, then you're all set for the nights
@@ -87,9 +83,9 @@ const Questions = () => {
               </span>
             </li>
             <li>
-              <span className="font-semibold">PLEASE NOTE: </span>There is a
-              mandatory shuttle on the day of the wedding. You will not be able
-              to drive yourself to the venue for the ceremony or the reception.
+              <span className="font-semibold">PLEASE NOTE: </span>If you are not
+              staying at the lodge, please coordinate with Matt & Hilary for
+              carpooling options to the venue.
             </li>
             <li>
               We recommend downloading the area in Google Maps for offline use.
@@ -106,12 +102,12 @@ const Questions = () => {
 
         <Faq
           question="Is there a shuttle to the venue for the wedding if I'm staying in Steamboat Springs?"
-          answer="We have arranged a mandatory shuttle to and from the venue for the wedding ceremony and reception on Saturday. Please see the wedding events page for pick-up and drop off times. There are also taxis and ride-sharing services in Steamboat Springs, but you will need to arrange that ahead of time."
+          answer="Previously, we had arranged a shuttle to take guests to and from the venue for the wedding ceremony and reception on Saturday, but this is no longer available. If you are not staying at the lodge, please coordinate with Matt & Hilary about carpooling to and from the venue. Please do not plan on driving yourselves if you will be drinking."
         />
 
         <Faq
           question="Is there a shuttle for the Welcome Party on Friday or on other days?"
-          answer="No. Please drive yourself to and from the venue on any day except for Saturday, October 11."
+          answer="No. Please drive yourself (or carpool) to and from the venue on any day except for Saturday, October 11."
         />
 
         <Faq
@@ -124,8 +120,8 @@ const Questions = () => {
         />
 
         <Faq
-          question="Can I carpool with you?"
-          answer="No (our car is going to be full) but we can probably pair you up with friends or family who are driving up!"
+          question="Can I carpool with you up to Steamboat?"
+          answer="No, sorry - our car is going to be full. But we can probably pair you up with friends or family who are driving up!"
         />
 
         <Faq

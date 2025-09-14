@@ -14,19 +14,16 @@ const EventsSummary = () => {
 
       <div className="flex w-full gap-2">
         <div className="w-36 shrink-0 pb-2 text-sm font-semibold">Event</div>
-        <div className="w-10 shrink-0 pb-2 text-sm font-semibold">Total</div>
         <div className="w-10 shrink-0 pb-2 text-sm font-semibold">Yes</div>
         <div className="w-10 shrink-0 pb-2 text-sm font-semibold">No</div>
         <div className="w-10 shrink-0 pb-2 text-sm font-semibold">?</div>
+        <div className="w-10 shrink-0 pb-2 text-sm font-semibold">Total</div>
       </div>
 
       {eventSummaries.map((eventSummary) => {
         return (
           <div key={eventSummary.id} className="flex gap-2">
             <div className="w-36 shrink-0 text-sm">{eventSummary.name}</div>
-            <div className="w-10 shrink-0 text-sm">
-              {eventSummary.totalCount}
-            </div>
             <div className="w-10 shrink-0 text-sm">
               {eventSummary.acceptedCount}
             </div>
@@ -35,6 +32,9 @@ const EventsSummary = () => {
             </div>
             <div className="w-10 shrink-0 text-sm">
               {eventSummary.pendingCount}
+            </div>
+            <div className="w-10 shrink-0 text-sm">
+              {eventSummary.totalCount}
             </div>
           </div>
         )

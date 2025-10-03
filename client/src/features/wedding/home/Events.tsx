@@ -150,27 +150,38 @@ const Events = () => {
 
           <section className="flex flex-col gap-2">
             <p>
-              <span className="text-primary font-semibold">11am:</span> Brunch
-              at the lodge.
-            </p>
-            <p>
-              <span className="text-primary font-semibold">2pm:</span> Visit{' '}
+              <span className="text-primary font-semibold">Details:</span> We'll
+              be hanging out at{' '}
               <a
                 className="text-primary font-semibold underline-offset-2 hover:underline"
                 href="https://strawberryhotsprings.com/"
                 target="_blank"
               >
                 Strawberry Park Hot Springs
-              </a>
+              </a>{' '}
+              for a couple of hours. If you RSVP'd to this (via the Google Form
+              we sent out) then we have your spot saved. Don't forget to bring a
+              towel!
             </p>
             <p>
-              <span className="text-primary font-semibold">Details:</span> We'll
-              be hanging out at the hot springs for a couple of hours. If you'd
-              like to join, we'll be scheduling a shuttle for all of us to go in
-              one group - more details to come.{' '}
-              <span className="text-primary font-semibold">
-                Please text Hilary and Matt to RSVP.
-              </span>
+              <span className="text-primary font-semibold">1:00pm:</span>{' '}
+              Shuttle departs the lodge for the hot springs.
+            </p>
+            <p>
+              <span className="text-primary font-semibold">1:30pm:</span> Arrive
+              at the hot springs.
+            </p>
+            <p>
+              <span className="text-primary font-semibold">3:30pm:</span>{' '}
+              Shuttle departs the hot springs.
+            </p>
+            <p>
+              <span className="text-primary font-semibold">4:00pm</span> Return
+              back to the lodge.
+            </p>
+            <p>
+              <span className="text-primary font-semibold">6:00pm</span> Sunday
+              Dinner at the lodge.
             </p>
           </section>
         </section>

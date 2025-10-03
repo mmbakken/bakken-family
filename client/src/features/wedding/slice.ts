@@ -185,6 +185,9 @@ export const weddingSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Login thunk
+    builder.addCase(login.pending, (state) => {
+      state.auth.isLoading = true
+    })
     builder.addCase(login.fulfilled, (state, action) => {
       state.entities.user = action.payload
     })
@@ -192,6 +195,8 @@ export const weddingSlice = createSlice({
       console.error('Error on login:')
       console.error(action.payload)
       state.entities.user = initialState.entities.user
+      state.auth.isLoading = false
+      state.auth.error = action.payload ?? null
     })
 
     builder.addCase(fetchUser.fulfilled, (state, action) => {

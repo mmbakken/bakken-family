@@ -113,15 +113,11 @@ const Events = () => {
                   all guests
                 </li>
                 <li>
-                  <span className="inline-block w-20">3:00pm</span>Cocktail hour
+                  <span className="inline-block w-20">2:45pm</span>Cocktail hour
                 </li>
                 <li>
-                  <span className="inline-block w-20">4:30pm</span>Seated for
-                  dinner
-                </li>
-                <li>
-                  <span className="inline-block w-20">4:40pm</span>Champagne
-                  toasts
+                  <span className="inline-block w-20">4:45pm</span>Champagne
+                  toast
                 </li>
                 <li>
                   <span className="inline-block w-20">5:00pm</span>Dinner

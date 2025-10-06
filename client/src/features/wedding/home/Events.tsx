@@ -156,8 +156,7 @@ const Events = () => {
                 Strawberry Park Hot Springs
               </a>{' '}
               for a couple of hours. If you RSVP'd to this (via the Google Form
-              we sent out) then we have your spot saved. Don't forget to bring a
-              towel!
+              we sent out) then we have your spot saved.
             </p>
             <p>
               <span className="text-primary font-semibold">1:00pm:</span>{' '}
